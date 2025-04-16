@@ -8,6 +8,9 @@ export const API_ENDPOINTS = {
     info: `${API_BASE_URL}/api/user/info`,
     detail: `${API_BASE_URL}/api/user/detailInfo`,
     delete: `${API_BASE_URL}/api/user/delete`
+  },
+  oauth2Google:{
+    googleLogin:`${API_BASE_URL}/oauth2/authorization/google`
   }
 }
 
