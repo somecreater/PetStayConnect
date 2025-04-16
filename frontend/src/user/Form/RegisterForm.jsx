@@ -20,7 +20,7 @@ function RegisterForm(props){
     e.preventDefault();
 
     if (password !== confirmPassword) {
-        setError('비밀번호와 확인 비밀번호가 일치하지 않습니다.');
+        alert('비밀번호와 확인 비밀번호가 일치하지 않습니다.');
         return;
     }
 
@@ -34,11 +34,10 @@ function RegisterForm(props){
 
     try{
       const response = await axios.post(API_ENDPOINTS.auth.register, payload, { withCredentials: true });
-      console.log('Registration success:', response.data);  
       navigate('/login');
     } catch (err){
       console.error('Registration failed:', err.response ? err.response.data : err.message);
-      setError('회원가입에 실패했습니다. 입력값을 확인해주세요.');
+      alert('회원가입에 실패했습니다. 입력값을 확인해주세요.');
     }
 
   };

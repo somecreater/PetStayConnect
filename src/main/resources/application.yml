@@ -4,11 +4,47 @@ server:
 spring:
   application:
     name: main
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID:""}
+            client-secret: ${GOOGLE_CLIENT_SECRET:""}
+            scope:
+              - email
+              - profile
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+        provider:
+          google:
+            authorization-uri: https://accounts.google.com/o/oauth2/v2/auth
+            token-uri: https://www.googleapis.com/oauth2/v4/token
+            user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
+            user-name-attribute: sub
+            jwk-set-uri: https://www.googleapis.com/oauth2/v3/certs
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${SPRING_MAIL_USERNAME:""}
+    password: ${SPRING_MAIL_PASSWORD:""}
+    properties:
+      mail:
+        smtp:
+          ssl:
+            trust: smtp.gmail.com
+          auth: true
+          timeout: 5000
+          starttls:
+            enable: true
+
   datasource:
     driver-class-name: ${SPRING_DATASOURCE_DRIVER:""}
     url: ${SPRING_DATASOURCE_URL:""}
     username: ${SPRING_DATASOURCE_USERNAME:""}
     password: ${SPRING_DATASOURCE_PASSWORD:""}
+
   jpa:
     hibernate:
       ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO:""}
@@ -18,6 +54,7 @@ spring:
         dialect: ${SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT:""}
     database-platform: ${SPRING_JPA_DATABASE_PLATFORM:""}
     open-in-view: ${SPRING_JPA_OPEN_IN_VIEW:false}
+
   jwt:
     secret: ${SPRING_JWT_SECRET:""}
 

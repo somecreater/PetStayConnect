@@ -82,6 +82,11 @@ public class UserService implements CustomUserServiceInterface, UserDetailsServi
   }
 
   @Override
+  public User getUserByEmail(String email){
+    return userRepository.findByEmail(email);
+  }
+
+  @Override
   public boolean DeleteUser(CustomUserDetails userDetails, String UserLoginId, String Password){
     if (userDetails==null){
       throw new UsernameNotFoundException("User is not authenticated");

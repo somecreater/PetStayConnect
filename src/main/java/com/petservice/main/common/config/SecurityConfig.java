@@ -3,8 +3,11 @@ package com.petservice.main.common.config;
 import com.petservice.main.common.database.repository.UserRepository;
 import com.petservice.main.user.jwt.JwtFilter;
 import com.petservice.main.user.jwt.JwtService;
+import com.petservice.main.user.service.Oauth2Service;
+import com.petservice.main.user.service.Oauth2SuccessHandler;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.boot.web.server.ErrorPage;
@@ -27,6 +30,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 
 import java.util.Collections;
 
+@Slf4j
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -61,11 +65,18 @@ public class SecurityConfig{
     http.formLogin((auth) -> auth.disable());
     http.httpBasic((auth) -> auth.disable());
     http.addFilterBefore(new JwtFilter(jwtService,userRepository), UsernamePasswordAuthenticationFilter.class);
+    http.oauth2Login(oauth2 -> oauth2
+        .loginPage("/login")
+        .userInfoEndpoint((userInfo)->userInfo.userService(oauth2Service()))
+      .successHandler(oauth2SuccessHandler())
+      .authorizationEndpoint(authEndpoint->authEndpoint.baseUri("/oauth2/authorization"))
+      .redirectionEndpoint(redirectEndpoint->redirectEndpoint.baseUri("/login/oauth2/code/**")));
+
     http.sessionManagement(
-        (session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+      (session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
     http.authorizeHttpRequests(auth -> auth
-        .requestMatchers("/api/user/**","/**").permitAll()
-        .anyRequest().authenticated()
+      .requestMatchers("/api/user/**","/oauth2/**","/**").permitAll()
+      .anyRequest().authenticated()
     );
 
     return http.build();
@@ -87,5 +98,15 @@ public class SecurityConfig{
       ErrorPage error404Page = new ErrorPage(HttpStatus.NOT_FOUND, "/index.html");
       factory.addErrorPages(error404Page);
     };
+  }
+
+  @Bean
+  public Oauth2Service oauth2Service(){
+    return new Oauth2Service();
+  }
+
+  @Bean
+  public Oauth2SuccessHandler oauth2SuccessHandler(){
+    return new Oauth2SuccessHandler();
   }
 }

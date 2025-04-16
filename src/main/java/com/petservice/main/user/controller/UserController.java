@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.http.ResponseCookie;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/user")
@@ -165,9 +167,13 @@ public class UserController {
       ResponseCookie deleteRefreshCookie =
           ResponseCookie.from("refreshToken", "").httpOnly(true).secure(true)
               .path("/api/user/refresh").maxAge(0).sameSite("Strict").build();
+      ResponseCookie deleteSessionCookie =
+          ResponseCookie.from("JSESSIONID", "").httpOnly(true).secure(true)
+              .path("/").maxAge(0).sameSite("Strict").build();
 
       response.addHeader(HttpHeaders.SET_COOKIE, deleteAccessCookie.toString());
       response.addHeader(HttpHeaders.SET_COOKIE, deleteRefreshCookie.toString());
+      response.addHeader(HttpHeaders.SET_COOKIE, deleteSessionCookie.toString());
 
       result.put("result",true);
       return ResponseEntity.ok(result);
@@ -213,15 +219,33 @@ public class UserController {
 
   //회원 정보 읽기
   @GetMapping("/info")
-  public ResponseEntity<?> getUserInfo(
-      @AuthenticationPrincipal CustomUserDetails principal){
+  public ResponseEntity<?> getUserInfo(@AuthenticationPrincipal Object principal){
     Map<String,Object> result=new HashMap<>();
+    log.info(principal.getClass().getName());
     if(principal==null){
-      result.put("auth",false);
+      result.put("auth", false);
       return ResponseEntity.ok(result);
     }
-    result.put("loginId",principal.getUsername());
-    result.put("UserName",principal.getName());
+
+    if (principal instanceof CustomOAuth2UserDetail) {
+      CustomOAuth2UserDetail oAuth2UserDetail=(CustomOAuth2UserDetail)principal;
+      result.put("loginMethod", "google");
+      result.put("auth", true);
+      result.put("loginId", oAuth2UserDetail.getName());
+      result.put("UserName", oAuth2UserDetail.getUsername());
+      result.put("Role", oAuth2UserDetail.getAuthorities().stream().map(GrantedAuthority::getAuthority)
+          .collect(Collectors.joining()));
+
+    } else {
+      result.put("loginMethod", "normal");
+      CustomUserDetails customUserDetails = (CustomUserDetails) principal;
+      result.put("auth", true);
+      result.put("loginId", customUserDetails.getUsername());
+      result.put("UserName", customUserDetails.getName());
+      result.put("Role", customUserDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority)
+          .collect(Collectors.joining()));
+
+    }
 
     return ResponseEntity.ok(result);
   }

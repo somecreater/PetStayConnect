@@ -8,5 +8,6 @@ public interface CustomUserServiceInterface {
   public User registerUser(UserDTO userDTO);
   public User UserLogin(String UserLoginId, String Password);
   public User getUserFromPrincipal(CustomUserDetails userDetails);
+  public User getUserByEmail(String email);
   public boolean DeleteUser(CustomUserDetails userDetails, String UserLoginId, String Password);
 }
