@@ -42,7 +42,7 @@ public class UserController {
 
   private final UserMapper userMapper;
 
-  private static final Long JWT_EXPIRATION = 1000L * 60 * 60;
+  private static final Long JWT_EXPIRATION = 1000L * 60 * 15;
 
   //토큰 리프레시
   @PostMapping("/refresh")
@@ -68,8 +68,8 @@ public class UserController {
     try {
       User user = verifiedToken.getUser();
       String newAccessToken =
-          jwtService.createJwt(user.getUserLoginId(), user.getRole().name(), JWT_EXPIRATION,
-              "ACCESS");
+          jwtService.createJwt(user.getUserLoginId(), user.getRole().name(), user.getName(),
+              JWT_EXPIRATION, "ACCESS");
 
       ResponseCookie.ResponseCookieBuilder token =
           ResponseCookie.from("accessToken", newAccessToken);
@@ -99,11 +99,8 @@ public class UserController {
       String userLoginId = loginRequest.getUsername();
       String userPassword = loginRequest.getPassword();
 
-      log.info(userLoginId);
-      log.info(userPassword);
-
       User user = customUserService.UserLogin(userLoginId, userPassword);
-      String accessToken = jwtService.createAccessToken(user.getUserLoginId(), user.getRole().name());
+      String accessToken = jwtService.createAccessToken(user.getUserLoginId(),user.getName(), user.getRole().name());
       RefreshToken refreshTokenEntity = refreshTokenService.createRefreshToken(user.getUserLoginId());
       String refreshToken = refreshTokenEntity.getToken();
 
@@ -203,11 +200,12 @@ public class UserController {
     return  ResponseEntity.ok(result);
   }
 
-  //회원 탈퇴
+  //회원 탈퇴(모든 토큰들도 삭제)
   @PostMapping("/delete")
   public ResponseEntity<?> DeleteUser(
       @AuthenticationPrincipal CustomUserDetails principal,
       @RequestBody Map<String,String> deleteRequest){
+
     Map<String,Object> result=new HashMap<>();
     if(principal==null){
       result.put("auth",false);
@@ -216,6 +214,9 @@ public class UserController {
 
     return ResponseEntity.ok(result);
   }
+
+  //회원 정보 수정
+
 
   //회원 정보 읽기
   @GetMapping("/info")
@@ -236,7 +237,7 @@ public class UserController {
       result.put("Role", oAuth2UserDetail.getAuthorities().stream().map(GrantedAuthority::getAuthority)
           .collect(Collectors.joining()));
 
-    } else {
+    } else if(principal instanceof CustomUserDetails ){
       result.put("loginMethod", "normal");
       CustomUserDetails customUserDetails = (CustomUserDetails) principal;
       result.put("auth", true);
@@ -245,6 +246,10 @@ public class UserController {
       result.put("Role", customUserDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority)
           .collect(Collectors.joining()));
 
+    }else {
+      log.warn("Unknown principal type: {}", principal.getClass().getName());
+      result.put("auth", false);
+      result.put("message", "알 수 없는 사용자 타입");
     }
 
     return ResponseEntity.ok(result);

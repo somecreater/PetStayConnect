@@ -53,8 +53,8 @@ function UserInfo(props){
           role: response.data.Role, 
         });
       }else{
-        console.log(response.data);
-        alert('Google 계정 연동에 문제가 있습니다!!');
+        alert(response.data.message);
+        navigate('/login');
       }
     }catch(err){
       console.error('사용자 정보 가져오기 오류:', err);

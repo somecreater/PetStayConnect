@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 @Getter
 public class CustomUserDetails implements UserDetails {
@@ -17,6 +18,12 @@ public class CustomUserDetails implements UserDetails {
   private final String name;
   private final Collection<? extends GrantedAuthority> authorities;
 
+  public CustomUserDetails(String LoginId, String name, String role){
+    this.username=LoginId;
+    this.password=null;
+    this.name=name;
+    this.authorities = List.of(new SimpleGrantedAuthority(role));
+  }
   public CustomUserDetails(User user) {
     this.username = user.getUserLoginId();
     this.password = user.getName();

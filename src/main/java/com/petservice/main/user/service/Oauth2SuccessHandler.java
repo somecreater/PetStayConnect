@@ -37,7 +37,7 @@ public class Oauth2SuccessHandler implements AuthenticationSuccessHandler {
     String email = oAuth2User.getAttribute("email");
     String name = oAuth2User.getAttribute("name");
 
-    String accessToken=jwtService.createAccessToken(email,
+    String accessToken=jwtService.createAccessToken(email,name,
       authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority)
         .collect(Collectors.joining()));
     RefreshToken refreshTokenEntity =refreshTokenService.createRefreshToken(email);
