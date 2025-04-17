@@ -1,8 +1,8 @@
 package com.petservice.main.user.jwt;
 
-import com.petservice.main.common.database.dto.CustomUserDetails;
-import com.petservice.main.common.database.entity.User;
-import com.petservice.main.common.database.repository.UserRepository;
+import com.petservice.main.user.database.dto.CustomUserDetails;
+import com.petservice.main.user.database.entity.User;
+import com.petservice.main.user.database.repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;

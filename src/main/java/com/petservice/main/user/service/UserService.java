@@ -1,10 +1,10 @@
 package com.petservice.main.user.service;
 
-import com.petservice.main.common.database.dto.CustomUserDetails;
-import com.petservice.main.common.database.dto.UserDTO;
-import com.petservice.main.common.database.entity.User;
-import com.petservice.main.common.database.mapper.UserMapper;
-import com.petservice.main.common.database.repository.UserRepository;
+import com.petservice.main.user.database.dto.CustomUserDetails;
+import com.petservice.main.user.database.dto.UserDTO;
+import com.petservice.main.user.database.entity.User;
+import com.petservice.main.user.database.mapper.UserMapper;
+import com.petservice.main.user.database.repository.UserRepository;
 import com.petservice.main.user.service.Interface.CustomUserServiceInterface;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

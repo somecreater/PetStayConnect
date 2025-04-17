@@ -1,9 +1,9 @@
 package com.petservice.main.user.service;
 
-import com.petservice.main.common.database.dto.CustomOAuth2UserDetail;
-import com.petservice.main.common.database.dto.UserDTO;
-import com.petservice.main.common.database.entity.Role;
-import com.petservice.main.common.database.entity.User;
+import com.petservice.main.user.database.dto.CustomOAuth2UserDetail;
+import com.petservice.main.user.database.dto.UserDTO;
+import com.petservice.main.user.database.entity.Role;
+import com.petservice.main.user.database.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;

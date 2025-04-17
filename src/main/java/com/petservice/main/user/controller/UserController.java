@@ -1,9 +1,9 @@
 package com.petservice.main.user.controller;
 
-import com.petservice.main.common.database.dto.*;
-import com.petservice.main.common.database.entity.RefreshToken;
-import com.petservice.main.common.database.entity.User;
-import com.petservice.main.common.database.mapper.UserMapper;
+import com.petservice.main.user.database.dto.*;
+import com.petservice.main.user.database.entity.RefreshToken;
+import com.petservice.main.user.database.entity.User;
+import com.petservice.main.user.database.mapper.UserMapper;
 import com.petservice.main.user.jwt.JwtService;
 import com.petservice.main.user.service.Interface.CustomUserServiceInterface;
 import com.petservice.main.user.service.Interface.RefreshTokenServiceInterface;

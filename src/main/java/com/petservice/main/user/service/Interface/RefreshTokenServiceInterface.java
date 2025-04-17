@@ -1,6 +1,6 @@
 package com.petservice.main.user.service.Interface;
 
-import com.petservice.main.common.database.entity.RefreshToken;
+import com.petservice.main.user.database.entity.RefreshToken;
 
 import java.util.Optional;
 

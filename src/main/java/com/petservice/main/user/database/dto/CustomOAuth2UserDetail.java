@@ -1,6 +1,6 @@
-package com.petservice.main.common.database.dto;
+package com.petservice.main.user.database.dto;
 
-import com.petservice.main.common.database.entity.User;
+import com.petservice.main.user.database.entity.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 

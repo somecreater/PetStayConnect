@@ -1,8 +1,8 @@
-package com.petservice.main.common.database.mapper;
+package com.petservice.main.user.database.mapper;
 
-import com.petservice.main.common.database.dto.UserDTO;
-import com.petservice.main.common.database.entity.User;
-import com.petservice.main.common.database.repository.UserRepository;
+import com.petservice.main.user.database.dto.UserDTO;
+import com.petservice.main.user.database.entity.User;
+import com.petservice.main.user.database.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
