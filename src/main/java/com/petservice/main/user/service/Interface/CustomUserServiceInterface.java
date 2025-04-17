@@ -1,8 +1,8 @@
 package com.petservice.main.user.service.Interface;
 
-import com.petservice.main.common.database.dto.CustomUserDetails;
-import com.petservice.main.common.database.dto.UserDTO;
-import com.petservice.main.common.database.entity.User;
+import com.petservice.main.user.database.dto.CustomUserDetails;
+import com.petservice.main.user.database.dto.UserDTO;
+import com.petservice.main.user.database.entity.User;
 
 public interface CustomUserServiceInterface {
   public User registerUser(UserDTO userDTO);

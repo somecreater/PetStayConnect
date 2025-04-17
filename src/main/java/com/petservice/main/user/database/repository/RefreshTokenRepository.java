@@ -1,7 +1,7 @@
-package com.petservice.main.common.database.repository;
+package com.petservice.main.user.database.repository;
 
-import com.petservice.main.common.database.entity.RefreshToken;
-import com.petservice.main.common.database.entity.User;
+import com.petservice.main.user.database.entity.RefreshToken;
+import com.petservice.main.user.database.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Repository;

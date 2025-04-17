@@ -1,4 +1,4 @@
-package com.petservice.main.common.database.dto;
+package com.petservice.main.user.database.dto;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;

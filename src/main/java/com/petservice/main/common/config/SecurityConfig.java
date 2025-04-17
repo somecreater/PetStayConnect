@@ -1,6 +1,6 @@
 package com.petservice.main.common.config;
 
-import com.petservice.main.common.database.repository.UserRepository;
+import com.petservice.main.user.database.repository.UserRepository;
 import com.petservice.main.user.jwt.JwtFilter;
 import com.petservice.main.user.jwt.JwtService;
 import com.petservice.main.user.service.Oauth2Service;

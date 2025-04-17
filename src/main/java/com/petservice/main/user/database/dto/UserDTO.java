@@ -1,6 +1,6 @@
-package com.petservice.main.common.database.dto;
+package com.petservice.main.user.database.dto;
 
-import com.petservice.main.common.database.entity.Role;
+import com.petservice.main.user.database.entity.Role;
 import lombok.Data;
 
 @Data

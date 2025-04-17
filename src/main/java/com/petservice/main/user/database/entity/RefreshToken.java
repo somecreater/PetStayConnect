@@ -1,4 +1,4 @@
-package com.petservice.main.common.database.entity;
+package com.petservice.main.user.database.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;

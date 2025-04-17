@@ -1,6 +1,6 @@
 package com.petservice.main.user.service;
 
-import com.petservice.main.common.database.entity.RefreshToken;
+import com.petservice.main.user.database.entity.RefreshToken;
 import com.petservice.main.user.jwt.JwtService;
 import com.petservice.main.user.service.Interface.RefreshTokenServiceInterface;
 import jakarta.servlet.ServletException;

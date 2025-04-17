@@ -1,9 +1,9 @@
 package com.petservice.main.user.service;
 
-import com.petservice.main.common.database.entity.RefreshToken;
-import com.petservice.main.common.database.entity.User;
-import com.petservice.main.common.database.repository.RefreshTokenRepository;
-import com.petservice.main.common.database.repository.UserRepository;
+import com.petservice.main.user.database.entity.RefreshToken;
+import com.petservice.main.user.database.entity.User;
+import com.petservice.main.user.database.repository.RefreshTokenRepository;
+import com.petservice.main.user.database.repository.UserRepository;
 import com.petservice.main.user.service.Interface.RefreshTokenServiceInterface;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
