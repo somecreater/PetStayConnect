@@ -54,7 +54,7 @@ function UserInfo(props){
         });
       }else{
         alert(response.data.message);
-        navigate('/login');
+        navigate('/user/login');
       }
     }catch(err){
       console.error('사용자 정보 가져오기 오류:', err);

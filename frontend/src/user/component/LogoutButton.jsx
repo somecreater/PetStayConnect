@@ -19,7 +19,7 @@ function LogoutButton(props){
         if(response.data.result){
           alert('로그아웃 되었습니다.');
           resetUser();
-          navigate('/login');
+          navigate('/user/login');
         }else{
           console.log('로그아웃 실패');
         }

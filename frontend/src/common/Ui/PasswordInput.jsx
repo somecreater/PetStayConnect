@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import '../Css/common.css'
-function TextInput(props){
+function PasswordInput(props){
     const { classtext, name, value, placeholderText, onChange} = props;
 
     return (
         <input className={classtext}
-            type="text"
+            type="password"
             name={name}
             value={value}
             placeholder={placeholderText}
@@ -14,4 +14,4 @@ function TextInput(props){
     );
 }
 
-export default TextInput;
+export default PasswordInput;

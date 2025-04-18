@@ -17,12 +17,13 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.http.ResponseCookie;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -204,19 +205,59 @@ public class UserController {
   @PostMapping("/delete")
   public ResponseEntity<?> DeleteUser(
       @AuthenticationPrincipal CustomUserDetails principal,
-      @RequestBody Map<String,String> deleteRequest){
+      @RequestBody Map<String,String> deleteRequest,
+      HttpServletResponse response){
 
     Map<String,Object> result=new HashMap<>();
+
     if(principal==null){
-      result.put("auth",false);
+      result.put("result",false);
       return ResponseEntity.ok(result);
+    }
+
+    String userLoginId = principal.getUsername();
+    refreshTokenService.deleteByUserId(userLoginId);
+
+    ResponseCookie deleteAccessCookie =
+        ResponseCookie.from("accessToken", "").httpOnly(true).secure(true).path("/").maxAge(0)
+            .sameSite("Strict").build();
+    ResponseCookie deleteRefreshCookie =
+        ResponseCookie.from("refreshToken", "").httpOnly(true).secure(true)
+            .path("/api/user/refresh").maxAge(0).sameSite("Strict").build();
+    ResponseCookie deleteSessionCookie =
+        ResponseCookie.from("JSESSIONID", "").httpOnly(true).secure(true)
+            .path("/").maxAge(0).sameSite("Strict").build();
+
+    response.addHeader(HttpHeaders.SET_COOKIE, deleteAccessCookie.toString());
+    response.addHeader(HttpHeaders.SET_COOKIE, deleteRefreshCookie.toString());
+    response.addHeader(HttpHeaders.SET_COOKIE, deleteSessionCookie.toString());
+
+    if(customUserService.DeleteUser(principal, deleteRequest.get("LoginId")
+        ,deleteRequest.get("Password"))){
+      result.put("result", true);
+    }else{
+      result.put("false", false);
     }
 
     return ResponseEntity.ok(result);
   }
 
   //회원 정보 수정
+  @PutMapping("/update")
+  public ResponseEntity<?> UpdateUserInfo(@AuthenticationPrincipal Object principal,
+      @RequestBody UserDTO user){
+    Map<String,Object> result=new HashMap<>();
+    User updateUser=customUserService.UpdateUser((CustomUserDetails)principal,user);
 
+    if(updateUser==null) {
+      result.put("result",false);
+      return ResponseEntity.ok(result);
+    }else {
+      result.put("result", true);
+      result.put("updateUser", userMapper.toDTO(updateUser));
+      return ResponseEntity.ok(result);
+    }
+  }
 
   //회원 정보 읽기
   @GetMapping("/info")

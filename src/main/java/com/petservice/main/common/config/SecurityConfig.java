@@ -64,9 +64,9 @@ public class SecurityConfig{
     http.csrf((auth) -> auth.disable());
     http.formLogin((auth) -> auth.disable());
     http.httpBasic((auth) -> auth.disable());
-    http.addFilterBefore(new JwtFilter(jwtService,userRepository), UsernamePasswordAuthenticationFilter.class);
+    http.addFilterBefore(new JwtFilter(jwtService), UsernamePasswordAuthenticationFilter.class);
     http.oauth2Login(oauth2 -> oauth2
-        .loginPage("/login")
+        .loginPage("/user/login")
         .userInfoEndpoint((userInfo)->userInfo.userService(oauth2Service()))
       .successHandler(oauth2SuccessHandler())
       .authorizationEndpoint(authEndpoint->authEndpoint.baseUri("/oauth2/authorization"))
@@ -75,7 +75,7 @@ public class SecurityConfig{
     http.sessionManagement(
       (session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
     http.authorizeHttpRequests(auth -> auth
-      .requestMatchers("/api/user/**","/oauth2/**","/**").permitAll()
+      .requestMatchers("/user/**","/api/user/**","/oauth2/**","/**").permitAll()
       .anyRequest().authenticated()
     );
 
