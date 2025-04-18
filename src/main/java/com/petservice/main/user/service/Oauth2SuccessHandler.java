@@ -25,7 +25,7 @@ public class Oauth2SuccessHandler implements AuthenticationSuccessHandler {
   private JwtService jwtService;
   @Autowired
   private RefreshTokenServiceInterface refreshTokenService;
-  private final String redirect="/info";
+  private final String redirect="/user/info";
   private static final Long JWT_EXPIRATION = 1000L * 60 * 60;
 
   //구글 로그인 성공 시 처리(헤더에 토큰들만 삽입)
@@ -37,7 +37,7 @@ public class Oauth2SuccessHandler implements AuthenticationSuccessHandler {
     String email = oAuth2User.getAttribute("email");
     String name = oAuth2User.getAttribute("name");
 
-    String accessToken=jwtService.createAccessToken(email,
+    String accessToken=jwtService.createAccessToken(email,name,
       authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority)
         .collect(Collectors.joining()));
     RefreshToken refreshTokenEntity =refreshTokenService.createRefreshToken(email);

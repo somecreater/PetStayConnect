@@ -3,11 +3,12 @@ export const API_ENDPOINTS = {
   auth:{
     refresh:`${API_BASE_URL}/api/user/refresh`,
     register: `${API_BASE_URL}/api/user/register`,
+    delete: `${API_BASE_URL}/api/user/delete`,
+    update: `${API_BASE_URL}/api/user/update`,
     login: `${API_BASE_URL}/api/user/login`,
     logout: `${API_BASE_URL}/api/user/logout`,
     info: `${API_BASE_URL}/api/user/info`,
     detail: `${API_BASE_URL}/api/user/detailInfo`,
-    delete: `${API_BASE_URL}/api/user/delete`
   },
   oauth2Google:{
     googleLogin:`${API_BASE_URL}/oauth2/authorization/google`

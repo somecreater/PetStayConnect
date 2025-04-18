@@ -1,7 +1,9 @@
 import React from 'react';
 import UserInfo from '../component/UserInfo';
-import '../../common/Css/common.css';
 import LogoutButton from '../component/LogoutButton';
+import UpdateButton from '../component/UpdateButton';
+import DeleteButton from '../component/DeleteButton';
+import '../../common/Css/common.css';
 
 function UserInfoPage(props){
   
@@ -11,6 +13,8 @@ function UserInfoPage(props){
 
         <UserInfo/>
         <LogoutButton/>
+        <UpdateButton/>
+        <DeleteButton/>
         
       </div>
     </>

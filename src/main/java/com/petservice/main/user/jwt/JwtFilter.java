@@ -1,8 +1,6 @@
 package com.petservice.main.user.jwt;
 
 import com.petservice.main.user.database.dto.CustomUserDetails;
-import com.petservice.main.user.database.entity.User;
-import com.petservice.main.user.database.repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -13,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -25,7 +22,6 @@ import java.io.IOException;
 public class JwtFilter extends OncePerRequestFilter {
 
   private final JwtService jwtService;
-  private final UserRepository userRepository;
   private static final String[] WITHOUT_TOKEN_URL={
       "/api/user/login",
       "/api/user/register",
@@ -74,17 +70,12 @@ public class JwtFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
         return;
       }
+      //로그인 아이디
+      String LoginId = jwtService.getLoginId(token);
+      String role=jwtService.getRole(token);
+      String Username=jwtService.getUsername(token);
 
-      String username = jwtService.getUsername(token);
-      User user = userRepository.findByUserLoginId(username).orElse(null);
-
-      if (user == null) {
-        log.info("User is null");
-        filterChain.doFilter(request, response);
-        return;
-      }
-
-      CustomUserDetails customUserDetails = new CustomUserDetails(user);
+      CustomUserDetails customUserDetails = new CustomUserDetails(LoginId,Username,role);
 
       Authentication authentication = new UsernamePasswordAuthenticationToken(customUserDetails, null,
               customUserDetails.getAuthorities());

@@ -4,6 +4,7 @@ import axios from 'axios';
 import { API_ENDPOINTS, createHeaders   } from '../../common/Api/Api';
 import RefreshApi from '../../common/Api/RefreshApi';
 import TextInput from '../../common/Ui/TextInput';
+import PasswordInput from '../../common/Ui/PasswordInput';
 import Button from '../../common/Ui/Button';
 import { useUser } from '../../common/Context/UserContext';
 import '../../common/Css/common.css';
@@ -24,7 +25,7 @@ function LoginForm(props){
       );
       if(response.data.authenticated){
         console.log('login success');
-        navigate('/info');
+        navigate('/user/info');
       }else{
         console.log('login fail');
       }
@@ -41,7 +42,7 @@ function LoginForm(props){
     return(
         <>
           <div>
-            <form className='LoginForm' onSubmit={handleLogin}>
+            <form className='UserLoginForm' onSubmit={handleLogin}>
               <TextInput 
                 classtext={'LoginIdInput'}
                 name={'username'} 
@@ -49,7 +50,7 @@ function LoginForm(props){
                 placeholderText={'아이디를 입력하시오'} 
                 onChange={(e)=>{setUsername(e.target.value)}}
               />
-              <TextInput
+              <PasswordInput
                 classtext={'PasswordInput'}
                 name={'password'} 
                 value={password} 
@@ -71,7 +72,7 @@ function LoginForm(props){
                 <Button
                   classtext={'RegisterButton'} 
                   type={'button'} 
-                  onClick={(e)=>{navigate('/register')}} 
+                  onClick={(e)=>{navigate('/user/register')}} 
                   title={'회원가입'}/>
               </div>
             </form>

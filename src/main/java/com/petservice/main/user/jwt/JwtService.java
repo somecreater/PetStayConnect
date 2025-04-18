@@ -25,7 +25,7 @@ public class JwtService {
         Jwts.SIG.HS256.key().build().getAlgorithm());
   }
 
-  public String getUsername(String token) {
+  public String getLoginId(String token) {
     return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload()
         .get("userLoginId", String.class);
   }
@@ -33,6 +33,11 @@ public class JwtService {
   public String getRole(String token) {
     return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload()
         .get("role", String.class);
+  }
+
+  public String getUsername(String token) {
+    return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload()
+        .get("username", String.class);
   }
 
   public String getTokenType(String token){
@@ -45,16 +50,16 @@ public class JwtService {
         .getExpiration().before(new Date());
   }
 
-  public String createAccessToken(String username, String role) {
-    return createJwt(username, role, accessTokenDurationMs,"ACCESS");
+  public String createAccessToken(String LoginId, String UserName, String role) {
+    return createJwt(LoginId, role, UserName, accessTokenDurationMs,"ACCESS");
   }
 
-  public String createRefreshToken(String username, String role) {
-    return createJwt(username, role, refreshTokenDurationMs, "REFRESH");
+  public String createRefreshToken(String LoginId, String UserName, String role) {
+    return createJwt(LoginId, role, UserName, refreshTokenDurationMs, "REFRESH");
   }
 
-  public String createJwt(String userLoginId, String role, Long expiredMs, String tokenType) {
-    return Jwts.builder().claim("userLoginId", userLoginId).claim("role", role)
+  public String createJwt(String userLoginId, String role, String UserName, Long expiredMs, String tokenType) {
+    return Jwts.builder().claim("userLoginId", userLoginId).claim("role", role).claim("username",UserName)
         .claim("tokenType", tokenType).issuedAt(new Date(System.currentTimeMillis()))
         .expiration(new Date(System.currentTimeMillis() + expiredMs)).signWith(secretKey).compact();
   }

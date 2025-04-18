@@ -63,6 +63,6 @@ app:
     enabled: ${APP_CORS_ENABLED:""}
   jwt:
     access-token:
-      expiration: ${APP_JWT_ACCESS_TOKEN_EXPIRATION:3600000}
+      expiration: ${APP_JWT_ACCESS_TOKEN_EXPIRATION:900000}
     refresh-token:
-      expiration: ${APP_JWT_REFRESH_TOKEN_EXPIRATION:2592000000}
+      expiration: ${APP_JWT_REFRESH_TOKEN_EXPIRATION:12096000}
