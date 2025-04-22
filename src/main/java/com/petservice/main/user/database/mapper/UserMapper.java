@@ -88,4 +88,22 @@ public class UserMapper {
     }
     return userdto;
   }
+  //리스트 정보는 제외
+  public UserDTO toBasicDTO(User user){
+    UserDTO userdto=new UserDTO();
+    userdto.setId(user.getId());
+    userdto.setUserLoginId(user.getUserLoginId());
+    userdto.setName(user.getName());
+    userdto.setEmail(user.getEmail());
+    userdto.setRole(user.getRole());
+    userdto.setPhone(user.getPhone());
+    userdto.setLoginType(user.getLoginType());
+    userdto.setPetNumber(user.getPetNumber());
+    userdto.setCreateAt(user.getCreatedAt());
+    userdto.setUpdateAt(user.getUpdatedAt());
+    if(user.getPetBusiness()!=null) {
+      userdto.setPetBusinessDTO(petBusinessMapper.toDTO(user.getPetBusiness()));
+    }
+    return userdto;
+  }
 }

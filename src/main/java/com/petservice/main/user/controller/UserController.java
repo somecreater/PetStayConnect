@@ -194,10 +194,12 @@ public class UserController {
 
     User newuser= customUserService.registerUser(user);
     UserDTO newuserDto=userMapper.toDTO(newuser);
-
-    result.put("result",true);
-    result.put("UserInfo",newuserDto);
-
+    if(newuserDto!=null) {
+      result.put("result", true);
+      result.put("UserInfo", newuserDto);
+    }else{
+      result.put("result", false);
+    }
     return  ResponseEntity.ok(result);
   }
 
@@ -306,12 +308,12 @@ public class UserController {
       result.put("auth",false);
       return ResponseEntity.ok(result);
     }
+    User user=customUserService.getUserFromPrincipal(principal);
 
     UserDTO userDetailInfo=userMapper
-        .toDTO(customUserService.getUserFromPrincipal(principal));
+        .toBasicDTO(user);
     result.put("auth",true);
     result.put("userDetail",userDetailInfo);
-
     return ResponseEntity.ok(result);
   }
 }

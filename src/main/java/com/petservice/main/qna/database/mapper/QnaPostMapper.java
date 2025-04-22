@@ -51,4 +51,19 @@ public class QnaPostMapper {
     }
     return qnaPostDTO;
   }
+
+  public QnaPostDTO toBasicDTO(QnaPost qnaPost){
+    QnaPostDTO qnaPostDTO=new QnaPostDTO();
+    qnaPostDTO.setId(qnaPost.getId());
+    qnaPostDTO.setCategory(qnaPost.getCategory());
+    qnaPostDTO.setTitle(qnaPost.getTitle());
+    qnaPostDTO.setContent(qnaPost.getContent());
+    qnaPostDTO.setViewCount(qnaPost.getViewCount());
+    qnaPostDTO.setCreatedAt(qnaPost.getCreatedAt());
+    qnaPostDTO.setUpdatedAt(qnaPost.getUpdatedAt());
+    if(qnaPost.getUser()!=null){
+      qnaPostDTO.setUserId(qnaPost.getUser().getId());
+    }
+    return qnaPostDTO;
+  }
 }
