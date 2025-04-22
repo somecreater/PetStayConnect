@@ -17,7 +17,7 @@ public class QnaPost extends TimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
@@ -32,9 +32,5 @@ public class QnaPost extends TimeEntity {
 
     @Column(name = "view_count")
     private Integer viewCount = 0;
-
-    @Column(name = "is_deleted", nullable = false)
-    private Boolean isDeleted = false;
-
 
 }
