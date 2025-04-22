@@ -5,6 +5,11 @@ import com.petservice.main.user.database.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
@@ -17,8 +22,9 @@ public class QnaPost extends TimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "user_id", nullable = true)
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     private User user;
 
     @Column(nullable = false, length = 200)
@@ -32,5 +38,8 @@ public class QnaPost extends TimeEntity {
 
     @Column(name = "view_count")
     private Integer viewCount = 0;
+
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY)
+    private List<QnaAnswer> qnaAnswerList = new ArrayList<>();
 
 }

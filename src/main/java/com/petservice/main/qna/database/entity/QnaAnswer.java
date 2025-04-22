@@ -5,6 +5,8 @@ import com.petservice.main.user.database.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 
 @Entity
@@ -21,8 +23,9 @@ public class QnaAnswer extends TimeEntity {
     @JoinColumn(name = "post_id", nullable = false)
     private QnaPost post;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "user_id", nullable = true)
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     private User user;
 
     @Column(columnDefinition = "TEXT", nullable = false)

@@ -1,6 +1,8 @@
 package com.petservice.main.user.database.mapper;
 
 import com.petservice.main.business.database.mapper.PetBusinessMapper;
+import com.petservice.main.qna.database.mapper.QnaAnswerMapper;
+import com.petservice.main.qna.database.mapper.QnaPostMapper;
 import com.petservice.main.user.database.dto.UserDTO;
 import com.petservice.main.user.database.entity.User;
 import com.petservice.main.user.database.repository.UserRepository;
@@ -16,6 +18,9 @@ public class UserMapper {
   private final PetMapper petMapper;
   private final PetBusinessMapper petBusinessMapper;
   private final BookmarkMapper bookmarkMapper;
+  private final QnaPostMapper qnaPostMapper;
+  private final QnaAnswerMapper qnaAnswerMapper;
+
   public User toEntity(UserDTO userDTO){
     User user=new User();
     user.setId(userDTO.getId());
@@ -38,6 +43,14 @@ public class UserMapper {
     if(userDTO.getBookmarkDTOList() != null){
       user.setBookmarkList(userDTO.getBookmarkDTOList().stream()
           .map(bookmarkMapper::toEntity).toList());
+    }
+    if(userDTO.getQnaPostDTOList() != null){
+      user.setQnaPostList(userDTO.getQnaPostDTOList().stream()
+          .map(qnaPostMapper::toEntity).toList());
+    }
+    if(userDTO.getQnaAnswerDTOList() != null){
+      user.setQnaAnswerList(userDTO.getQnaAnswerDTOList().stream()
+          .map(qnaAnswerMapper::toEntity).toList());
     }
     return user;
   }
@@ -64,6 +77,14 @@ public class UserMapper {
     if(user.getBookmarkList() != null){
       userdto.setBookmarkDTOList(user.getBookmarkList().stream()
           .map(bookmarkMapper::toDTO).toList());
+    }
+    if(user.getQnaPostList() != null){
+      userdto.setQnaPostDTOList(user.getQnaPostList().stream()
+          .map(qnaPostMapper::toDTO).toList());
+    }
+    if(user.getQnaAnswerList() != null){
+      userdto.setQnaAnswerDTOList(user.getQnaAnswerList().stream()
+          .map(qnaAnswerMapper::toDTO).toList());
     }
     return userdto;
   }
