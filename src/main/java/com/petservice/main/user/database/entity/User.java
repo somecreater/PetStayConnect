@@ -2,6 +2,8 @@ package com.petservice.main.user.database.entity;
 
 import com.petservice.main.business.database.entity.PetBusiness;
 import com.petservice.main.common.database.entity.TimeEntity;
+import com.petservice.main.qna.database.entity.QnaAnswer;
+import com.petservice.main.qna.database.entity.QnaPost;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -53,6 +55,12 @@ public class User extends TimeEntity {
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<Bookmark> bookmarkList=new ArrayList<>();
+
+  @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+  private List<QnaPost> qnaPostList=new ArrayList<>();
+
+  @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+  private List<QnaAnswer> qnaAnswerList=new ArrayList<>();
 
   @OneToOne(mappedBy="user", optional=true)
   private PetBusiness petBusiness;
