@@ -1,5 +1,6 @@
 package com.petservice.main.payment.database.entity;
 
+import com.petservice.main.business.database.entity.Reservation;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
