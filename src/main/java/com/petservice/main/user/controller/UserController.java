@@ -256,7 +256,7 @@ public class UserController {
       return ResponseEntity.ok(result);
     }else {
       result.put("result", true);
-      result.put("updateUser", userMapper.toDTO(updateUser));
+      result.put("updateUser", userMapper.toBasicDTO(updateUser));
       return ResponseEntity.ok(result);
     }
   }
