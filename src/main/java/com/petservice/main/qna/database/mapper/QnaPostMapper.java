@@ -61,9 +61,6 @@ public class QnaPostMapper {
     qnaPostDTO.setViewCount(qnaPost.getViewCount());
     qnaPostDTO.setCreatedAt(qnaPost.getCreatedAt());
     qnaPostDTO.setUpdatedAt(qnaPost.getUpdatedAt());
-    if(qnaPost.getUser()!=null){
-      qnaPostDTO.setUserId(qnaPost.getUser().getId());
-    }
     return qnaPostDTO;
   }
 }

@@ -4,6 +4,7 @@ import com.petservice.main.business.database.entity.BusinessStatus;
 import com.petservice.main.business.database.entity.Varification;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,4 +27,6 @@ public class PetBusinessDTO {
   private Long petBusinessTypeId;
   private List<PetBusinessRoomDTO> petBusinessRoomDTOList=new ArrayList<>();
   private List<ReservationDTO> reservationDTOList=new ArrayList<>();
+  private LocalDateTime createdAt;
+  private LocalDateTime updatedAt;
 }

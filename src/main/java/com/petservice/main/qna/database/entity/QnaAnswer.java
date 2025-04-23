@@ -13,7 +13,6 @@ import org.hibernate.annotations.OnDeleteAction;
 @Table(name = "qna_answer")
 @Getter
 @Setter
-
 public class QnaAnswer extends TimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,7 +22,7 @@ public class QnaAnswer extends TimeEntity {
     @JoinColumn(name = "post_id", nullable = false)
     private QnaPost post;
 
-    @ManyToOne(optional = true)
+    @ManyToOne(optional = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = true)
     @OnDelete(action = OnDeleteAction.SET_NULL)
     private User user;
@@ -31,4 +30,9 @@ public class QnaAnswer extends TimeEntity {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 
+    @Column
+    public Integer score;
+
+    @Column(name = "is_adopted")
+    public Boolean isAdopted;
 }

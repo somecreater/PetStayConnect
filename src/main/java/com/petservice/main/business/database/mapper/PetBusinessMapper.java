@@ -15,6 +15,9 @@ public class PetBusinessMapper {
   private final UserRepository userRepository;
   private final PetBusinessTypeRepository petBusinessTypeRepository;
 
+  private final PetBusinessRoomMapper petBusinessRoomMapper;
+  private final ReservationMapper reservationMapper;
+
   public PetBusiness toEntity(PetBusinessDTO petBusinessDTO){
 
     PetBusiness petBusiness=new PetBusiness();
@@ -29,7 +32,8 @@ public class PetBusinessMapper {
     petBusiness.setRegistrationNumber(petBusinessDTO.getRegistrationNumber());
     petBusiness.setBankAccount(petBusinessDTO.getBankAccount());
     petBusiness.setVarification(petBusinessDTO.getVarification());
-
+    petBusiness.setCreatedAt(petBusinessDTO.getCreatedAt());
+    petBusiness.setUpdatedAt(petBusinessDTO.getUpdatedAt());
     if(petBusinessDTO.getUserId()!=null) {
       petBusiness.setUser(
           userRepository.findById(
@@ -40,7 +44,14 @@ public class PetBusinessMapper {
           petBusinessTypeRepository.findById(
               petBusinessDTO.getPetBusinessTypeId()).orElse(null));
     }
-
+    if(petBusinessDTO.getPetBusinessRoomDTOList()!=null){
+      petBusiness.setPetBusinessRoomList(petBusinessDTO.getPetBusinessRoomDTOList().stream()
+          .map(petBusinessRoomMapper::toEntity).toList());
+    }
+    if(petBusinessDTO.getReservationDTOList()!=null){
+      petBusiness.setReservationList(petBusinessDTO.getReservationDTOList().stream()
+          .map(reservationMapper::toEntity).toList());
+    }
     return petBusiness;
   }
 
@@ -58,6 +69,8 @@ public class PetBusinessMapper {
     petBusinessDTO.setRegistrationNumber(petBusiness.getRegistrationNumber());
     petBusinessDTO.setBankAccount(petBusiness.getBankAccount());
     petBusinessDTO.setVarification(petBusiness.getVarification());
+    petBusinessDTO.setCreatedAt(petBusiness.getCreatedAt());
+    petBusinessDTO.setUpdatedAt(petBusiness.getUpdatedAt());
 
     if(petBusiness.getUser()!=null){
       petBusinessDTO.setUserId(petBusiness.getUser().getId());
@@ -66,6 +79,39 @@ public class PetBusinessMapper {
       petBusinessDTO.setPetBusinessTypeName(petBusiness.getPetBusinessType().getTypeName());
       petBusinessDTO.setPetBusinessTypeId(petBusiness.getPetBusinessType().getId());
     }
+    if(petBusiness.getPetBusinessRoomList()!=null){
+      petBusinessDTO.setPetBusinessRoomDTOList(petBusiness.getPetBusinessRoomList().stream()
+          .map(petBusinessRoomMapper::toDTO).toList());
+    }
+    if(petBusiness.getReservationList()!=null){
+      petBusinessDTO.setReservationDTOList(petBusiness.getReservationList().stream()
+          .map(reservationMapper::toDTO).toList());
+    }
+
+    return petBusinessDTO;
+  }
+
+  public PetBusinessDTO toBasicDTO(PetBusiness petBusiness){
+
+    PetBusinessDTO petBusinessDTO =new PetBusinessDTO();
+    petBusinessDTO.setId(petBusiness.getId());
+    petBusinessDTO.setBusinessName(petBusiness.getBusinessName());
+    petBusinessDTO.setStatus(petBusiness.getStatus());
+    petBusinessDTO.setMinPrice(petBusiness.getMinPrice());
+    petBusinessDTO.setMaxPrice(petBusiness.getMaxPrice());
+    petBusinessDTO.setFacilities(petBusiness.getFacilities());
+    petBusinessDTO.setDescription(petBusiness.getDescription());
+    petBusinessDTO.setAvgRate(petBusiness.getAvgRate());
+    petBusinessDTO.setRegistrationNumber(petBusiness.getRegistrationNumber());
+    petBusinessDTO.setBankAccount(petBusiness.getBankAccount());
+    petBusinessDTO.setVarification(petBusiness.getVarification());
+    petBusinessDTO.setCreatedAt(petBusiness.getCreatedAt());
+    petBusinessDTO.setUpdatedAt(petBusiness.getUpdatedAt());
+    if(petBusiness.getPetBusinessType()!=null){
+      petBusinessDTO.setPetBusinessTypeName(petBusiness.getPetBusinessType().getTypeName());
+      petBusinessDTO.setPetBusinessTypeId(petBusiness.getPetBusinessType().getId());
+    }
+
     return petBusinessDTO;
   }
 }

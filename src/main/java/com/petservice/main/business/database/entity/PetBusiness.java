@@ -1,5 +1,6 @@
 package com.petservice.main.business.database.entity;
 
+import com.petservice.main.common.database.entity.TimeEntity;
 import com.petservice.main.user.database.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -13,7 +14,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-public class PetBusiness {
+public class PetBusiness extends TimeEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

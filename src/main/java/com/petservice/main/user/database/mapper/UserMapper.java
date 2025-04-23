@@ -1,8 +1,10 @@
 package com.petservice.main.user.database.mapper;
 
 import com.petservice.main.business.database.mapper.PetBusinessMapper;
+import com.petservice.main.business.database.mapper.ReservationMapper;
 import com.petservice.main.qna.database.mapper.QnaAnswerMapper;
 import com.petservice.main.qna.database.mapper.QnaPostMapper;
+import com.petservice.main.review.database.mapper.ReviewMapper;
 import com.petservice.main.user.database.dto.UserDTO;
 import com.petservice.main.user.database.entity.User;
 import com.petservice.main.user.database.repository.UserRepository;
@@ -20,6 +22,8 @@ public class UserMapper {
   private final BookmarkMapper bookmarkMapper;
   private final QnaPostMapper qnaPostMapper;
   private final QnaAnswerMapper qnaAnswerMapper;
+  private final ReservationMapper reservationMapper;
+  private final ReviewMapper reviewMapper;
 
   public User toEntity(UserDTO userDTO){
     User user=new User();
@@ -31,6 +35,7 @@ public class UserMapper {
     user.setPhone(userDTO.getPhone());
     user.setLoginType(userDTO.getLoginType());
     user.setPetNumber(userDTO.getPetNumber());
+    user.setQnaScore(userDTO.getQnaScore());
     user.setCreatedAt(userDTO.getCreateAt());
     user.setUpdatedAt(userDTO.getUpdateAt());
     if(userDTO.getPetBusinessDTO()!=null) {
@@ -52,6 +57,14 @@ public class UserMapper {
       user.setQnaAnswerList(userDTO.getQnaAnswerDTOList().stream()
           .map(qnaAnswerMapper::toEntity).toList());
     }
+    if(userDTO.getReservationDTOList() != null){
+      user.setReservationList(userDTO.getReservationDTOList().stream()
+          .map(reservationMapper::toEntity).toList());
+    }
+    if(userDTO.getReviewDTOList() != null){
+      user.setReviewList(userDTO.getReviewDTOList().stream()
+          .map(reviewMapper::toEntity).toList());
+    }
     return user;
   }
 
@@ -65,6 +78,7 @@ public class UserMapper {
     userdto.setPhone(user.getPhone());
     userdto.setLoginType(user.getLoginType());
     userdto.setPetNumber(user.getPetNumber());
+    userdto.setQnaScore(user.getQnaScore());
     userdto.setCreateAt(user.getCreatedAt());
     userdto.setUpdateAt(user.getUpdatedAt());
     if(user.getPetBusiness()!=null) {
@@ -85,6 +99,14 @@ public class UserMapper {
     if(user.getQnaAnswerList() != null){
       userdto.setQnaAnswerDTOList(user.getQnaAnswerList().stream()
           .map(qnaAnswerMapper::toDTO).toList());
+    }
+    if(user.getReservationList() != null){
+      userdto.setReservationDTOList(user.getReservationList().stream()
+          .map(reservationMapper::toDTO).toList());
+    }
+    if(user.getReviewList() != null){
+      userdto.setReviewDTOList(user.getReviewList().stream()
+          .map(reviewMapper::toDTO).toList());
     }
     return userdto;
   }

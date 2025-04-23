@@ -1,8 +1,10 @@
 package com.petservice.main.user.database.dto;
 
 import com.petservice.main.business.database.dto.PetBusinessDTO;
+import com.petservice.main.business.database.dto.ReservationDTO;
 import com.petservice.main.qna.database.dto.QnaAnswerDTO;
 import com.petservice.main.qna.database.dto.QnaPostDTO;
+import com.petservice.main.review.database.dto.ReviewDTO;
 import com.petservice.main.user.database.entity.Role;
 import com.petservice.main.user.database.entity.UserType;
 import lombok.Data;
@@ -31,4 +33,6 @@ public class UserDTO {
   private List<BookmarkDTO> bookmarkDTOList = new ArrayList<>();
   private List<QnaPostDTO> qnaPostDTOList = new ArrayList<>();
   private List<QnaAnswerDTO> qnaAnswerDTOList = new ArrayList<>();
+  private List<ReservationDTO> reservationDTOList =new ArrayList<>();
+  private List<ReviewDTO> reviewDTOList = new ArrayList<>();
 }

@@ -41,4 +41,16 @@ public class BookmarkMapper {
     return bookmarkDTO;
   }
 
+  public BookmarkDTO toBasicDTO(Bookmark bookmark){
+
+    BookmarkDTO bookmarkDTO =new BookmarkDTO();
+    bookmarkDTO.setId(bookmark.getId());
+    bookmarkDTO.setBookmarkType(bookmark.getBookmarkType());
+    bookmarkDTO.setTargetId(bookmark.getTargetId());
+    bookmarkDTO.setCreateAt(bookmark.getCreatedAt());
+    bookmarkDTO.setUpdateAt(bookmark.getUpdatedAt());
+
+    return bookmarkDTO;
+  }
+
 }

@@ -57,7 +57,7 @@ public class Reservation extends TimeEntity {
     private Payment payment;
 
     @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL)
-    private List<PetReservation> petReservations = new ArrayList<>();
+    private List<PetReservation> petReservationList = new ArrayList<>();
 
     @OneToOne(mappedBy = "reservation")
     private Review review;

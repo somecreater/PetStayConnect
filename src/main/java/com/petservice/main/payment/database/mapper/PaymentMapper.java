@@ -16,27 +16,41 @@ public class PaymentMapper {
     private final ReservationRepository reservationRepository;
 
     public Payment toEntity(PaymentDTO dto) {
+
         Payment entity = new Payment();
-
-        if (dto.getId() != null) {
-            entity.setId(dto.getId().longValue());
-        }
-
-        if (dto.getReservationId() != null) {
-            Reservation reservation = reservationRepository.findById(dto.getReservationId().longValue())
-                    .orElseThrow(() -> new IllegalArgumentException("Reservation not found"));
-            entity.setReservation(reservation);
-        }
-
+        entity.setId(dto.getId());
         entity.setAmount(dto.getAmount());
         entity.setFeeRate(dto.getFeeRate());
         entity.setServiceFee(dto.getServiceFee());
+        entity.setPaymentStatus(dto.getPaymentStatus());
         entity.setPaymentMethod(dto.getPaymentMethod());
         entity.setTransactionId(dto.getTransactionId());
         entity.setTransactionTime(dto.getTransactionTime());
+        entity.setRefundStatus(dto.getRefundStatus());
         entity.setRefundAmount(dto.getRefundAmount());
-
+        if(dto.getReservationId() != null){
+            entity.setReservation(reservationRepository.findById(dto.getReservationId()).orElse(null));
+        }
         return entity;
-
     }
+
+    public PaymentDTO toDTO(Payment payment){
+
+        PaymentDTO paymentDTO = new PaymentDTO();
+        paymentDTO.setId(payment.getId());
+        paymentDTO.setAmount(payment.getAmount());
+        paymentDTO.setFeeRate(payment.getFeeRate());
+        paymentDTO.setServiceFee(payment.getServiceFee());
+        paymentDTO.setPaymentStatus(payment.getPaymentStatus());
+        paymentDTO.setPaymentMethod(payment.getPaymentMethod());
+        paymentDTO.setTransactionId(payment.getTransactionId());
+        paymentDTO.setTransactionTime(payment.getTransactionTime());
+        paymentDTO.setPaymentStatus(payment.getPaymentStatus());
+        paymentDTO.setRefundAmount(payment.getRefundAmount());
+        if(payment.getReservation() != null){
+            paymentDTO.setReservationId(payment.getReservation().getId());
+        }
+        return paymentDTO;
+    }
+
 }
