@@ -29,7 +29,7 @@ public class Reservation extends TimeEntity {
     private PetBusiness petBusiness;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "pet_business_room_id", nullable = false)
+    @JoinColumn(name = "pet_business_room_id", nullable = true)
     private PetBusinessRoom petBusinessRoom;
 
     @Column(name = "check_in", nullable = false)
