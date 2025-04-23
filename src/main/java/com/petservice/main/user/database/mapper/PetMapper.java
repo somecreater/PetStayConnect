@@ -49,4 +49,19 @@ public class PetMapper {
     }
     return petDTO;
   }
+  public PetDTO toBasicDTO(Pet pet){
+
+    PetDTO petDTO =new PetDTO();
+    petDTO.setId(pet.getId());
+    petDTO.setName(pet.getName());
+    petDTO.setSpecies(pet.getSpecies());
+    petDTO.setBreed(pet.getBreed());
+    petDTO.setBirthDate(pet.getBirthDate());
+    petDTO.setHealthInfo(pet.getHealthInfo());
+    petDTO.setGender(pet.getGender());
+    petDTO.setCreateAt(pet.getCreatedAt());
+    petDTO.setUpdateAt(pet.getUpdatedAt());
+
+    return petDTO;
+  }
 }

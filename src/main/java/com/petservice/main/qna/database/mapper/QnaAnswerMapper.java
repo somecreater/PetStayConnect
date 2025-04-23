@@ -18,6 +18,8 @@ public class QnaAnswerMapper {
     QnaAnswer qnaAnswer=new QnaAnswer();
     qnaAnswer.setId(qnaAnswerDTO.getId());
     qnaAnswer.setContent(qnaAnswerDTO.getContent());
+    qnaAnswer.setScore(qnaAnswerDTO.getScore());
+    qnaAnswer.setIsAdopted(qnaAnswerDTO.getIsAdopted());
     qnaAnswer.setCreatedAt(qnaAnswerDTO.getCreatedAt());
     qnaAnswer.setUpdatedAt(qnaAnswerDTO.getUpdatedAt());
     if(qnaAnswerDTO.getUserId()!=null) {
@@ -34,6 +36,8 @@ public class QnaAnswerMapper {
     QnaAnswerDTO qnaAnswerDTO=new QnaAnswerDTO();
     qnaAnswerDTO.setId(qnaAnswer.getId());
     qnaAnswerDTO.setContent(qnaAnswer.getContent());
+    qnaAnswerDTO.setScore(qnaAnswer.getScore());
+    qnaAnswerDTO.setIsAdopted(qnaAnswer.getIsAdopted());
     qnaAnswerDTO.setCreatedAt(qnaAnswer.getCreatedAt());
     qnaAnswerDTO.setUpdatedAt(qnaAnswer.getUpdatedAt());
     if(qnaAnswer.getUser()!=null){
@@ -42,6 +46,19 @@ public class QnaAnswerMapper {
     if(qnaAnswer.getPost()!=null){
       qnaAnswerDTO.setPostId(qnaAnswer.getPost().getId());
     }
+    return qnaAnswerDTO;
+  }
+
+  public QnaAnswerDTO toBasicDTO(QnaAnswer qnaAnswer){
+
+    QnaAnswerDTO qnaAnswerDTO=new QnaAnswerDTO();
+    qnaAnswerDTO.setId(qnaAnswer.getId());
+    qnaAnswerDTO.setContent(qnaAnswer.getContent());
+    qnaAnswerDTO.setScore(qnaAnswer.getScore());
+    qnaAnswerDTO.setIsAdopted(qnaAnswer.getIsAdopted());
+    qnaAnswerDTO.setCreatedAt(qnaAnswer.getCreatedAt());
+    qnaAnswerDTO.setUpdatedAt(qnaAnswer.getUpdatedAt());
+
     return qnaAnswerDTO;
   }
 }

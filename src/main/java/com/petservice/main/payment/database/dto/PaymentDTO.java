@@ -10,15 +10,15 @@ import java.time.LocalDateTime;
 @Data
 public class PaymentDTO {
 
-    private Integer id;
-    private Integer reservationId;
+    private Long id;
+    private Long reservationId;
     private BigDecimal amount;
     private BigDecimal feeRate;
     private BigDecimal serviceFee;
-    private PaymentStatus paymentState;
+    private PaymentStatus paymentStatus;
     private String paymentMethod;
     private String transactionId;
     private LocalDateTime transactionTime;
-    private RefundStatus refundState;
+    private RefundStatus refundStatus;
     private BigDecimal refundAmount;
 }

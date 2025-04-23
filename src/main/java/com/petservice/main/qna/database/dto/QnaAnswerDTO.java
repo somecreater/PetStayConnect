@@ -10,6 +10,8 @@ public class QnaAnswerDTO {
   private Long postId;
   private Long userId;
   private String content;
+  private Integer score;
+  private Boolean isAdopted;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
 }
