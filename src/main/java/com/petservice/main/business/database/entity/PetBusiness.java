@@ -4,6 +4,10 @@ import com.petservice.main.user.database.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Fetch;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Table(name = "pet_business")
 @Entity
@@ -54,4 +58,11 @@ public class PetBusiness {
   @ManyToOne
   @JoinColumn(name = "business_type_id")
   private PetBusinessType petBusinessType;
+
+  @OneToMany(mappedBy = "petBusiness", fetch = FetchType.LAZY)
+  private List<PetBusinessRoom> petBusinessRoomList=new ArrayList<>();
+
+  @OneToMany(mappedBy = "petBusiness", fetch = FetchType.LAZY)
+  private List<Reservation> reservationList=new ArrayList<>();
+
 }
