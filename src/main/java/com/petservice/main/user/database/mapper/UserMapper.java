@@ -124,7 +124,7 @@ public class UserMapper {
     userdto.setCreateAt(user.getCreatedAt());
     userdto.setUpdateAt(user.getUpdatedAt());
     if(user.getPetBusiness()!=null) {
-      userdto.setPetBusinessDTO(petBusinessMapper.toDTO(user.getPetBusiness()));
+      userdto.setPetBusinessDTO(petBusinessMapper.toBasicDTO(user.getPetBusiness()));
     }
     return userdto;
   }

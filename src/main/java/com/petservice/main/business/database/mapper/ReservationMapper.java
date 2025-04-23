@@ -20,7 +20,6 @@ public class ReservationMapper {
   private final PaymentMapper paymentMapper;
   private final PetReservationMapper petReservationMapper;
   private final ReviewMapper reviewMapper;
-  private final PetBusinessRoomMapper petBusinessRoomMapper;
 
   public Reservation toEntity(ReservationDTO reservationDTO){
 

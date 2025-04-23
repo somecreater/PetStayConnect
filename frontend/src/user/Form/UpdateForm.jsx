@@ -19,6 +19,7 @@ function UpdateForm(props){
   const { user,mapUserDto,updateUser }= useUser();
 
   const [nomalUser, SetNomalUser]=useState({
+    id: user.id,
     userLoginId: user.userLoginId,
     name: user.name,
     email: user.email,
@@ -65,6 +66,7 @@ function UpdateForm(props){
 
         updateUser(mapUserDto(dto));
         SetNomalUser({
+          id:          dto.id,
           userLoginId: dto.userLoginId,
           name:        dto.name,
           email:       dto.email,
@@ -96,7 +98,7 @@ function UpdateForm(props){
       const payload={
         ...nomalUser,
         petBusinessDTO:
-        nomalUser.role === 'SERVICE_PROVIDER' ? { ...bizUser, userId: nomalUser.userLoginId } : null,
+        nomalUser.role === 'SERVICE_PROVIDER' ? { ...bizUser, userId: nomalUser.id } : null,
         petDTOList       : [],
         bookmarkDTOList  : [],
         qnaPostDTOList   : [],

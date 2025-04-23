@@ -3,13 +3,13 @@ package com.petservice.main.user.service;
 import com.petservice.main.business.database.dto.PetBusinessDTO;
 import com.petservice.main.business.database.entity.PetBusiness;
 import com.petservice.main.business.database.mapper.PetBusinessMapper;
-import com.petservice.main.business.database.mapper.PetBusinessTypeMapper;
 import com.petservice.main.business.database.repository.PetBusinessRepository;
 import com.petservice.main.business.service.Interface.BusinessServiceInterface;
 import com.petservice.main.user.database.dto.CustomUserDetails;
 import com.petservice.main.user.database.dto.UserDTO;
 import com.petservice.main.user.database.entity.Role;
 import com.petservice.main.user.database.entity.User;
+import com.petservice.main.user.database.entity.UserType;
 import com.petservice.main.user.database.mapper.UserMapper;
 import com.petservice.main.user.database.repository.UserRepository;
 import com.petservice.main.user.service.Interface.CustomUserServiceInterface;
@@ -179,8 +179,24 @@ public class UserService implements CustomUserServiceInterface, UserDetailsServi
     }
 
     existUser.setName(userDTO.getName());
-    existUser.setEmail(userDTO.getEmail());
+    if(existUser.getLoginType() != UserType.GOOGLE) {
+      existUser.setEmail(userDTO.getEmail());
+    }
     existUser.setPhone(userDTO.getPhone());
+    if(existUser.getRole() ==Role.SERVICE_PROVIDER){
+      PetBusinessDTO updatePetBusiness= userDTO.getPetBusinessDTO();
+      PetBusiness existPetBusiness= existUser.getPetBusiness();
+
+      existPetBusiness.setBusinessName(updatePetBusiness.getBusinessName());
+      existPetBusiness.setBankAccount(updatePetBusiness.getBankAccount());
+      existPetBusiness.setMinPrice(updatePetBusiness.getMinPrice());
+      existPetBusiness.setMaxPrice(updatePetBusiness.getMaxPrice());
+      existPetBusiness.setFacilities(updatePetBusiness.getFacilities());
+      existPetBusiness.setDescription(updatePetBusiness.getDescription());
+      existPetBusiness.setUpdatedAt(LocalDateTime.now());
+
+      existUser.setPetBusiness(existPetBusiness);
+    }
     existUser.setUpdatedAt(LocalDateTime.now());
     User user=userRepository.save(existUser);
 
