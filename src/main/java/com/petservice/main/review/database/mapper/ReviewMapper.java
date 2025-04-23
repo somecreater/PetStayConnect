@@ -1,7 +1,8 @@
 package com.petservice.main.review.database.mapper;
 
+import com.petservice.main.business.database.repository.ReservationRepository;
 import com.petservice.main.review.database.dto.ReviewDTO;
-import com.petservice.main.review.database.entity.ReviewEntity;
+import com.petservice.main.review.database.entity.Review;
 import com.petservice.main.user.database.repository.UserRepository;
 //import com.petservice.main.reservation.database.repository.ReservationRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,11 +14,10 @@ import org.springframework.stereotype.Component;
 public class ReviewMapper {
 
     private final UserRepository userRepository;
-//    private final ReservationRepository reservationRepository;
+    private final ReservationRepository reservationRepository;
 
-    // DTO → Entity
-    public ReviewEntity toEntity(ReviewDTO dto) {
-        ReviewEntity entity = new ReviewEntity();
+    public Review toEntity(ReviewDTO dto) {
+        Review entity = new Review();
         entity.setId(dto.getId());
         entity.setRating(dto.getRating());
         entity.setContent(dto.getContent());
@@ -27,19 +27,16 @@ public class ReviewMapper {
         entity.setPetBusinessName(dto.getPetBusinessName());
         entity.setPetBusinessLocation(dto.getPetBusinessLocation());
 
-        // FK: user
         if (dto.getUserId() != null) {
             entity.setUser(userRepository.findById(dto.getUserId()).orElse(null));
         }
-        // FK: reservation
-//        if (dto.getReservationId() != null) {
-//            entity.setReservation(reservationRepository.findById(dto.getReservationId()).orElse(null));
-//        }
+        if (dto.getReservationId() != null) {
+            entity.setReservation(reservationRepository.findById(dto.getReservationId()).orElse(null));
+        }
         return entity;
     }
 
-    // Entity → DTO
-    public ReviewDTO toDTO(ReviewEntity entity) {
+    public ReviewDTO toDTO(Review entity) {
         ReviewDTO dto = new ReviewDTO();
         dto.setId(entity.getId());
         dto.setRating(entity.getRating());
@@ -50,14 +47,27 @@ public class ReviewMapper {
         dto.setPetBusinessName(entity.getPetBusinessName());
         dto.setPetBusinessLocation(entity.getPetBusinessLocation());
 
-        // FK: user
         if (entity.getUser() != null) {
             dto.setUserId(entity.getUser().getId());
         }
-//        // FK: reservation
-//        if (entity.getReservation() != null) {
-//            dto.setReservationId(entity.getReservation().getId());
-//        }
+//         FK: reservation
+        if (entity.getReservation() != null) {
+            dto.setReservationId(entity.getReservation().getId());
+        }
+        return dto;
+    }
+
+    public ReviewDTO toBasicDTO(Review entity){
+        ReviewDTO dto = new ReviewDTO();
+        dto.setId(entity.getId());
+        dto.setRating(entity.getRating());
+        dto.setContent(entity.getContent());
+        dto.setReportCount(entity.getReportCount());
+        dto.setCreatedAt(entity.getCreatedAt());
+        dto.setUpdatedAt(entity.getUpdatedAt());
+        dto.setPetBusinessName(entity.getPetBusinessName());
+        dto.setPetBusinessLocation(entity.getPetBusinessLocation());
+
         return dto;
     }
 }

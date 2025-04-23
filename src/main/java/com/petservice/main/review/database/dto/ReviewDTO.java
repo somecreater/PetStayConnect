@@ -12,9 +12,9 @@ public class ReviewDTO {
     private Integer rating;
     private String content;
     private Integer reportCount;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
     private String petBusinessName;
     private String petBusinessLocation;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
 }
