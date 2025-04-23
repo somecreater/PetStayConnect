@@ -63,6 +63,7 @@ public class PetBusinessMapper {
       petBusinessDTO.setUserId(petBusiness.getUser().getId());
     }
     if(petBusiness.getPetBusinessType()!=null){
+      petBusinessDTO.setPetBusinessTypeName(petBusiness.getPetBusinessType().getTypeName());
       petBusinessDTO.setPetBusinessTypeId(petBusiness.getPetBusinessType().getId());
     }
     return petBusinessDTO;

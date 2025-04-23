@@ -19,5 +19,6 @@ public class PetBusinessDTO {
   private String bankAccount;
   private Varification varification;
   private Long userId;
+  private String petBusinessTypeName;
   private Long petBusinessTypeId;
 }

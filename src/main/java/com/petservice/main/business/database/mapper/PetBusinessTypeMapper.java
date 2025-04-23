@@ -39,4 +39,13 @@ public class PetBusinessTypeMapper {
     }
     return petBusinessTypeDTO;
   }
+
+  public PetBusinessTypeDTO toBasicDTO(PetBusinessType petBusinessType){
+
+    PetBusinessTypeDTO petBusinessTypeDTO =new PetBusinessTypeDTO();
+    petBusinessTypeDTO.setId(petBusinessType.getId());
+    petBusinessTypeDTO.setTypeName(petBusinessType.getTypeName());
+    petBusinessTypeDTO.setDescription(petBusinessType.getDescription());
+    return petBusinessTypeDTO;
+  }
 }
