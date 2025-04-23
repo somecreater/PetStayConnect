@@ -2,6 +2,7 @@ package com.petservice.main.business.database.entity;
 
 import com.petservice.main.common.database.entity.TimeEntity;
 import com.petservice.main.payment.database.entity.Payment;
+import com.petservice.main.review.database.entity.Review;
 import com.petservice.main.user.database.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -16,6 +17,7 @@ import java.util.List;
 @Getter
 @Setter
 public class Reservation extends TimeEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -41,8 +43,8 @@ public class Reservation extends TimeEntity {
     @Column(name = "special_requests", columnDefinition = "TEXT")
     private String specialRequests;
 
-    @Column(name = "business_reservation_info", columnDefinition = "TEXT")
-    private String businessReservationInfo;
+    @Column(name = "business_request_info", columnDefinition = "TEXT")
+    private String businessRequestInfo;
 
     @Column(nullable = false)
     private Integer period;
@@ -51,10 +53,13 @@ public class Reservation extends TimeEntity {
     @Column(nullable = false)
     private ReservationStatus status;
 
-    @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL)
-    private List<Payment> payments = new ArrayList<>();
+    @OneToOne(mappedBy = "reservation", cascade = CascadeType.ALL)
+    private Payment payment;
 
     @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL)
     private List<PetReservation> petReservations = new ArrayList<>();
+
+    @OneToOne(mappedBy = "reservation")
+    private Review review;
 
 }

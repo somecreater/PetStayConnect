@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from "react";
 import { useNavigate } from 'react-router-dom';
-import { API_ENDPOINTS, createHeaders   } from '../../common/Api/Api';
-import RefreshApi from '../../common/Api/RefreshApi';
+import ApiService from '../../common/Api/ApiService';
 import TextInput from '../../common/Ui/TextInput';
 import Button from '../../common/Ui/Button';
-import CustomP from '../../common/Ui/CusomP';
+import CusomP from '../../common/Ui/CusomP';
+import CustomLabel from '../../common/Ui/CustomLabel';
 import { useUser } from '../../common/Context/UserContext';
 import '../../common/Css/common.css';
 
@@ -14,28 +14,54 @@ import '../../common/Css/common.css';
 나중에 유저 변수, getUser 인라인 함수, 폼을 수정 하면된다.
 */
 function UpdateForm(props){
+  
   const navigate=useNavigate();
-  const { user: contextUser,resetUser,updateUser }= useUser();
+  const { user, resetUser,updateUser }= useUser();
 
-  const  [user, setUser] = useState({
-    userLoginId: '',
-    name:'',
-    email:'',
-    role: ''
+  const [nomalUser, SetNomalUser]=useState({
+    userLoginId: user.userLoginId,
+    name: user.name,
+    email: user.email,
+    phone: user.phone,
+    qnaScore: user.qnaScore,
+    loginType: user.loginType,
+    petNumber: user.petNumber,
+    role: user.role,
+    createAt: user.createAt,
+    updateAt: user.updateAt,
   });
+
+  const [bizUser,SetBizUser]=useState({
+    businessName:user.petBusinessDTO.businessName,
+    status:user.petBusinessDTO.status,
+    minPrice:user.petBusinessDTO.minPrice,
+    maxPrice:user.petBusinessDTO.maxPrice,
+    facilities:user.petBusinessDTO.facilities,
+    description:user.petBusinessDTO.description,
+    avgRate: user.petBusinessDTO.avgRate,
+    registrationNumber: user.petBusinessDTO.registrationNumber,
+    bankAccount: user.petBusinessDTO.bankAccount,
+    varification: user.petBusinessDTO.varification,
+    petBusinessTypeName: user.petBusinessDTO.petBusinessTypeName,
+    petBusinessTypeId: user.petBusinessDTO.petBusinessTypeId,
+  });
+
+  const handleChange = (e, isUpdateBiz = false) => {
+    const { name, value } = e.target;
+    isUpdateBiz
+    ? SetBizUser(prev => ({ ...prev, [name]: value })) :
+    SetNomalUser(prev => ({ ...prev, [name]: value }));
+  };
 
   const getUser = async () => {
     try{
-      const response = await RefreshApi.get(API_ENDPOINTS.auth.detail, {
-        params: { userLoginId: contextUser.userLoginId },
-        headers: createHeaders(),
-      });
+      const response = await ApiService.userService.detail(contextUser.userLoginId);
         
       if(response.data.auth){
         
         const userData = response.data.userDetail;
 
-        setUser({
+        updateUser({
           userLoginId: userData.userLoginId,
           name: userData.name,
           email: userData.email,
@@ -51,26 +77,16 @@ function UpdateForm(props){
   };
 
   useEffect(() => {
-    if (contextUser?.userLoginId) {
+    if (nomalUser.userLoginId) {
         getUser();
       }
-  }, [contextUser]);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setUser((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+  }, [nomalUser]);
 
   const handleUpdate= async(e) => {
     e.preventDefault();
     try{
 
-      const response = await RefreshApi.put(API_ENDPOINTS.auth.update, user, {
-        headers: createHeaders(),
-      });
+      const response = await ApiService.userService.update(user);
 
       if(response.data.result){
         alert('회원 정보가 성공적으로 수정되었습니다.');
@@ -92,20 +108,25 @@ function UpdateForm(props){
     }
   }
 
+
+  const isBiz = user.role === 'SERVICE_PROVIDER';
+  const isNomal = user.loginType === 'NORMAL';
   return (
     <>
       <form className="UserUpdateForm" onSubmit={handleUpdate}>
         
-        <label className="UpdateLabel" for="UserLoginId">로그인 아이디: </label>
+        <CustomLabel classtetxt={'UserInfolabel'} title={'로그인 아이디:'} for={'UserUpdateInfo'}/>
         <CustomP
-          classtext="UserLoginId"
+          classtext="UserUpdateInfo"
           title={user.userLoginId}
         />
-        <label className="UpdateLabel" for="UserRole">역할: </label>
+
+        <CustomLabel classtetxt={'UserInfolabel'} title={'역할:'} for={'UserUpdateInfo'}/>
         <CustomP
-          classtext="UserRole"
+          classtext="UserUpdateInfo"
           title={user.role}
         />
+
         <TextInput 
           classtext="NameInput"
           name="name" 
@@ -113,13 +134,30 @@ function UpdateForm(props){
           placeholderText="새로운 이름을 입력하세요" 
           onChange={handleChange}
         />
-        <TextInput 
+        {
+          isNomal ?(
+          <TextInput 
           classtext="EmailInput"
           name="email"
           value={user.email} 
           placeholderText="새로운 이메일을 입력하세요"
           onChange={handleChange}
-        />
+          />
+        ):(
+          <>
+          <CusomP classtext={'UserInfo'} title={"구글로 가입된 회원은 이메일 변경이 불가능 합니다."}/>
+          <CusomP classtext={'UserInfo'} title={user.email}/>
+          </>
+        )
+        }
+
+        {
+          isBiz && (
+            <fieldset className="BusinessUpdateInfo">
+              
+            </fieldset>
+          )
+        }
         <Button
           classtext="UserUpdateButton"
           type="submit" 
