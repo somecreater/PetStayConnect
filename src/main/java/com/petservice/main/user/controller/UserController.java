@@ -100,7 +100,7 @@ public class UserController {
       String userLoginId = loginRequest.getUsername();
       String userPassword = loginRequest.getPassword();
 
-      User user = customUserService.UserLogin(userLoginId, userPassword);
+      UserDTO user = customUserService.UserLogin(userLoginId, userPassword);
       String accessToken = jwtService.createAccessToken(user.getUserLoginId(),user.getName(), user.getRole().name());
       RefreshToken refreshTokenEntity = refreshTokenService.createRefreshToken(user.getUserLoginId());
       String refreshToken = refreshTokenEntity.getToken();
@@ -192,8 +192,7 @@ public class UserController {
       return ResponseEntity.ok(result);
     }
 
-    User newuser= customUserService.registerUser(user);
-    UserDTO newuserDto=userMapper.toDTO(newuser);
+    UserDTO newuserDto= customUserService.registerUser(user);
     if(newuserDto!=null) {
       result.put("result", true);
       result.put("UserInfo", newuserDto);
@@ -249,14 +248,14 @@ public class UserController {
   public ResponseEntity<?> UpdateUserInfo(@AuthenticationPrincipal Object principal,
       @RequestBody UserDTO user){
     Map<String,Object> result=new HashMap<>();
-    User updateUser=customUserService.UpdateUser((CustomUserDetails)principal,user);
+    UserDTO updateUser=customUserService.UpdateUser((CustomUserDetails)principal,user);
 
     if(updateUser==null) {
       result.put("result",false);
       return ResponseEntity.ok(result);
     }else {
       result.put("result", true);
-      result.put("updateUser", userMapper.toBasicDTO(updateUser));
+      result.put("updateUser", updateUser);
       return ResponseEntity.ok(result);
     }
   }
@@ -308,10 +307,8 @@ public class UserController {
       result.put("auth",false);
       return ResponseEntity.ok(result);
     }
-    User user=customUserService.getUserFromPrincipal(principal);
+    UserDTO userDetailInfo=customUserService.getUserFromPrincipal(principal);
 
-    UserDTO userDetailInfo=userMapper
-        .toBasicDTO(user);
     result.put("auth",true);
     result.put("userDetail",userDetailInfo);
     return ResponseEntity.ok(result);

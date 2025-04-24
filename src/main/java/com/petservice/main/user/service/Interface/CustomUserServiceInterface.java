@@ -5,11 +5,11 @@ import com.petservice.main.user.database.dto.UserDTO;
 import com.petservice.main.user.database.entity.User;
 
 public interface CustomUserServiceInterface {
-  public User registerUser(UserDTO userDTO);
-  public User UserLogin(String UserLoginId, String Password);
-  public User getUserFromPrincipal(CustomUserDetails userDetails);
-  public User getUserByEmail(String email);
-  public User UpdateUser(CustomUserDetails userDetails, UserDTO userDTO);
+  public UserDTO registerUser(UserDTO userDTO);
+  public UserDTO UserLogin(String UserLoginId, String Password);
+  public UserDTO getUserFromPrincipal(CustomUserDetails userDetails);
+  public UserDTO getUserByEmail(String email);
+  public UserDTO UpdateUser(CustomUserDetails userDetails, UserDTO userDTO);
   public boolean DeleteUser(CustomUserDetails userDetails, String UserLoginId, String Password);
   public boolean UserValidation(UserDTO userDTO);
 }

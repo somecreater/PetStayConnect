@@ -54,7 +54,7 @@ public class UserService implements CustomUserServiceInterface, UserDetailsServi
   //회원 가입 기능(추후 사업 타입관련 기능 구현시 서비스로 수정)
   @Override
   @Transactional
-  public User registerUser(UserDTO userDTO){
+  public UserDTO registerUser(UserDTO userDTO){
     User user=null;
     PetBusiness petBusiness=null;
     if(userRepository.findByUserLoginId(userDTO.getUserLoginId()).isPresent()){
@@ -68,41 +68,46 @@ public class UserService implements CustomUserServiceInterface, UserDetailsServi
     userDTO.setCreateAt(LocalDateTime.now());
     userDTO.setUpdateAt(LocalDateTime.now());
 
-    if(userDTO.getRole().name().compareTo("SERVICE_PROVIDER") == 0 && userDTO.getPetBusinessDTO()!=null){
+    PetBusinessDTO petBusinessDTO = userDTO.getPetBusinessDTO();
 
-      if( businessServiceInterface.existBusiness(userDTO.getPetBusinessDTO()) ||
-          !businessServiceInterface.BusinessValidation(userDTO.getPetBusinessDTO())){
-        throw new IllegalArgumentException("Business Information Invalid!!");
+    try {
+      if (userDTO.getRole() == Role.SERVICE_PROVIDER && petBusinessDTO != null) {
+
+        if (businessServiceInterface.existBusiness(petBusinessDTO) ||
+            !businessServiceInterface.BusinessValidation(petBusinessDTO)) {
+          throw new IllegalArgumentException("Business Information Invalid!!");
+        }
+
+        //먼저 유저 정보를 저장하고 사업자 정보를 저장
+        userDTO.setPetBusinessDTO(null);
+        User newuser = userMapper.toEntity(userDTO);
+        newuser.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        user = userRepository.save(newuser);
+
+        petBusinessDTO.setUserId(user.getId());
+        //나중에 수정
+        petBusinessDTO.setPetBusinessTypeId(0L);
+        petBusiness = petBusinessMapper.toEntity(petBusinessDTO);
+        petBusinessRepository.save(petBusiness);
+
+        user.setPetBusiness(petBusiness);
+
+      } else {
+        User newuser = userMapper.toEntity(userDTO);
+        newuser.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        user = userRepository.save(newuser);
       }
-
-      //먼저 유저 정보를 저장하고 사업자 정보를 저장
-      PetBusinessDTO petBusinessDTO=userDTO.getPetBusinessDTO();
-      userDTO.setPetBusinessDTO(null);
-      User newuser=userMapper.toEntity(userDTO);
-      newuser.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-      user=userRepository.save(newuser);
-
-      petBusinessDTO.setUserId(user.getId());
-      //나중에 수정
-      petBusinessDTO.setPetBusinessTypeId(0L);
-      petBusiness=petBusinessMapper.toEntity(petBusinessDTO);
-      petBusinessRepository.save(petBusiness);
-
-      user.setPetBusiness(petBusiness);
-
-    }else{
-      User newuser=userMapper.toEntity(userDTO);
-      newuser.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-      user=userRepository.save(newuser);
+    }catch (Exception e){
+      log.info(e.getMessage());
     }
 
-    return user;
+    return userMapper.toBasicDTO(user);
   }
 
   //로그인 기능
   @Override
   @Transactional(readOnly = true)
-  public User UserLogin(String UserLoginId, String Password){
+  public UserDTO UserLogin(String UserLoginId, String Password){
 
     Optional<User> userOptional=userRepository.findByUserLoginId(UserLoginId);
 
@@ -116,46 +121,34 @@ public class UserService implements CustomUserServiceInterface, UserDetailsServi
       throw new BadCredentialsException("Invalid ID or password");
     }
 
-    return user;
+    return userMapper.toBasicDTO(user);
   }
 
-  //사용자 인증 객체로 회원 정보 조회(추후 수정)
+  //사용자 인증 객체로 회원 정보 조회
   @Override
   @Transactional(readOnly = true)
-  public User getUserFromPrincipal(CustomUserDetails userDetails){
+  public UserDTO getUserFromPrincipal(CustomUserDetails userDetails){
     if (userDetails==null){
       throw new UsernameNotFoundException("User is not authenticated");
     }
+    User user = userRepository.findByUserLoginIdWithBusiness(userDetails.getUsername())
+        .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-    Optional<User> userOptional=userRepository.findByUserLoginId(userDetails.getUsername());
-
-    if(!userOptional.isPresent()){
-      log.error("User not found with LoginId: {}", userDetails.getUsername());
-      return null;
-    }
-
-    User userInformation=userOptional.get();
-    if(userInformation.getRole()==Role.SERVICE_PROVIDER){
-      PetBusiness petBusiness= petBusinessRepository.findByUser_Id(userInformation.getId());
-      petBusiness.setUser(userInformation);
-      userInformation.setPetBusiness(petBusiness);
-    }
-
-    return userInformation;
+    return userMapper.toBasicDTO(user);
   }
 
   //회원 정보 조회
   @Override
   @Transactional(readOnly = true)
-  public User getUserByEmail(String email){
-    return userRepository.findByEmail(email);
+  public UserDTO getUserByEmail(String email){
+    return userMapper.toBasicDTO(userRepository.findByEmail(email));
   }
 
   //회원 기본 정보 수정(일부 제외)
   //추후 수정 가능
   @Override
   @Transactional
-  public User UpdateUser(CustomUserDetails userDetails, UserDTO userDTO){
+  public UserDTO UpdateUser(CustomUserDetails userDetails, UserDTO userDTO){
 
     if (userDetails == null || !UserValidation(userDTO)) {
       return null;
@@ -200,7 +193,7 @@ public class UserService implements CustomUserServiceInterface, UserDetailsServi
     existUser.setUpdatedAt(LocalDateTime.now());
     User user=userRepository.save(existUser);
 
-    return user;
+    return userMapper.toBasicDTO(user);
   }
 
   //회원 탈퇴 기능(추후 수정)
@@ -215,11 +208,21 @@ public class UserService implements CustomUserServiceInterface, UserDetailsServi
 
     if(userOptional.isPresent()){
       User delete=userOptional.get();
-      if(passwordEncoder.matches(Password,delete.getPassword())) {
-        //회원의 사업자 정보, 북마크, 펫 정보 삭제(자동)
-        userRepository.deleteByUserLoginId(delete.getUserLoginId());
-      }else{
+      if(!passwordEncoder.matches(Password,delete.getPassword())) {
+
         return false;
+
+      }else{
+        //회원의 사업자 정보, 북마크, 펫 정보 삭제(자동)
+        if(delete.getRole().equals(Role.SERVICE_PROVIDER)){
+          PetBusiness deletePetBusiness=petBusinessRepository.findByUser_Id(delete.getId());
+          petBusinessRepository.deleteById(deletePetBusiness.getId());
+          userRepository.deleteByUserLoginId(delete.getUserLoginId());
+
+        }else {
+          userRepository.deleteByUserLoginId(delete.getUserLoginId());
+        }
+
       }
     }else{
       log.error("User not found with LoginId: {}", userDetails.getUsername());
