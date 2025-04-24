@@ -3,8 +3,8 @@ package com.petservice.main.user.service;
 import com.petservice.main.user.database.dto.CustomOAuth2UserDetail;
 import com.petservice.main.user.database.dto.UserDTO;
 import com.petservice.main.user.database.entity.Role;
-import com.petservice.main.user.database.entity.User;
 import com.petservice.main.user.database.entity.UserType;
+import com.petservice.main.user.database.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -23,6 +23,8 @@ public class Oauth2Service extends DefaultOAuth2UserService {
   private UserService userService;
   @Autowired
   private BCryptPasswordEncoder bCryptPasswordEncoder;
+  @Autowired
+  private UserMapper userMapper;
 
   public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
     OAuth2User oAuth2User = super.loadUser(userRequest);
@@ -31,7 +33,7 @@ public class Oauth2Service extends DefaultOAuth2UserService {
     String email = oAuth2User.getAttribute("email");
     String name = oAuth2User.getAttribute("name");
 
-    User user= userService.getUserByEmail(email);
+    UserDTO user= userService.getUserByEmail(email);
     String userNameAttributeName=userRequest.getClientRegistration().getProviderDetails()
         .getUserInfoEndpoint().getUserNameAttributeName();
 
@@ -40,7 +42,8 @@ public class Oauth2Service extends DefaultOAuth2UserService {
       user=userService.registerUser(newUserDTO);
     }
 
-    return new CustomOAuth2UserDetail(oAuth2User.getAttributes(),userNameAttributeName,user);
+    return new CustomOAuth2UserDetail(oAuth2User.getAttributes()
+        ,userNameAttributeName,userMapper.toEntity(user));
   }
 
   public UserDTO Oauth2ToDTO(OAuth2User oAuth2User){

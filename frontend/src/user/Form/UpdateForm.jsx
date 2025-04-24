@@ -178,19 +178,31 @@ function UpdateForm(props){
           isBiz && (
             <fieldset className="BusinessUpdateInfo">
               <legend>새로운 사업자 정보</legend>
+              
+              <CustomLabel classtetxt={'BusinessUpdatelabel'} title={'업체명:'} for={'BusinessUpdateInput'}/>
               <TextInput classtext="BusinessUpdateInput" name="businessName" value={bizUser.businessName}
                 placeholderText="업체명" onChange={e => handleChange(e, true)} />
+              
+              <CustomLabel classtetxt={'BusinessUpdatelabel'} title={'정산 계좌:'} for={'BusinessUpdateInput'}/>
               <TextInput classtext="BusinessUpdateInput" name="bankAccount" value={bizUser.bankAccount}
                 placeholderText="정산 계좌" onChange={e => handleChange(e, true)} />
+              
+              <CustomLabel classtetxt={'BusinessUpdatelabel'} title={'최소 요금:'} for={'BusinessUpdateInput'}/>
               <TextInput classtext="BusinessUpdateInput" name="minPrice" value={bizUser.minPrice}
                 placeholderText="최소 요금" onChange={e => handleChange(e, true)} />
+              
+              <CustomLabel classtetxt={'BusinessUpdatelabel'} title={'최대 요금:'} for={'BusinessUpdateInput'}/>
               <TextInput classtext="BusinessUpdateInput" name="maxPrice" value={bizUser.maxPrice}
                 placeholderText="최대 요금" onChange={e => handleChange(e, true)} />
+              
+              <CustomLabel classtetxt={'BusinessUpdatelabel'} title={'시설 요약(쉼표 구분):'} for={'BusinessUpdateInput'}/>
               <TextInput classtext="BusinessUpdateInput" name="facilities" value={bizUser.facilities}
                 placeholderText="시설 요약(쉼표 구분)" onChange={e => handleChange(e, true)} />
-            <textarea className="BusinessLongUpdateInput" name="description" value={bizUser.description}
-              placeholder="상세 설명" onChange={e => handleChange(e, true)} />
-            </fieldset>
+                
+              <CustomLabel classtetxt={'BusinessUpdatelabel'} title={'상세 설명:'} for={'BusinessLongUpdateInput'}/>
+              <textarea className="BusinessLongUpdateInput" name="description" value={bizUser.description}
+                placeholder="상세 설명" onChange={e => handleChange(e, true)} />
+              </fieldset>
           )
         }
         <Button

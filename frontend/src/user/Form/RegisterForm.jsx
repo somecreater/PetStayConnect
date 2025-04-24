@@ -141,18 +141,25 @@ function RegisterForm(props){
         { registerform.role === 'SERVICE_PROVIDER' && (
           <fieldset className="BusinessInfo">
             <legend>사업자 정보</legend>
+
             <TextInput classtext="BusinessNameInput" name="businessName" value={biz.businessName}
               placeholderText="업체명" onChange={e => handleChange(e, true)} />
+
             <TextInput classtext="RegistrationNumberInput" name="registrationNumber" value={biz.registrationNumber}
               placeholderText="사업자 등록번호" onChange={e => handleChange(e, true)} />
+
             <TextInput classtext="BankAccountInput" name="bankAccount" value={biz.bankAccount}
               placeholderText="정산 계좌" onChange={e => handleChange(e, true)} />
+
             <TextInput classtext="MinPriceInput" name="minPrice" value={biz.minPrice}
               placeholderText="최소 요금" onChange={e => handleChange(e, true)} />
+
             <TextInput classtext="MaxPriceInput" name="maxPrice" value={biz.maxPrice}
               placeholderText="최대 요금" onChange={e => handleChange(e, true)} />
+
             <TextInput classtext="FacilitiesInput" name="facilities" value={biz.facilities}
               placeholderText="시설 요약(쉼표 구분)" onChange={e => handleChange(e, true)} />
+
             <textarea className="DescriptionInput" name="description" value={biz.description}
               placeholder="상세 설명" onChange={e => handleChange(e, true)} />
 
