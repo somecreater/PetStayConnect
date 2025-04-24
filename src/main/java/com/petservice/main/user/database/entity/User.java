@@ -52,6 +52,9 @@ public class User extends TimeEntity {
   @Column(name="qna_score", nullable = true)
   private Integer qnaScore;
 
+  @Column
+  private Integer point;
+
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<Pet> petList=new ArrayList<>();
 
