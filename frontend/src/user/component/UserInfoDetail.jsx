@@ -36,6 +36,9 @@ function UserInfoDetail(props){
       
       <CustomLabel classtetxt={'UserInfolabel'} title={'QNA점수:'} for={'UserInfo'}/> 
       <CusomP classtext={'UserInfo'} title={user.qnaScore}/>
+
+      <CustomLabel classtetxt={'UserInfolabel'} title={'회원의 포인트:'} for={'UserInfo'}/> 
+      <CusomP classtext={'UserInfo'} title={user.point}/>
       
       <CustomLabel classtetxt={'UserInfolabel'} title={'생성일자:'} for={'UserInfo'}/> 
       <CusomP classtext={'UserInfo'} title={user.createAt}/>
