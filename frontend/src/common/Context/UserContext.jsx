@@ -9,6 +9,7 @@ const initialUser = {
   loginType: '',
   petNumber: '',
   qnaScore: 0,
+  point: 0,
   createAt: '',
   updateAt: '',
 
@@ -41,6 +42,7 @@ const mapUserDto= (dto) => {
     loginType:     dto.loginType,
     petNumber:     dto.petNumber,
     qnaScore:      dto.qnaScore,
+    point:         dto.point,
     createAt:      dto.createAt,
     updateAt:      dto.updateAt,
     role:          dto.role,

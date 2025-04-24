@@ -25,6 +25,7 @@ function UpdateForm(props){
     email: user.email,
     phone: user.phone,
     qnaScore: user.qnaScore,
+    point: user.point,
     loginType: user.loginType,
     petNumber: user.petNumber,
     role: user.role,

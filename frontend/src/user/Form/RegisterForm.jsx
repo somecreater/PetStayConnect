@@ -18,6 +18,7 @@ function RegisterForm(props){
     loginType: 'NORMAL',
     petNumber: 0,
     qnaScore: 0,
+    point: 0,
     password: '',
     confirmPassword: '',
     role: 'CUSTOMER',
