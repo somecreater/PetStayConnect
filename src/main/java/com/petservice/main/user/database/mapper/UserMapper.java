@@ -36,6 +36,7 @@ public class UserMapper {
     user.setLoginType(userDTO.getLoginType());
     user.setPetNumber(userDTO.getPetNumber());
     user.setQnaScore(userDTO.getQnaScore());
+    user.setPoint(userDTO.getPoint());
     user.setCreatedAt(userDTO.getCreateAt());
     user.setUpdatedAt(userDTO.getUpdateAt());
     if(userDTO.getPetBusinessDTO()!=null) {
@@ -79,6 +80,7 @@ public class UserMapper {
     userdto.setLoginType(user.getLoginType());
     userdto.setPetNumber(user.getPetNumber());
     userdto.setQnaScore(user.getQnaScore());
+    userdto.setPoint(user.getPoint());
     userdto.setCreateAt(user.getCreatedAt());
     userdto.setUpdateAt(user.getUpdatedAt());
     if(user.getPetBusiness()!=null) {
@@ -121,6 +123,8 @@ public class UserMapper {
     userdto.setPhone(user.getPhone());
     userdto.setLoginType(user.getLoginType());
     userdto.setPetNumber(user.getPetNumber());
+    userdto.setQnaScore(user.getQnaScore());
+    userdto.setPoint(user.getPoint());
     userdto.setCreateAt(user.getCreatedAt());
     userdto.setUpdateAt(user.getUpdatedAt());
     if(user.getPetBusiness()!=null) {

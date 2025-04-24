@@ -238,7 +238,7 @@ public class UserController {
         ,deleteRequest.get("Password"))){
       result.put("result", true);
     }else{
-      result.put("false", false);
+      result.put("result", false);
     }
 
     return ResponseEntity.ok(result);

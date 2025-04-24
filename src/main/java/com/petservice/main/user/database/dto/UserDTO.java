@@ -26,6 +26,7 @@ public class UserDTO {
   private UserType loginType;
   private Integer petNumber;
   private Integer qnaScore;
+  private Integer point;
   private LocalDateTime createAt;
   private LocalDateTime updateAt;
   private PetBusinessDTO petBusinessDTO;
