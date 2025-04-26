@@ -1,10 +1,9 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../../common/Context/UserContext';
-import { API_ENDPOINTS, createHeaders   } from '../../common/Api/Api';
-import RefreshApi from '../../common/Api/RefreshApi';
 import '../../common/Css/common.css';
 import Button from '../../common/Ui/Button';
+import ApiService from '../../common/Api/ApiService';
 
 function LogoutButton(props){
     
@@ -12,9 +11,7 @@ function LogoutButton(props){
     const { resetUser } = useUser();
     const handleLogout = async ()=>{
       try{
-        const response= await RefreshApi.post(API_ENDPOINTS.auth.logout,{
-          headers: createHeaders(),
-        });
+        const response = await ApiService.userService.logout();
   
         if(response.data.result){
           alert('로그아웃 되었습니다.');

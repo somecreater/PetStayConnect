@@ -1,7 +1,9 @@
 package com.petservice.main.user.jwt;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -46,12 +48,22 @@ public class JwtService {
   }
 
   public Boolean isExpired(String token) {
-    return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload()
-        .getExpiration().before(new Date());
+    try {
+      Jwts.parser()
+          .verifyWith(secretKey)
+          .build()
+          .parseSignedClaims(token)
+          .getPayload();
+      return false;
+    } catch (ExpiredJwtException e) {
+      return true;
+    } catch (JwtException e) {
+      return true;
+    }
   }
 
   public String createAccessToken(String LoginId, String UserName, String role) {
-    return createJwt(LoginId, role, UserName, accessTokenDurationMs,"ACCESS");
+    return createJwt(LoginId, role, UserName, accessTokenDurationMs, "ACCESS");
   }
 
   public String createRefreshToken(String LoginId, String UserName, String role) {
