@@ -35,11 +35,10 @@ public class RefreshTokenService implements RefreshTokenServiceInterface {
     User user=userRepository.findByUserLoginId(userLoginId)
         .orElseThrow(() -> new RuntimeException("User not found with LoginId: " + userLoginId));
 
-    Optional<RefreshToken> existingToken = refreshTokenRepository.findByUser(user);
-    if(existingToken.isPresent()){
-      RefreshToken refreshToken = existingToken.get();
-      refreshToken.setExpiryDate(Instant.now().plusMillis(refreshTokenDurationMs));
-      return refreshTokenRepository.save(refreshToken);
+    RefreshToken existingToken = refreshTokenRepository.findByUser_Id(user.getId());
+    if(existingToken != null){
+      existingToken.setExpiryDate(Instant.now().plusMillis(refreshTokenDurationMs));
+      return refreshTokenRepository.save(existingToken);
     }
 
     RefreshToken refreshToken=new RefreshToken();

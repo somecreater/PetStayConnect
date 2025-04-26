@@ -1,8 +1,7 @@
 import React, {useState} from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { API_ENDPOINTS, createHeaders   } from '../../common/Api/Api';
-import RefreshApi from '../../common/Api/RefreshApi';
+import { API_ENDPOINTS } from '../../common/Api/Api';
+import ApiService from '../../common/Api/ApiService';
 import TextInput from '../../common/Ui/TextInput';
 import PasswordInput from '../../common/Ui/PasswordInput';
 import Button from '../../common/Ui/Button';
@@ -19,12 +18,11 @@ function LoginForm(props){
   const handleLogin = async (e)=>{
     e.preventDefault();
     try{
-      const response = await axios.post(API_ENDPOINTS.auth.login,
-        { username, password },
-        { withCredentials: true }
-      );
-      if(response.data.authenticated){
+      const response = await ApiService.userService.login({username, password});
+      const  { authenticated, LoginUser } = response.data;
+      if(authenticated){
         console.log('login success');
+        updateUser(LoginUser);
         navigate('/user/info');
       }else{
         console.log('login fail');

@@ -3,6 +3,7 @@ package com.petservice.main.common.config;
 import com.petservice.main.user.database.repository.UserRepository;
 import com.petservice.main.user.jwt.JwtFilter;
 import com.petservice.main.user.jwt.JwtService;
+import com.petservice.main.user.service.Interface.RefreshTokenServiceInterface;
 import com.petservice.main.user.service.Oauth2Service;
 import com.petservice.main.user.service.Oauth2SuccessHandler;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,6 +21,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -40,7 +42,14 @@ public class SecurityConfig{
   private boolean corsEnabled;
 
   private final JwtService jwtService;
-  private final UserRepository userRepository;
+  private final RefreshTokenServiceInterface refreshTokenService;
+
+  @Bean
+  public WebSecurityCustomizer webSecurityCustomizer() {
+    return (web) -> web.ignoring()
+        .requestMatchers("/assets/**", "/favicon.ico", "/**.png", "/**.svg", "/**.jpg", "/**.html",
+            "/**.css", "/**.js");
+  }
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
@@ -64,7 +73,7 @@ public class SecurityConfig{
     http.csrf((auth) -> auth.disable());
     http.formLogin((auth) -> auth.disable());
     http.httpBasic((auth) -> auth.disable());
-    http.addFilterBefore(new JwtFilter(jwtService), UsernamePasswordAuthenticationFilter.class);
+    http.addFilterBefore(new JwtFilter(jwtService,refreshTokenService), UsernamePasswordAuthenticationFilter.class);
     http.oauth2Login(oauth2 -> oauth2
         .loginPage("/user/login")
         .userInfoEndpoint((userInfo)->userInfo.userService(oauth2Service()))
@@ -75,7 +84,8 @@ public class SecurityConfig{
     http.sessionManagement(
       (session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
     http.authorizeHttpRequests(auth -> auth
-      .requestMatchers("/user/**","/api/user/**","/oauth2/**","/**").permitAll()
+      .requestMatchers("/user/**","/api/user/**","/oauth2/**","/**","/vite.svg"
+         , "/favicon.ico", "/*.svg", "/*.js", "/*.css", "/asset-manifest.json").permitAll()
       .anyRequest().authenticated()
     );
 

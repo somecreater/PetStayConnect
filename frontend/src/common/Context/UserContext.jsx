@@ -12,7 +12,7 @@ const initialUser = {
   point: 0,
   createAt: '',
   updateAt: '',
-
+  role: null,
   petBusinessDTO: {
     id:'',
     businessName:'',
@@ -29,7 +29,10 @@ const initialUser = {
     petBusinessTypeName: '',
     petBusinessTypeId: '',
   },
-  role: null,
+  petDTOList: [],
+  bookmarkDTOList: [],
+  qnaPostDTOList: [],
+  qnaAnswerDTOList: [],
 };
 
 const mapUserDto= (dto) => {
@@ -94,23 +97,25 @@ export const useUser = () => useContext(UserContext);
 
 export const UserProvider = ({ children }) => {
   const [user, dispatch] = useReducer(userReducer, initialUser);
+
+  const updateUser = (newData) => {
+    const updatedUser = { ...user, ...newData };
+    dispatch({ type: 'SET_USER', payload: updatedUser });
+    sessionStorage.setItem('user', JSON.stringify(updatedUser));
+  };
   
+  const resetUser = () => {
+    dispatch({ type: 'RESET_USER' });
+    sessionStorage.removeItem('user');
+  };
+
   useEffect(() => {
-    const storedUser = localStorage.getItem('user');
+    const storedUser = sessionStorage.getItem('user');
     if (storedUser) {
       dispatch({ type: 'SET_USER', payload: JSON.parse(storedUser) });
     }
   }, []);
 
-  const updateUser = (newData) => {
-    dispatch({ type: 'SET_USER', payload: newData });
-    localStorage.setItem('user', JSON.stringify({ ...user, ...newData }));
-  };
-  
-  const resetUser = () => {
-    dispatch({ type: 'RESET_USER' });
-    localStorage.removeItem('user');
-  };
   
   return (
     <UserContext.Provider value={{ user, mapUserDto, updateUser, resetUser }}>

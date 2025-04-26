@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../../common/Context/UserContext';
-import { API_ENDPOINTS, createHeaders   } from '../../common/Api/Api';
-import RefreshApi from '../../common/Api/RefreshApi';
 import '../../common/Css/common.css';
 import Button from '../../common/Ui/Button';
 import TextInput from '../../common/Ui/TextInput';
 import PasswordInput from '../../common/Ui/PasswordInput';
+import ApiService from '../../common/Api/ApiService';
 
 function UserDeleteForm(props){
   
@@ -19,17 +18,7 @@ function UserDeleteForm(props){
     e.preventDefault();
 
     try{
-      const response = await RefreshApi.post(
-        API_ENDPOINTS.auth.delete,
-        { 
-          LoginId: userid, 
-          Password: userpass,
-        },
-        { 
-          withCredentials: true, 
-          headers: createHeaders(),
-        }
-    );
+      const response = await ApiService.userService.delete(userid,userpass);
 
       if(response.data.result){
         alert('회원 탈퇴가 완료되었습니다.');

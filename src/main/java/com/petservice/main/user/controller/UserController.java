@@ -7,6 +7,7 @@ import com.petservice.main.user.database.mapper.UserMapper;
 import com.petservice.main.user.jwt.JwtService;
 import com.petservice.main.user.service.Interface.CustomUserServiceInterface;
 import com.petservice.main.user.service.Interface.RefreshTokenServiceInterface;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,16 +48,31 @@ public class UserController {
 
   //토큰 리프레시
   @PostMapping("/refresh")
-  public ResponseEntity<?> refreshToken(@RequestBody TokenRefreshRequest refreshRequest,
+  public ResponseEntity<?> refreshToken(HttpServletRequest request,
       HttpServletResponse response) {
+
     Map<String, Object> result = new HashMap<>();
 
-    String tokenInfo = refreshRequest.getRefreshToken();
+    String tokenInfo = null;
+    if(request.getCookies() != null){
+      for (var cookie : request.getCookies()) {
+        if ("refreshToken".equals(cookie.getName())) {
+          tokenInfo = cookie.getValue();
+          break;
+        }
+      }
+    }
+    if (tokenInfo == null) {
+      result.put("result", false);
+      result.put("message", "리프레시 토큰이 쿠키에 없습니다.");
+      return new ResponseEntity<>("refresh token null", HttpStatus.BAD_REQUEST);
+    }
+
     Optional<RefreshToken> findToken = refreshTokenService.findByToken(tokenInfo);
     if (findToken.isEmpty()) {
       result.put("result", false);
       result.put("message", "토큰이 존재하지 않습니다.");
-      return ResponseEntity.ok(result);
+      return new ResponseEntity<>("refresh token null", HttpStatus.BAD_REQUEST);
     }
 
     RefreshToken refreshToken = findToken.get();
@@ -64,21 +80,21 @@ public class UserController {
     if (verifiedToken == null) {
       result.put("result", false);
       result.put("message", "토큰이 이미 만료되었습니다.");
-      return ResponseEntity.ok(result);
+      return new ResponseEntity<>("refresh token expired", HttpStatus.BAD_REQUEST);
     }
     try {
       User user = verifiedToken.getUser();
       String newAccessToken =
           jwtService.createJwt(user.getUserLoginId(), user.getRole().name(), user.getName(),
-              JWT_EXPIRATION, "ACCESS");
+          JWT_EXPIRATION, "ACCESS");
 
       ResponseCookie.ResponseCookieBuilder token =
           ResponseCookie.from("accessToken", newAccessToken);
       token.httpOnly(true);
       token.secure(true);
       token.path("/");
-      token.maxAge(JWT_EXPIRATION / 1000);
-      token.sameSite("Strict");
+      //token.maxAge(JWT_EXPIRATION / 1000);
+      token.sameSite("None");
       ResponseCookie accessCookie = token.build();
 
       response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
@@ -88,7 +104,7 @@ public class UserController {
       log.error("Token Refresh Error: {}",e.getMessage());
       result.put("result", false);
       result.put("message","토큰 생성도중 오류 발생");
-      return ResponseEntity.ok(result);
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
     }
   }
 
@@ -110,8 +126,8 @@ public class UserController {
       token.httpOnly(true);
       token.secure(true);
       token.path("/");
-      token.maxAge(JWT_EXPIRATION / 1000);
-      token.sameSite("Strict");
+      //token.maxAge(5);
+      token.sameSite("None");
       ResponseCookie accessCookie = token.build();
 
       long refreshMaxAge = refreshTokenEntity.getExpiryDate().getEpochSecond() -
@@ -120,21 +136,22 @@ public class UserController {
           refreshCookieBuilder = ResponseCookie.from("refreshToken", refreshToken);
       refreshCookieBuilder.httpOnly(true);
       refreshCookieBuilder.secure(true);
-      refreshCookieBuilder.path("/api/user/refresh");
+      refreshCookieBuilder.path("/");
       refreshCookieBuilder.maxAge(refreshMaxAge);
-      refreshCookieBuilder.sameSite("Strict");
+      refreshCookieBuilder.sameSite("None");
       ResponseCookie refreshCookie = refreshCookieBuilder.build();
 
       response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
       response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
 
       Map<String, Object> result = new HashMap<>();
-      result.put("accessToken", accessToken);
-      result.put("refreshToken", refreshToken);
+      //result.put("accessToken", accessToken);
+      //result.put("refreshToken", refreshToken);
       result.put("tokenType", "Bearer");
       result.put("authenticated", true);
       result.put("name", user.getName());
       result.put("LoginId", user.getUserLoginId());
+      result.put("LoginUser",user);
 
       return ResponseEntity.status(HttpStatus.CREATED)
         .header(HttpHeaders.SET_COOKIE, accessCookie.toString())
@@ -161,13 +178,13 @@ public class UserController {
 
       ResponseCookie deleteAccessCookie =
           ResponseCookie.from("accessToken", "").httpOnly(true).secure(true).path("/").maxAge(0)
-              .sameSite("Strict").build();
+              .sameSite("None").build();
       ResponseCookie deleteRefreshCookie =
           ResponseCookie.from("refreshToken", "").httpOnly(true).secure(true)
-              .path("/api/user/refresh").maxAge(0).sameSite("Strict").build();
+              .path("/").maxAge(0).sameSite("None").build();
       ResponseCookie deleteSessionCookie =
           ResponseCookie.from("JSESSIONID", "").httpOnly(true).secure(true)
-              .path("/").maxAge(0).sameSite("Strict").build();
+              .path("/").maxAge(0).sameSite("None").build();
 
       response.addHeader(HttpHeaders.SET_COOKIE, deleteAccessCookie.toString());
       response.addHeader(HttpHeaders.SET_COOKIE, deleteRefreshCookie.toString());
@@ -224,10 +241,10 @@ public class UserController {
             .sameSite("Strict").build();
     ResponseCookie deleteRefreshCookie =
         ResponseCookie.from("refreshToken", "").httpOnly(true).secure(true)
-            .path("/api/user/refresh").maxAge(0).sameSite("Strict").build();
+            .path("/").maxAge(0).sameSite("None").build();
     ResponseCookie deleteSessionCookie =
         ResponseCookie.from("JSESSIONID", "").httpOnly(true).secure(true)
-            .path("/").maxAge(0).sameSite("Strict").build();
+            .path("/").maxAge(0).sameSite("None").build();
 
     response.addHeader(HttpHeaders.SET_COOKIE, deleteAccessCookie.toString());
     response.addHeader(HttpHeaders.SET_COOKIE, deleteRefreshCookie.toString());
