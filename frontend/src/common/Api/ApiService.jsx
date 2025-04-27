@@ -6,10 +6,12 @@ import axios from 'axios';
 const ApiService = {
   
     userService:{
-    login: (dto) => axios.post(API_ENDPOINTS.auth.login, dto, {
-       withCredentials: true, 
+    login: (dto) => RefreshApi.post(API_ENDPOINTS.auth.login, dto, {
+      headers: createHeaders(),
+      withCredentials: true, 
     }),
-    register: (dto) => axios.post(API_ENDPOINTS.auth.register, dto, { 
+    register: (dto) => RefreshApi.post(API_ENDPOINTS.auth.register, dto, { 
+      headers: createHeaders(),
       withCredentials: true, 
     }),
 

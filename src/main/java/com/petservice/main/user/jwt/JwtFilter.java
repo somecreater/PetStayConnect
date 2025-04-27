@@ -39,6 +39,12 @@ public class JwtFilter extends OncePerRequestFilter {
   };
 
   @Override
+  protected boolean shouldNotFilter(HttpServletRequest request) {
+    // API 경로(/api/) 가 아니면 필터를 적용하지 않음
+    return !request.getRequestURI().startsWith("/api/");
+  }
+
+  @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
     FilterChain filterChain) throws ServletException, IOException {
 
@@ -115,7 +121,9 @@ public class JwtFilter extends OncePerRequestFilter {
         return;
       }
     }catch (Exception e){
+      response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
       log.error("Error JWT {}",e.getMessage());
+      return;
     }
 
     filterChain.doFilter(request, response);
