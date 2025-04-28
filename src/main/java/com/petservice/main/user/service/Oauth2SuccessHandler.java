@@ -48,7 +48,6 @@ public class Oauth2SuccessHandler implements AuthenticationSuccessHandler {
     token.httpOnly(true);
     token.secure(true);
     token.path("/");
-    token.maxAge(JWT_EXPIRATION / 1000);
     token.sameSite("Strict");
     ResponseCookie accessCookie = token.build();
 
