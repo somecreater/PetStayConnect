@@ -1,11 +1,11 @@
 package com.petservice.main.business.service;
 
 import com.petservice.main.business.database.dto.PetBusinessDTO;
-import com.petservice.main.business.service.Interface.BusinessServiceInterface;
+import com.petservice.main.business.service.Interface.PetBusinessServiceInterface;
 import org.springframework.stereotype.Service;
 
 @Service
-public class BusinessService implements BusinessServiceInterface{
+public class PetBusinessService implements PetBusinessServiceInterface {
 
   @Override
   public boolean BusinessValidation(PetBusinessDTO petBusinessDTO) {

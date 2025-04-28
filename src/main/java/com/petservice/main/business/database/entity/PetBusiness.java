@@ -20,7 +20,7 @@ public class PetBusiness extends TimeEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(name = "business_name")
+  @Column(name = "business_name", nullable = false)
   private String businessName;
 
   @Enumerated(EnumType.STRING)
@@ -42,10 +42,10 @@ public class PetBusiness extends TimeEntity {
   @Column(name = "avg_rate")
   private Integer avgRate;
 
-  @Column(name = "registration_number")
+  @Column(name = "registration_number", nullable = false, unique = true)
   private String registrationNumber;
 
-  @Column(name = "bank_account")
+  @Column(name = "bank_account", unique = true)
   private String bankAccount;
 
   @Enumerated(EnumType.STRING)
