@@ -65,14 +65,14 @@ public class UserController {
     if (tokenInfo == null) {
       result.put("result", false);
       result.put("message", "리프레시 토큰이 쿠키에 없습니다.");
-      return new ResponseEntity<>("refresh token null", HttpStatus.BAD_REQUEST);
+      return new ResponseEntity<>("refresh token null", HttpStatus.UNAUTHORIZED);
     }
 
     Optional<RefreshToken> findToken = refreshTokenService.findByToken(tokenInfo);
     if (findToken.isEmpty()) {
       result.put("result", false);
       result.put("message", "토큰이 존재하지 않습니다.");
-      return new ResponseEntity<>("refresh token null", HttpStatus.BAD_REQUEST);
+      return new ResponseEntity<>("refresh token null", HttpStatus.UNAUTHORIZED);
     }
 
     RefreshToken refreshToken = findToken.get();
@@ -80,7 +80,7 @@ public class UserController {
     if (verifiedToken == null) {
       result.put("result", false);
       result.put("message", "토큰이 이미 만료되었습니다.");
-      return new ResponseEntity<>("refresh token expired", HttpStatus.BAD_REQUEST);
+      return new ResponseEntity<>("refresh token expired", HttpStatus.UNAUTHORIZED);
     }
     try {
       User user = verifiedToken.getUser();
@@ -116,6 +116,13 @@ public class UserController {
       String userLoginId = loginRequest.getUsername();
       String userPassword = loginRequest.getPassword();
 
+      if(userLoginId.isBlank() || userPassword.isBlank()){
+        Map<String, Object> result = new HashMap<>();
+        result.put("authenticated",false);
+        result.put("message", "Login Fail");
+        return new ResponseEntity<>(result,HttpStatus.BAD_REQUEST);
+      }
+
       UserDTO user = customUserService.UserLogin(userLoginId, userPassword);
       String accessToken = jwtService.createAccessToken(user.getUserLoginId(),user.getName(), user.getRole().name());
       RefreshToken refreshTokenEntity = refreshTokenService.createRefreshToken(user.getUserLoginId());
@@ -145,8 +152,6 @@ public class UserController {
       response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
 
       Map<String, Object> result = new HashMap<>();
-      //result.put("accessToken", accessToken);
-      //result.put("refreshToken", refreshToken);
       result.put("tokenType", "Bearer");
       result.put("authenticated", true);
       result.put("name", user.getName());
@@ -160,8 +165,10 @@ public class UserController {
 
     }catch (Exception e){
       log.error("Auth Fail: {}", e.getMessage());
-      return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-          .body(Map.of("authenticated",false));
+      Map<String, Object> result = new HashMap<>();
+      result.put("authenticated",false);
+      result.put("message", "Login Fail");
+      return new ResponseEntity<>(result,HttpStatus.UNAUTHORIZED);
     }
   }
 
@@ -196,7 +203,8 @@ public class UserController {
     }catch (Exception e){
       log.error("로그아웃에 실패했습니다: {}", e.getMessage());
       result.put("result",false);
-      return ResponseEntity.ok(result);
+      result.put("message", "logout fail");
+      return new ResponseEntity<>(result,HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -206,7 +214,8 @@ public class UserController {
     Map<String,Object> result=new HashMap<>();
     if(user==null){
       result.put("result",false);
-      return ResponseEntity.ok(result);
+      result.put("message","register user fail");
+      return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
     }
 
     UserDTO newuserDto= customUserService.registerUser(user);
@@ -214,7 +223,9 @@ public class UserController {
       result.put("result", true);
       result.put("UserInfo", newuserDto);
     }else{
-      result.put("result", false);
+      result.put("result",false);
+      result.put("message","register user fail");
+      return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
     }
     return  ResponseEntity.ok(result);
   }
@@ -230,7 +241,8 @@ public class UserController {
 
     if(principal==null){
       result.put("result",false);
-      return ResponseEntity.ok(result);
+      result.put("message", "none login");
+      return new ResponseEntity<>(result,HttpStatus.UNAUTHORIZED);
     }
 
     String userLoginId = principal.getUsername();
@@ -255,6 +267,8 @@ public class UserController {
       result.put("result", true);
     }else{
       result.put("result", false);
+      result.put("message","delete user fail");
+      return new ResponseEntity<>(result,HttpStatus.BAD_REQUEST);
     }
 
     return ResponseEntity.ok(result);
@@ -269,7 +283,8 @@ public class UserController {
 
     if(updateUser==null) {
       result.put("result",false);
-      return ResponseEntity.ok(result);
+      result.put("message","update user fail");
+      return new ResponseEntity<>(result,HttpStatus.BAD_REQUEST);
     }else {
       result.put("result", true);
       result.put("updateUser", updateUser);
@@ -284,7 +299,8 @@ public class UserController {
     log.info(principal.getClass().getName());
     if(principal==null){
       result.put("auth", false);
-      return ResponseEntity.ok(result);
+      result.put("message", "none login");
+      return new ResponseEntity<>(result,HttpStatus.UNAUTHORIZED);
     }
 
     if (principal instanceof CustomOAuth2UserDetail) {
@@ -309,6 +325,7 @@ public class UserController {
       log.warn("Unknown principal type: {}", principal.getClass().getName());
       result.put("auth", false);
       result.put("message", "알 수 없는 사용자 타입");
+      return new ResponseEntity<>(result,HttpStatus.UNAUTHORIZED);
     }
 
     return ResponseEntity.ok(result);
@@ -322,7 +339,8 @@ public class UserController {
     Map<String,Object> result=new HashMap<>();
     if(principal==null||principal.getUsername().compareTo(UserLoginId)!=0){
       result.put("auth",false);
-      return ResponseEntity.ok(result);
+      result.put("message","비로그인 상태거나, 잘못된 요청입니다.");
+      return new ResponseEntity<>(result,HttpStatus.UNAUTHORIZED);
     }
     UserDTO userDetailInfo=customUserService.getUserFromPrincipal(principal);
 
