@@ -60,7 +60,7 @@ public class UserService implements CustomUserServiceInterface, UserDetailsServi
     PetBusiness petBusiness=null;
 
     if(!UserValidation(userDTO)){
-      throw new IllegalArgumentException("Data is valid");
+      throw new IllegalArgumentException("Data is not valid");
     }
 
     if(userRepository.findByUserLoginId(userDTO.getUserLoginId()).isPresent()){
@@ -117,13 +117,13 @@ public class UserService implements CustomUserServiceInterface, UserDetailsServi
 
     User user=null;
     if(userDTO == null){
-      throw new IllegalArgumentException("Data is valid");
+      throw new IllegalArgumentException("Data is not valid");
     }
 
     userDTO.setRole(Role.MANAGER);
 
     if(!UserValidation(userDTO)){
-      throw new IllegalArgumentException("Data is valid");
+      throw new IllegalArgumentException("Data is not valid");
     }
 
     if(userRepository.findByUserLoginId(userDTO.getUserLoginId()).isPresent()){
