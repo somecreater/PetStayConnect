@@ -1,4 +1,4 @@
-import { Routes, Route, unstable_HistoryRouter as HistoryRouter } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import { UserProvider } from './common/Context/UserContext';
 import './common/Api/Api'
 import './common/Api/RefreshApi';
