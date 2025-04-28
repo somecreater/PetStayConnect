@@ -19,33 +19,33 @@ function UpdateForm(props){
   const { user,mapUserDto,updateUser }= useUser();
 
   const [nomalUser, SetNomalUser]=useState({
-    id: user.id,
-    userLoginId: user.userLoginId,
-    name: user.name,
-    email: user.email,
-    phone: user.phone,
-    qnaScore: user.qnaScore,
-    point: user.point,
-    loginType: user.loginType,
-    petNumber: user.petNumber,
-    role: user.role,
-    createAt: user.createAt,
-    updateAt: user.updateAt,
+    id:           user.id,
+    userLoginId:  user.userLoginId,
+    name:         user.name,
+    email:        user.email,
+    phone:        user.phone,
+    qnaScore:     user.qnaScore,
+    point:        user.point,
+    loginType:    user.loginType,
+    petNumber:    user.petNumber,
+    role:         user.role,
+    createAt:     user.createAt,
+    updateAt:     user.updateAt,
   });
 
   const [bizUser,SetBizUser]=useState({
-    businessName:user.petBusinessDTO.businessName,
-    status:user.petBusinessDTO.status,
-    minPrice:user.petBusinessDTO.minPrice,
-    maxPrice:user.petBusinessDTO.maxPrice,
-    facilities:user.petBusinessDTO.facilities,
-    description:user.petBusinessDTO.description,
-    avgRate: user.petBusinessDTO.avgRate,
-    registrationNumber: user.petBusinessDTO.registrationNumber,
-    bankAccount: user.petBusinessDTO.bankAccount,
-    varification: user.petBusinessDTO.varification,
-    petBusinessTypeName: user.petBusinessDTO.petBusinessTypeName,
-    petBusinessTypeId: user.petBusinessDTO.petBusinessTypeId,
+    businessName:         user.petBusinessDTO?.businessName           || '',
+    status:               user.petBusinessDTO?.status                 || '',
+    minPrice:             user.petBusinessDTO?.minPrice               || '',
+    maxPrice:             user.petBusinessDTO?.maxPrice               || '',
+    facilities:           user.petBusinessDTO?.facilities             || '',
+    description:          user.petBusinessDTO?.description            || '',
+    avgRate:              user.petBusinessDTO?.avgRate                || '',
+    registrationNumber:   user.petBusinessDTO?.registrationNumber     || '',
+    bankAccount:          user.petBusinessDTO?.bankAccount            || '',
+    varification:         user.petBusinessDTO?.varification           || '',
+    petBusinessTypeName:  user.petBusinessDTO?.petBusinessTypeName    || '',
+    petBusinessTypeId:    user.petBusinessDTO?.petBusinessTypeId      || '',
   });
 
   const handleChange = (e, isUpdateBiz = false) => {
@@ -142,6 +142,7 @@ function UpdateForm(props){
           title={nomalUser.role}
         />
 
+        <CusomP classtext={'UserInfo'} title={'회원 이름:'}/>
         <TextInput 
           classtext="UserUpdateInput"
           name="name" 
@@ -151,6 +152,8 @@ function UpdateForm(props){
         />
         {
           isNomal ?(
+          <>
+          <CusomP classtext={'UserInfo'} title={'회원 이메일:'}/>
           <TextInput 
           classtext="UserUpdateInput"
           name="email"
@@ -158,6 +161,7 @@ function UpdateForm(props){
           placeholderText="새로운 이메일을 입력하세요"
           onChange={handleChange}
           />
+          </>  
         ):(
           <>
           <CusomP classtext={'UserInfo'} title={"구글로 가입된 회원은 이메일 변경이 불가능 합니다."}/>
@@ -166,6 +170,7 @@ function UpdateForm(props){
         )
         }
 
+        <CusomP classtext={'UserInfo'} title={'회원 전화번호:'}/>
         <TextInput 
           classtext="UserUpdateInput"
           name="phone" 

@@ -4,7 +4,13 @@ server:
 spring:
   application:
     name: main
-
+  mvc:
+    throw-exception-if-no-handler-found: ${IS_EXCEPTION_HANDLER:""}
+    pathmatch:
+      matching-strategy: "ant_path_matcher"
+  web:
+    resources:
+      add-mappings: ${IS_MAPPING:""}
   security:
     oauth2:
       client:
