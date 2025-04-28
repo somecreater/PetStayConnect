@@ -17,7 +17,7 @@ public class PetBusinessType {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(name = "type_name")
+  @Column(name = "type_name", unique = true)
   private String typeName;
 
   @Column(columnDefinition = "TEXT")
