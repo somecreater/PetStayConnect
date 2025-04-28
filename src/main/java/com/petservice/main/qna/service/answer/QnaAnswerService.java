@@ -19,7 +19,6 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class QnaAnswerService implements QnaAnswerServiceInterface {
     private final QnaAnswerRepository answerRepo;
     private final QnaPostRepository postRepo;
@@ -27,6 +26,7 @@ public class QnaAnswerService implements QnaAnswerServiceInterface {
     private final QnaAnswerMapper mapper;
 
     @Override
+    @Transactional
     public QnaAnswerDTO createAnswer(Long postId, QnaAnswerDTO dto, String userLoginId) {
         QnaPost post = findPost(postId);
         User businessOwner = findBusinessOwner(userLoginId);
@@ -42,22 +42,24 @@ public class QnaAnswerService implements QnaAnswerServiceInterface {
     public List<QnaAnswerDTO> getAnswersByPost(Long postId) {
         return answerRepo.findByPostId(postId)
                 .stream()
-                .map(mapper::toBasicDTO)
+                .map(mapper::toDTO)
                 .collect(Collectors.toList());
     }
 
     @Override
+    @Transactional
     public QnaAnswerDTO updateAnswer(Long postId, Long answerId, QnaAnswerDTO dto, String userLoginId) {
         QnaAnswer answer = findAnswerForPost(postId, answerId);
         verifyOwner(answer, userLoginId);
 
         answer.setContent(dto.getContent());
         answer.setScore(dto.getScore());
-        // 더티 체킹으로 엔티티 자동 업데이트
+
         return mapper.toDTO(answer);
     }
 
     @Override
+    @Transactional
     public void deleteAnswer(Long postId, Long answerId, String userLoginId) {
         QnaAnswer answer = findAnswerForPost(postId, answerId);
         verifyOwner(answer, userLoginId);
@@ -66,33 +68,25 @@ public class QnaAnswerService implements QnaAnswerServiceInterface {
     }
 
     @Override
+    @Transactional
     public QnaAnswerDTO adoptAnswer(Long postId, Long answerId, String userLoginId) {
         QnaAnswer answer = findAnswerForPost(postId, answerId);
         verifyPostOwner(answer.getPost(), userLoginId);
 
-        // 중복 채택 방지
-        if (Boolean.TRUE.equals(answer.getIsAdopted())) {
-            throw new IllegalStateException("Answer already adopted");
+        if (answerRepo.existsByPostIdAndIsAdoptedTrue(postId)) {
+            throw new IllegalStateException("This question already has an adopted answer");
         }
-        // 이전 채택 상태 초기화
-        answerRepo.findByPostId(postId)
-                .stream()
-                .filter(QnaAnswer::getIsAdopted)
-                .forEach(prev -> prev.setIsAdopted(false));
 
-        // 해당 답변 채택 처리
         answer.setIsAdopted(true);
-        // 더티 체킹으로 변경 내용 자동 반영
 
-        // 사업자 보상 점수 증가
         User businessOwner = answer.getUser();
         businessOwner.setQnaScore((businessOwner.getQnaScore() == null ? 0 : businessOwner.getQnaScore()) + 1);
-        // businessOwner 영속성 컨텍스트 관리로 점수 변경 자동 저장
+
 
         return mapper.toDTO(answer);
     }
 
-    //----- 헬퍼 메서드 -----//
+    // 헬퍼 메서드
 
     private QnaPost findPost(Long postId) {
         return postRepo.findById(postId)
