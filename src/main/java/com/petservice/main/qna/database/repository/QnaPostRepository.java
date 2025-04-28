@@ -13,4 +13,5 @@ public interface QnaPostRepository extends JpaRepository<QnaPost, Long> {
 
     List<QnaPost> findByUser_UserLoginId(String userLoginId);
 
+
 }

@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface QnaPostServiceInterface {
 
-    void createPost(QnaPostDTO dto, String userLoginId);
+    QnaPostDTO createPost(QnaPostDTO dto, String userLoginId);
 
     List<QnaPostDTO> getAllPosts();
 
@@ -16,7 +16,7 @@ public interface QnaPostServiceInterface {
 
     QnaPostDTO getPostById(Long postId);
 
-    void updatePost(Long postId, QnaPostDTO dto, String userLoginId);
+    QnaPostDTO updatePost(Long postId, QnaPostDTO dto, String userLoginId);
 
     void deletePost(Long postId, String userLoginId);
 
