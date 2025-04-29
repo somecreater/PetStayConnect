@@ -1,9 +1,10 @@
 package com.petservice.main.pet.service;
 
-import com.petservice.main.pet.database.dto.PetDTO;
-import com.petservice.main.pet.database.entity.Pet;
-import com.petservice.main.pet.database.mapper.PetMapper;
-import com.petservice.main.pet.database.repository.PetRepository;
+import com.petservice.main.user.database.dto.PetDTO;
+import com.petservice.main.user.database.entity.Pet;
+import com.petservice.main.user.database.mapper.PetMapper;
+import com.petservice.main.user.database.repository.PetRepository;
+import com.petservice.main.user.database.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,8 +13,10 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+
 public class PetServiceImpl implements PetService {
 
+    private final UserRepository userRepository;
     private final PetRepository petRepository;
     private final PetMapper petMapper;
 
@@ -21,7 +24,7 @@ public class PetServiceImpl implements PetService {
     public List<PetDTO> getPetsByUserId(Long userId) {
         // 모든 펫 중 userId가 일치하는 것만 반환
         return petRepository.findAll().stream()
-                .filter(pet -> pet.getUserId() != null && pet.getUserId().equals(userId))
+                .filter(pet -> pet.getUser() != null && pet.getUser().getId().equals(userId))
                 .map(petMapper::toDTO)
                 .collect(Collectors.toList());
     }
@@ -50,7 +53,8 @@ public class PetServiceImpl implements PetService {
         existingPet.setBirthDate(petDTO.getBirthDate());
         existingPet.setHealthInfo(petDTO.getHealthInfo());
         existingPet.setGender(petDTO.getGender());
-        existingPet.setUserId(petDTO.getUserId());
+        existingPet.setUser(userRepository.findById(petDTO.getUserId()).orElse(null));
+
 
         Pet updatedPet = petRepository.save(existingPet);
         return petMapper.toDTO(updatedPet);

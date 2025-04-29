@@ -1,6 +1,6 @@
 package com.petservice.main.pet.controller;
 
-import com.petservice.main.pet.database.dto.PetDTO;
+import com.petservice.main.user.database.dto.PetDTO;
 import com.petservice.main.pet.service.PetService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
