@@ -9,7 +9,7 @@ public interface PetBusinessTypeServiceInterface {
   public PetBusinessTypeDTO registerType(PetBusinessTypeDTO petBusinessTypeDTO);
   public PetBusinessTypeDTO updateType(PetBusinessTypeDTO petBusinessTypeDTO);
   public PetBusinessTypeDTO getType(Long id);
-  public List<PetBusinessTypeDTO> getListType();
+  public List<PetBusinessTypeDTO> getTypeList();
   public boolean deleteType(Long id);
   public boolean insertValidationType(PetBusinessTypeDTO petBusinessTypeDTO);
   public boolean updateValidationType(PetBusinessTypeDTO petBusinessTypeDTO);
