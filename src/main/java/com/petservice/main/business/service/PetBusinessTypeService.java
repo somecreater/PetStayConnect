@@ -32,7 +32,7 @@ public class PetBusinessTypeService implements PetBusinessTypeServiceInterface {
       PetBusinessType petBusinessType = new PetBusinessType();
 
       if(!insertValidationType(petBusinessTypeDTO)){
-        throw new IllegalArgumentException("Data is not valid");
+        return null;
       }
 
       petBusinessType.setTypeName(petBusinessTypeDTO.getTypeName());
@@ -51,13 +51,14 @@ public class PetBusinessTypeService implements PetBusinessTypeServiceInterface {
   public PetBusinessTypeDTO updateType(PetBusinessTypeDTO petBusinessTypeDTO){
     try {
       if(!updateValidationType(petBusinessTypeDTO)){
-        throw new IllegalArgumentException("Data is not valid");
+        return null;
       }
 
       PetBusinessType petBusinessType =
-          petBusinessTypeRepository.findById(petBusinessTypeDTO.getId())
-          .orElseThrow(() -> new IllegalArgumentException("Not exist Type"));
-
+          petBusinessTypeRepository.findById(petBusinessTypeDTO.getId()).orElse(null);
+      if(petBusinessType == null){
+        return null;
+      }
       petBusinessType.setTypeName(petBusinessTypeDTO.getTypeName());
       petBusinessType.setDescription(petBusinessTypeDTO.getDescription());
 
@@ -84,7 +85,7 @@ public class PetBusinessTypeService implements PetBusinessTypeServiceInterface {
 
   @Override
   @Transactional(readOnly = true)
-  public List<PetBusinessTypeDTO> getListType() {
+  public List<PetBusinessTypeDTO> getTypeList() {
     List<PetBusinessType> petBusinessTypes = petBusinessTypeRepository.findAll();
 
     if (petBusinessTypes.isEmpty()) {
@@ -104,11 +105,11 @@ public class PetBusinessTypeService implements PetBusinessTypeServiceInterface {
       PetBusinessType petBusinessType = petBusinessTypeRepository.findById(id).orElse(null);
 
       if (petBusinessType == null) {
-        throw new IllegalArgumentException("Type is not exist");
+        return false;
       }
 
       if(petBusinessRepository.existsByPetBusinessType_Id(id)){
-        throw new IllegalArgumentException("PetBusiness is exist!!");
+        return false;
       }
 
       petBusinessTypeRepository.deleteById(id);
