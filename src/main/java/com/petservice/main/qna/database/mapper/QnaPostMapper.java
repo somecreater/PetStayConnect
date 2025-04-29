@@ -20,7 +20,6 @@ public class QnaPostMapper {
     qnaPost.setCategory(qnaPostDTO.getCategory());
     qnaPost.setTitle(qnaPostDTO.getTitle());
     qnaPost.setContent(qnaPostDTO.getContent());
-    qnaPost.setViewCount(qnaPostDTO.getViewCount());
     qnaPost.setCreatedAt(qnaPostDTO.getCreatedAt());
     qnaPost.setUpdatedAt(qnaPostDTO.getUpdatedAt());
     if(qnaPostDTO.getUserId()!=null){
@@ -37,9 +36,9 @@ public class QnaPostMapper {
     QnaPostDTO qnaPostDTO=new QnaPostDTO();
     qnaPostDTO.setId(qnaPost.getId());
     qnaPostDTO.setCategory(qnaPost.getCategory());
+    qnaPostDTO.setViewCount(qnaPost.getViewCount());
     qnaPostDTO.setTitle(qnaPost.getTitle());
     qnaPostDTO.setContent(qnaPost.getContent());
-    qnaPostDTO.setViewCount(qnaPost.getViewCount());
     qnaPostDTO.setCreatedAt(qnaPost.getCreatedAt());
     qnaPostDTO.setUpdatedAt(qnaPost.getUpdatedAt());
     if(qnaPost.getUser()!=null){

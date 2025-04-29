@@ -31,8 +31,8 @@ public class QnaAnswer extends TimeEntity {
     private String content;
 
     @Column
-    public Integer score;
+    public Integer score = 0;
 
     @Column(name = "is_adopted")
-    public Boolean isAdopted;
+    public Boolean isAdopted = false;
 }

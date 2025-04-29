@@ -1,6 +1,7 @@
 package com.petservice.main.qna.service.post;
 
 import com.petservice.main.qna.database.dto.QnaPostDTO;
+import org.springframework.data.domain.Page;
 
 
 import java.util.List;
@@ -9,10 +10,7 @@ public interface QnaPostServiceInterface {
 
     QnaPostDTO createPost(QnaPostDTO dto, String userLoginId);
 
-    List<QnaPostDTO> getAllPosts();
-
     List<QnaPostDTO> getPostsByUserLoginId(String userLoginId);
-
 
     QnaPostDTO getPostById(Long postId);
 
@@ -20,5 +18,5 @@ public interface QnaPostServiceInterface {
 
     void deletePost(Long postId, String userLoginId);
 
-
+    Page<QnaPostDTO> getPostsPage(int page, int size);
 }

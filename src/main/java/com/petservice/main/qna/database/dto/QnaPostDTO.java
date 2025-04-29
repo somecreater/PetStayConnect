@@ -1,5 +1,6 @@
 package com.petservice.main.qna.database.dto;
 
+import com.petservice.main.qna.database.entity.QnaCategory;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -12,7 +13,7 @@ public class QnaPostDTO {
   private Long userId;
   private String title;
   private String content;
-  private String category;
+  private QnaCategory category;
   private Integer viewCount;
   private List<QnaAnswerDTO> qnaAnswerDTOList = new ArrayList<>();
   private LocalDateTime createdAt;

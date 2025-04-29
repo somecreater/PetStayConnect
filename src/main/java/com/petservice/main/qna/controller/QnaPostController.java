@@ -4,6 +4,8 @@ import com.petservice.main.qna.database.dto.QnaPostDTO;
 import com.petservice.main.qna.service.post.QnaPostServiceInterface;
 import com.petservice.main.user.database.dto.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -54,8 +56,11 @@ public class QnaPostController {
 
     //전체 질문 목록 조회
     @GetMapping("/list")
-    public ResponseEntity<List<QnaPostDTO>> getAllPosts() {
-        List<QnaPostDTO> posts = qnaPostService.getAllPosts();
+    public ResponseEntity<Page<QnaPostDTO>> getPostsPage(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Page<QnaPostDTO> posts = qnaPostService.getPostsPage(page, size);
         return ResponseEntity.ok(posts);
     }
 

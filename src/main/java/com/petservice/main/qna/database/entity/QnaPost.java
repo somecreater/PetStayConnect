@@ -5,6 +5,7 @@ import com.petservice.main.user.database.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -33,13 +34,18 @@ public class QnaPost extends TimeEntity {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 
-    @Column
-    private String category;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private QnaCategory category;
 
-    @Column(name = "view_count")
+    @Column(name = "view_count", nullable=false)
     private Integer viewCount = 0;
 
-    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY)
+    @OneToMany(
+            mappedBy = "post",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY)
     private List<QnaAnswer> qnaAnswerList = new ArrayList<>();
 
 }
