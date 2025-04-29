@@ -176,11 +176,22 @@ public class UserService implements CustomUserServiceInterface, UserDetailsServi
     return userMapper.toBasicDTO(user);
   }
 
-  //회원 정보 조회
+  //회원 정보 조회 1
   @Override
   @Transactional(readOnly = true)
   public UserDTO getUserByEmail(String email){
     return userMapper.toBasicDTO(userRepository.findByEmail(email));
+  }
+
+  //회원 정보 조회 2
+  public UserDTO getUserByLoginId(String LoginId){
+    User findUser=userRepository.findByUserLoginId(LoginId).orElse(null);
+    if(findUser !=null){
+      return userMapper.toBasicDTO(findUser);
+    }
+    else{
+      return null;
+    }
   }
 
   //회원 기본 정보 수정(일부 제외)

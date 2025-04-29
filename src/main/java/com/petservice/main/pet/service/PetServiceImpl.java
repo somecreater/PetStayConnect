@@ -1,35 +1,38 @@
 package com.petservice.main.pet.service;
 
 import com.petservice.main.user.database.dto.PetDTO;
+import com.petservice.main.user.database.dto.UserDTO;
 import com.petservice.main.user.database.entity.Pet;
-import com.petservice.main.user.database.entity.User;
 import com.petservice.main.user.database.mapper.PetMapper;
+import com.petservice.main.user.database.mapper.UserMapper;
 import com.petservice.main.user.database.repository.PetRepository;
-import com.petservice.main.user.database.repository.UserRepository;
+import com.petservice.main.user.service.Interface.CustomUserServiceInterface;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class PetServiceImpl implements PetService {
+public class PetServiceImpl implements PetServiceInterface {
 
-    private final UserRepository userRepository;
     private final PetRepository petRepository;
     private final PetMapper petMapper;
+    private final UserMapper userMapper;
+    private final CustomUserServiceInterface userService;
 
     @Override
     @Transactional(readOnly = true)
-    public List<PetDTO> getPetsByUserId(Long userId) {
-        return petRepository.findAll().stream()
-                .filter(pet -> pet.getUser() != null && pet.getUser().getId().equals(userId))
-                .map(petMapper::toDTO)
-                .collect(Collectors.toList());
+    public List<PetDTO> getPetsByUserLoginId(String userLoginId) {
+
+        List<Pet> PetList= petRepository.findByUser_UserLoginId(userLoginId);
+        if(PetList.isEmpty()){
+            return null;
+        }
+        return PetList.stream().map(petMapper::toBasicDTO).toList();
     }
 
     @Override
@@ -42,17 +45,21 @@ public class PetServiceImpl implements PetService {
 
     @Override
     @Transactional
-    public PetDTO createPet(PetDTO petDTO) {
+    public PetDTO createPet(PetDTO petDTO, String userLoginId) {
         try {
             if (!insertValidationPet(petDTO)) {
                 return null;
             }
             Pet pet = petMapper.toEntity(petDTO);
+
             // user 객체 세팅
-            if (petDTO.getUserId() != null) {
-                User user = userRepository.findById(petDTO.getUserId()).orElse(null);
-                pet.setUser(user);
+            UserDTO userDTO = userService.getUserByLoginId(userLoginId);
+
+            if(userDTO == null){
+                return null;
             }
+
+            pet.setUser(userMapper.toEntity(userDTO));
             Pet savedPet = petRepository.save(pet);
             return petMapper.toDTO(savedPet);
         } catch (Exception e) {
@@ -63,12 +70,12 @@ public class PetServiceImpl implements PetService {
 
     @Override
     @Transactional
-    public PetDTO updatePet(Long petId, PetDTO petDTO) {
+    public PetDTO updatePet(PetDTO petDTO) {
         try {
             if (!updateValidationPet(petDTO)) {
                 return null;
             }
-            Pet existingPet = petRepository.findById(petId).orElse(null);
+            Pet existingPet = petRepository.findById(petDTO.getId()).orElse(null);
             if (existingPet == null) {
                 return null;
             }
@@ -78,12 +85,9 @@ public class PetServiceImpl implements PetService {
             existingPet.setBirthDate(petDTO.getBirthDate());
             existingPet.setHealthInfo(petDTO.getHealthInfo());
             existingPet.setGender(petDTO.getGender());
-            if (petDTO.getUserId() != null) {
-                User user = userRepository.findById(petDTO.getUserId()).orElse(null);
-                existingPet.setUser(user);
-            }
+
             Pet updatedPet = petRepository.save(existingPet);
-            return petMapper.toDTO(updatedPet);
+            return petMapper.toBasicDTO(updatedPet);
         } catch (Exception e) {
             log.error("Pet 수정 중 예외 발생: {}", e.getMessage());
             throw new RuntimeException("Pet 수정 실패");
@@ -94,8 +98,7 @@ public class PetServiceImpl implements PetService {
     @Transactional
     public boolean deletePet(Long petId) {
         try {
-            Pet pet = petRepository.findById(petId).orElse(null);
-            if (pet == null) {
+            if(petRepository.existsById(petId)){
                 return false;
             }
             petRepository.deleteById(petId);
@@ -107,15 +110,32 @@ public class PetServiceImpl implements PetService {
     }
 
     // --- 유효성 검사 메서드 예시 ---
+    @Override
     public boolean insertValidationPet(PetDTO petDTO) {
         return petDTO != null
                 && petDTO.getName() != null && !petDTO.getName().trim().isEmpty()
                 && petDTO.getUserId() != null;
     }
 
+    @Override
     public boolean updateValidationPet(PetDTO petDTO) {
         return petDTO != null
                 && petDTO.getId() != null
                 && petDTO.getName() != null && !petDTO.getName().trim().isEmpty();
     }
+
+    @Override
+    public boolean isUserPet(String userLoginId, Long petId){
+
+        PetDTO petDTO=getPetById(petId);
+        if(petDTO == null){
+            return false;
+        }
+        if(petDTO.getUserLoginId().compareTo(userLoginId) != 0){
+            return false;
+        }
+        return true;
+    }
+
+
 }

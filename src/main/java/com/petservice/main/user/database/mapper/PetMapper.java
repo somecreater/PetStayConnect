@@ -46,6 +46,7 @@ public class PetMapper {
     petDTO.setUpdateAt(pet.getUpdatedAt());
     if(pet.getUser() != null){
       petDTO.setUserId(pet.getUser().getId());
+      petDTO.setUserLoginId(pet.getUser().getUserLoginId());
     }
     return petDTO;
   }
