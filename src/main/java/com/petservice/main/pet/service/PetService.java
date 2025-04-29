@@ -12,7 +12,7 @@ public interface PetService {
     PetDTO updatePet(Long petId, PetDTO petDTO);
 
     // 펫 삭제
-    void deletePet(Long petId);
+    boolean deletePet(Long petId);
 
     // 특정 회원의 펫 목록 조회
     List<PetDTO> getPetsByUserId(Long userId);
