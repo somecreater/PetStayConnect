@@ -11,15 +11,18 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @RestController
-@RequestMapping("/api/qnas")
+@RequestMapping("/api/qnas/{question_id}/answer")
 @RequiredArgsConstructor
 public class QnaAnswerController {
     private final QnaAnswerServiceInterface service;
 
-    @PostMapping("/question/{question_id}/answer")
+    @PostMapping
     public ResponseEntity<?> createAnswer(
             @PathVariable("question_id") Long questionId,
             @RequestBody QnaAnswerDTO dto,
@@ -43,18 +46,43 @@ public class QnaAnswerController {
                 .body(created);
     }
 
-    @GetMapping("/answer/{answer_id}")
+    @GetMapping
     public ResponseEntity<?> listAnswers(
-            @PathVariable("answer_id") Long questionId
+            @PathVariable("question_id") Long questionId
     ) {
         List<QnaAnswerDTO> answers = service.getAnswersByPost(questionId);
         return ResponseEntity.ok(answers);
     }
 
-    @PutMapping("/answer/{answer_id}")
+    @GetMapping("/{answer_id}")
+    public ResponseEntity<?> getAnswer(
+        @PathVariable("question_id") Long questionId,
+        @PathVariable("answer_id") Long answerId){
+
+        Map<String,Object> result = new HashMap<>();
+        QnaAnswerDTO qnaAnswerDTO = service.getAnswerById(answerId);
+
+        if(qnaAnswerDTO!=null){
+            if(Objects.equals(qnaAnswerDTO.getPostId(), questionId)){
+                result.put("result", true);
+                result.put("message", "답변을 가져옵니다.");
+                result.put("answer",qnaAnswerDTO);
+            }else{
+                result.put("result", false);
+                result.put("message", "답변이 해당 질문에 존재하지 않습니다.");
+            }
+
+        }else{
+            result.put("result", false);
+            result.put("message", "답변이 존재하지 않습니다.");
+        }
+        return ResponseEntity.ok(result);
+    }
+
+    @PutMapping("/{answer_id}")
     public ResponseEntity<?> updateAnswer(
+            @PathVariable("question_id") Long questionId,
             @PathVariable("answer_id") Long answerId,
-            @RequestParam(name = "question_id") Long questionId,
             @RequestBody QnaAnswerDTO dto,
             @AuthenticationPrincipal CustomUserDetails principal
     ) {
@@ -84,10 +112,10 @@ public class QnaAnswerController {
         }
     }
 
-    @DeleteMapping("/answer/{answer_id}")
+    @DeleteMapping("/{answer_id}")
     public ResponseEntity<?> deleteAnswer(
+            @PathVariable("question_id") Long questionId,
             @PathVariable("answer_id") Long answerId,
-            @RequestParam(name = "question_id") Long questionId,
             @AuthenticationPrincipal CustomUserDetails principal
     ) {
         if (principal == null) {
@@ -111,10 +139,10 @@ public class QnaAnswerController {
         }
     }
 
-    @PostMapping("/answer/{answer_id}/accept")
+    @PostMapping("/{answer_id}/accept")
     public ResponseEntity<?> adoptAnswer(
+            @PathVariable("question_id") Long questionId,
             @PathVariable("answer_id") Long answerId,
-            @RequestParam(name = "question_id") Long questionId,
             @AuthenticationPrincipal CustomUserDetails principal
     ) {
         if (principal == null) {

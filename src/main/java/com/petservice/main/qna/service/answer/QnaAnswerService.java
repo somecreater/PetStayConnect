@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -46,6 +47,15 @@ public class QnaAnswerService implements QnaAnswerServiceInterface {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public QnaAnswerDTO getAnswerById(Long answerId){
+        Optional<QnaAnswer> qnaAnswer = answerRepo.findById(answerId);
+        if(!qnaAnswer.isPresent()){
+            return null;
+        }
+        return mapper.toDTO(qnaAnswer.get());
+    }
     @Override
     @Transactional
     public QnaAnswerDTO updateAnswer(Long postId, Long answerId, QnaAnswerDTO dto, String userLoginId) {
