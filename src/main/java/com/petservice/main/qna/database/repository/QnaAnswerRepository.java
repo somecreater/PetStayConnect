@@ -7,6 +7,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface QnaAnswerRepository extends JpaRepository<QnaAnswer,Long> {
+public interface QnaAnswerRepository extends JpaRepository<QnaAnswer, Long> {
     List<QnaAnswer> findByPostId(Long postId);
+
+    boolean existsByPostIdAndIsAdoptedTrue(Long postId);
 }

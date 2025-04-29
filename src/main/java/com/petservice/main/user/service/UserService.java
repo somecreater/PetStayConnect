@@ -4,7 +4,7 @@ import com.petservice.main.business.database.dto.PetBusinessDTO;
 import com.petservice.main.business.database.entity.PetBusiness;
 import com.petservice.main.business.database.mapper.PetBusinessMapper;
 import com.petservice.main.business.database.repository.PetBusinessRepository;
-import com.petservice.main.business.service.Interface.BusinessServiceInterface;
+import com.petservice.main.business.service.Interface.PetBusinessServiceInterface;
 import com.petservice.main.user.database.dto.CustomUserDetails;
 import com.petservice.main.user.database.dto.UserDTO;
 import com.petservice.main.user.database.entity.Role;
@@ -16,6 +16,7 @@ import com.petservice.main.user.service.Interface.CustomUserServiceInterface;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -35,7 +36,7 @@ public class UserService implements CustomUserServiceInterface, UserDetailsServi
   private final PasswordEncoder passwordEncoder;
   private final PetBusinessRepository petBusinessRepository;
 
-  private final BusinessServiceInterface businessServiceInterface;
+  private final PetBusinessServiceInterface petBusinessServiceInterface;
 
   private final UserMapper userMapper;
   private final PetBusinessMapper petBusinessMapper;
@@ -57,6 +58,11 @@ public class UserService implements CustomUserServiceInterface, UserDetailsServi
   public UserDTO registerUser(UserDTO userDTO){
     User user=null;
     PetBusiness petBusiness=null;
+
+    if(!UserValidation(userDTO)){
+      throw new IllegalArgumentException("Data is not valid");
+    }
+
     if(userRepository.findByUserLoginId(userDTO.getUserLoginId()).isPresent()){
       throw new IllegalArgumentException("LoginId already in use");
     }
@@ -73,8 +79,7 @@ public class UserService implements CustomUserServiceInterface, UserDetailsServi
     try {
       if (userDTO.getRole() == Role.SERVICE_PROVIDER && petBusinessDTO != null) {
 
-        if (businessServiceInterface.existBusiness(petBusinessDTO) ||
-            !businessServiceInterface.BusinessValidation(petBusinessDTO)) {
+        if (petBusinessServiceInterface.existBusiness(petBusinessDTO)) {
           throw new IllegalArgumentException("Business Information Invalid!!");
         }
 
@@ -99,8 +104,42 @@ public class UserService implements CustomUserServiceInterface, UserDetailsServi
       }
     }catch (Exception e){
       log.info(e.getMessage());
+      throw new RuntimeException("회원 가입 중 문제 발생!!, 다시 해주세요.");
     }
 
+    return userMapper.toBasicDTO(user);
+  }
+
+  //관리자 회원 가입
+  @Override
+  @Transactional
+  public UserDTO registerMasterUser(UserDTO userDTO){
+
+    User user=null;
+    if(userDTO == null){
+      throw new IllegalArgumentException("Data is not valid");
+    }
+
+    userDTO.setRole(Role.MANAGER);
+
+    if(!UserValidation(userDTO)){
+      throw new IllegalArgumentException("Data is not valid");
+    }
+
+    if(userRepository.findByUserLoginId(userDTO.getUserLoginId()).isPresent()){
+      throw new IllegalArgumentException("LoginId already in use");
+    }
+
+    if(userRepository.existsByEmail(userDTO.getEmail()) ||
+        userRepository.existsByPhone(userDTO.getPhone())){
+      throw new IllegalArgumentException("Email or Phone already in use");
+    }
+    userDTO.setCreateAt(LocalDateTime.now());
+    userDTO.setUpdateAt(LocalDateTime.now());
+
+    User newuser = userMapper.toEntity(userDTO);
+    newuser.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+    user = userRepository.save(newuser);
     return userMapper.toBasicDTO(user);
   }
 
@@ -231,11 +270,51 @@ public class UserService implements CustomUserServiceInterface, UserDetailsServi
     return true;
   }
 
+  @Override
   public boolean UserValidation(UserDTO userDTO){
-    if(userDTO==null){
+    try {
+      if (userDTO == null) {
+        return false;
+      }
+
+      if (isBlank(userDTO.getUserLoginId())
+          || isBlank(userDTO.getEmail())
+          || isBlank(userDTO.getRole().name())
+          || isBlank(userDTO.getName())
+          || isBlank(userDTO.getPhone())) {
+        return false;
+      }
+
+      if (userDTO.getRole().equals(Role.SERVICE_PROVIDER)) {
+        PetBusinessDTO petBusinessDTO = userDTO.getPetBusinessDTO();
+
+        if (petBusinessDTO == null) {
+          return false;
+        }
+
+        if (isBlank(petBusinessDTO.getBusinessName())
+          || isBlank(petBusinessDTO.getStatus().name())
+          || isBlank(petBusinessDTO.getAvgRate().toString())
+          || isBlank(petBusinessDTO.getRegistrationNumber())
+          || isBlank(petBusinessDTO.getBankAccount())
+          || isBlank(petBusinessDTO.getVarification().name())) {
+          return false;
+        }
+
+        if(!petBusinessServiceInterface.BusinessValidation(petBusinessDTO)){
+          return false;
+        }
+
+      }
+    }catch (Exception e){
+      log.error("회원 DTO 체크 중 에러 발생!!, {}",e.getMessage());
       return false;
     }
-    return userDTO.getUserLoginId() != null && userDTO.getEmail() != null
-      && userDTO.getRole() != null && userDTO.getName() != null && userDTO.getPhone() != null;
+    return true;
+  }
+
+  @Override
+  public boolean isBlank(String str){
+    return str == null || str.trim().isEmpty();
   }
 }

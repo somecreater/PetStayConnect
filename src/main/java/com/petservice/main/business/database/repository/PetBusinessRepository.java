@@ -9,4 +9,7 @@ import org.springframework.stereotype.Repository;
 public interface PetBusinessRepository extends JpaRepository<PetBusiness,Long> {
 
   PetBusiness findByUser_Id(Long id);
+
+  boolean existsByPetBusinessType_Id(Long id);
+
 }

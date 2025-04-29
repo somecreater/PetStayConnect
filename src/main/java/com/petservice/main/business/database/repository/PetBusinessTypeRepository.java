@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PetBusinessTypeRepository extends JpaRepository<PetBusinessType, Long> {
 
+  boolean existsByTypeName(String typeName);
+
 }
