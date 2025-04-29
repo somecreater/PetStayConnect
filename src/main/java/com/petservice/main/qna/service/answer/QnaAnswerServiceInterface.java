@@ -9,6 +9,8 @@ public interface QnaAnswerServiceInterface {
 
     List<QnaAnswerDTO> getAnswersByPost(Long postId);
 
+    QnaAnswerDTO getAnswerById(Long answerId);
+
     QnaAnswerDTO updateAnswer(Long postId, Long answerId, QnaAnswerDTO dto, String userLoginId);
 
     void deleteAnswer(Long postId, Long answerId, String userLoginId);
