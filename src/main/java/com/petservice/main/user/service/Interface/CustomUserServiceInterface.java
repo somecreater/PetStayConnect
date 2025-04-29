@@ -9,6 +9,7 @@ public interface CustomUserServiceInterface {
   public UserDTO UserLogin(String UserLoginId, String Password);
   public UserDTO getUserFromPrincipal(CustomUserDetails userDetails);
   public UserDTO getUserByEmail(String email);
+  public UserDTO getUserByLoginId(String LoginId);
   public UserDTO UpdateUser(CustomUserDetails userDetails, UserDTO userDTO);
   public boolean DeleteUser(CustomUserDetails userDetails, String UserLoginId, String Password);
   public boolean UserValidation(UserDTO userDTO);

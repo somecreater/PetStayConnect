@@ -19,4 +19,5 @@ public class PetDTO {
   private LocalDateTime createAt;
   private LocalDateTime updateAt;
   private Long userId;
+  private String userLoginId;
 }
