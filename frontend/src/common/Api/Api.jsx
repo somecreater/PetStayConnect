@@ -14,7 +14,9 @@ export const API_ENDPOINTS = {
     googleLogin:`${API_BASE_URL}/oauth2/authorization/google`
   },
   pets: `${API_BASE_URL}/api/pets`,
-  qna: `${API_BASE_URL}/api/`
+  qna: `${API_BASE_URL}/api/qnas`,
+  businesstype:`${API_BASE_URL}/api/type`,
+  
 }
 
 export const createHeaders = () => ({

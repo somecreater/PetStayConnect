@@ -64,18 +64,94 @@ const ApiService = {
   },
   qnas:{
     post:{
-      
+      register: (dto) => RefreshApi.post(API_ENDPOINTS.qna+ `/question`, dto, {
+        headers: createHeaders(),
+        withCredentials: true, 
+      }),
+      list: (page,size) => RefreshApi.get(API_ENDPOINTS.qna+ `/list`,{
+        params:{ page,size },
+        headers: createHeaders(),
+        withCredentials: true,   
+      }),
+      mine: () => RefreshApi.get(API_ENDPOINTS.qna+ `/mine`,{
+        headers: createHeaders(),
+        withCredentials: true, 
+      }),
+      detail: (question_id) => RefreshApi.get(API_ENDPOINTS.qna+ `/${question_id}`, {
+        headers: createHeaders(),
+        withCredentials: true, 
+      }),
+      update: (question_id,dto) => RefreshApi.put(API_ENDPOINTS.qna+ `/${question_id}`, dto, 
+      {
+        headers: createHeaders(),
+        withCredentials: true, 
+      }),
+      delete: (question_id) => RefreshApi.delete(API_ENDPOINTS.qna+ `/${question_id}`,{
+        headers: createHeaders(),
+        withCredentials: true, 
+      })
     },
     answer:{
-
+      register: (question_id,dto) => RefreshApi.post(API_ENDPOINTS.qna+ `/${question_id}/answer`, dto,
+      {
+        headers: createHeaders(),
+        withCredentials: true,  
+      }),
+      list: (question_id) => RefreshApi.get(API_ENDPOINTS.qna+ `/${question_id}/answer`,{
+        headers: createHeaders(),
+        withCredentials: true,  
+      }),
+      detaiil: (question_id,answer_id) => RefreshApi.get(API_ENDPOINTS.qna+ `/${question_id}/answer/${answer_id}`,
+      {
+        headers: createHeaders(),
+        withCredentials: true,
+      }),
+      update: (question_id,answer_id,dto) => RefreshApi.put(API_ENDPOINTS.qna+ `/${question_id}/answer/${answer_id}`,
+      dto,
+      {
+        headers: createHeaders(),
+        withCredentials: true,
+      }),
+      delete: (question_id,answer_id) => RefreshApi.delete(API_ENDPOINTS.qna+ `/${question_id}/answer/${answer_id}`,
+      {
+        headers: createHeaders(),
+        withCredentials: true,
+      }),
+      accept: (question_id,answer_id) => RefreshApi.post(API_ENDPOINTS.qna+ `/${question_id}/answer/${answer_id}/accept`,
+      {
+        headers: createHeaders(),
+        withCredentials: true,
+      })
     }
   },
   businessTypeService:{
-
+    list: () => RefreshApi.get(API_ENDPOINTS.businesstype, {
+      headers: createHeaders(),
+      withCredentials: true,
+    }),
+    detail: (type_id) => RefreshApi.get(API_ENDPOINTS.businesstype+ `/${type_id}`, {
+      headers: createHeaders(),
+      withCredentials: true,
+    }),
+    register: (dto) => RefreshApi.post(API_ENDPOINTS.businesstype, dto, {
+      headers: createHeaders(),
+      withCredentials: true,
+    }),
+    update: (type_id,dto) => RefreshApi.put(API_ENDPOINTS.businesstype+ `/${type_id}`,
+    dto,
+    {
+      headers: createHeaders(),
+      withCredentials: true,
+    }),
+    delete: (type_id,dto) => RefreshApi.delete(API_ENDPOINTS.businesstype+ `${type_id}`,
+    dto,
+    {
+      headers: createHeaders(),
+      withCredentials: true,
+    })
   },
 
   businessService:{
-    typelist: () => RefreshApi.get(),
 
   },
 
