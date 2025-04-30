@@ -12,7 +12,9 @@ export const API_ENDPOINTS = {
   },
   oauth2Google:{
     googleLogin:`${API_BASE_URL}/oauth2/authorization/google`
-  }
+  },
+  pets: `${API_BASE_URL}/api/pets`,
+  qna: `${API_BASE_URL}/api/`
 }
 
 export const createHeaders = () => ({

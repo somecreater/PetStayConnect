@@ -5,7 +5,7 @@ import axios from 'axios';
 
 const ApiService = {
   
-    userService:{
+  userService:{
     login: (dto) => RefreshApi.post(API_ENDPOINTS.auth.login, dto, {
       headers: createHeaders(),
       withCredentials: true, 
@@ -38,6 +38,40 @@ const ApiService = {
       headers: createHeaders(),
       withCredentials: true, 
     }), 
+  },
+
+  pet:{
+    register: (dto) => RefreshApi.post(API_ENDPOINTS.pets, dto,  { 
+      headers: createHeaders(),
+      withCredentials: true, 
+    }),
+    update: (petId,dto) => RefreshApi.put(API_ENDPOINTS.pets+ `/${petId}`, dto,{
+      headers: createHeaders(),
+      withCredentials: true, 
+    }),
+    delete: (petId) => RefreshApi.delete( API_ENDPOINTS.pets+ `/${petId}`,{
+      headers: createHeaders(),
+      withCredentials: true, 
+    }),
+    userpet: (userId) => RefreshApi.get(API_ENDPOINTS.pets+ `/user/${userId}`,{
+      headers: createHeaders(),
+      withCredentials: true, 
+    }),
+    detail: (petId) => RefreshApi.get(API_ENDPOINTS.pets+ `/${petId}`,{
+      headers: createHeaders(),
+      withCredentials: true, 
+    })
+  },
+  qnas:{
+    post:{
+      
+    },
+    answer:{
+
+    }
+  },
+  businessTypeService:{
+
   },
 
   businessService:{
