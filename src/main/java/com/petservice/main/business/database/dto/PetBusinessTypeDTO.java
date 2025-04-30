@@ -11,5 +11,7 @@ public class PetBusinessTypeDTO {
   private Long id;
   private String typeName;
   private String description;
+  private String sectorCode;
+  private String typeCode;
   private List<PetBusinessDTO> petBusinessDTOList = new ArrayList<>();
 }

@@ -14,8 +14,8 @@ function Modal(props){
         <button className="modal-close" onClick={onClose}>×</button>
         {children}
       </div>
-    </>
-    
+    </>,
+    document.getElementById('modal-root') 
   );
 }
 
