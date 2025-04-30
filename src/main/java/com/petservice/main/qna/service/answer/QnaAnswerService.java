@@ -49,13 +49,14 @@ public class QnaAnswerService implements QnaAnswerServiceInterface {
 
     @Override
     @Transactional(readOnly = true)
-    public QnaAnswerDTO getAnswerById(Long answerId){
+    public QnaAnswerDTO getAnswerById(Long answerId) {
         Optional<QnaAnswer> qnaAnswer = answerRepo.findById(answerId);
-        if(!qnaAnswer.isPresent()){
+        if (!qnaAnswer.isPresent()) {
             return null;
         }
         return mapper.toDTO(qnaAnswer.get());
     }
+
     @Override
     @Transactional
     public QnaAnswerDTO updateAnswer(Long postId, Long answerId, QnaAnswerDTO dto, String userLoginId) {
@@ -88,6 +89,7 @@ public class QnaAnswerService implements QnaAnswerServiceInterface {
         }
 
         answer.setIsAdopted(true);
+        answerRepo.save(answer);
 
         User businessOwner = answer.getUser();
         businessOwner.setQnaScore((businessOwner.getQnaScore() == null ? 0 : businessOwner.getQnaScore()) + 1);

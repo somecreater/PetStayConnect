@@ -7,7 +7,11 @@ import com.petservice.main.qna.database.repository.QnaPostRepository;
 import com.petservice.main.user.database.entity.User;
 import com.petservice.main.user.database.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
 import org.springframework.transaction.annotation.Transactional;
 
 
@@ -42,16 +46,18 @@ public class QnaPostService implements QnaPostServiceInterface {
     //전체 질문 목록 조회
     @Override
     @Transactional(readOnly = true)
-    public List<QnaPostDTO> getAllPosts() {
-        return qnaPostRepository.findAllByOrderByCreatedAtDesc().stream()
-                .map(qnaPostMapper::toBasicDTO)
-                .collect(Collectors.toList());
+    public Page<QnaPostDTO> getPostsPage(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        return qnaPostRepository
+                .findAllByOrderByCreatedAtDesc(pageable)
+                .map(qnaPostMapper::toBasicDTO);
     }
 
 
     //내가 쓴 질문 목록 조회
     @Override
     @Transactional(readOnly = true)
+
     public List<QnaPostDTO> getPostsByUserLoginId(String userLoginId) {
         return qnaPostRepository.findByUser_UserLoginId(userLoginId).stream()
                 .map(qnaPostMapper::toBasicDTO)
@@ -65,6 +71,11 @@ public class QnaPostService implements QnaPostServiceInterface {
     public QnaPostDTO getPostById(Long postId) {
         QnaPost post = qnaPostRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("질문을 찾을 수 없습니다."));
+//        post.setViewCount(
+//                post.getViewCount() == null
+//                        ? 1 : post.getViewCount() + 1
+//        );
+
         return qnaPostMapper.toDTO(post);
     }
 
@@ -101,6 +112,4 @@ public class QnaPostService implements QnaPostServiceInterface {
 
         qnaPostRepository.delete(post);
     }
-
-
 }
