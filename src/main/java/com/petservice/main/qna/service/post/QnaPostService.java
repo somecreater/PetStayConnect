@@ -60,7 +60,7 @@ public class QnaPostService implements QnaPostServiceInterface {
 
     public List<QnaPostDTO> getPostsByUserLoginId(String userLoginId) {
         return qnaPostRepository.findByUser_UserLoginId(userLoginId).stream()
-                .map(qnaPostMapper::toDTO)
+                .map(qnaPostMapper::toBasicDTO)
                 .collect(Collectors.toList());
     }
 
@@ -71,10 +71,10 @@ public class QnaPostService implements QnaPostServiceInterface {
     public QnaPostDTO getPostById(Long postId) {
         QnaPost post = qnaPostRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("질문을 찾을 수 없습니다."));
-        post.setViewCount(
-                post.getViewCount() == null
-                        ? 1 : post.getViewCount() + 1
-        );
+//        post.setViewCount(
+//                post.getViewCount() == null
+//                        ? 1 : post.getViewCount() + 1
+//        );
 
         return qnaPostMapper.toDTO(post);
     }

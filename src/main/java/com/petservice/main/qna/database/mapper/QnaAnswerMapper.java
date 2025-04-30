@@ -18,6 +18,8 @@ public class QnaAnswerMapper {
     QnaAnswer qnaAnswer=new QnaAnswer();
     qnaAnswer.setId(qnaAnswerDTO.getId());
     qnaAnswer.setContent(qnaAnswerDTO.getContent());
+    qnaAnswer.setScore(qnaAnswerDTO.getScore());
+    qnaAnswer.setIsAdopted(qnaAnswerDTO.getIsAdopted());
     qnaAnswer.setCreatedAt(qnaAnswerDTO.getCreatedAt());
     qnaAnswer.setUpdatedAt(qnaAnswerDTO.getUpdatedAt());
     if(qnaAnswerDTO.getUserId()!=null) {
