@@ -124,7 +124,7 @@ public class PetController {
     @GetMapping("/{petId}")
     public ResponseEntity<?> getPetById(
         @AuthenticationPrincipal CustomUserDetails principal,
-        @PathVariable Long petId) {
+        @PathVariable("petId") Long petId) {
 
         Map<String, Object> result = new HashMap<>();
         if(!petService.isUserPet(principal.getUsername(),petId)){
