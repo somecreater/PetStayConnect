@@ -16,6 +16,8 @@ public class PetBusinessTypeMapper {
     PetBusinessType petBusinessType=new PetBusinessType();
     petBusinessType.setId(petBusinessTypeDTO.getId());
     petBusinessType.setTypeName(petBusinessTypeDTO.getTypeName());
+    petBusinessType.setSectorCode(petBusinessTypeDTO.getSectorCode());
+    petBusinessType.setTypeCode(petBusinessTypeDTO.getTypeCode());
     petBusinessType.setDescription(petBusinessTypeDTO.getDescription());
     if(petBusinessTypeDTO.getPetBusinessDTOList()!=null) {
       petBusinessType.setPetBusinessList(
@@ -31,6 +33,8 @@ public class PetBusinessTypeMapper {
     PetBusinessTypeDTO petBusinessTypeDTO =new PetBusinessTypeDTO();
     petBusinessTypeDTO.setId(petBusinessType.getId());
     petBusinessTypeDTO.setTypeName(petBusinessType.getTypeName());
+    petBusinessTypeDTO.setSectorCode(petBusinessType.getSectorCode());
+    petBusinessTypeDTO.setTypeCode(petBusinessType.getTypeCode());
     petBusinessTypeDTO.setDescription(petBusinessType.getDescription());
     if(petBusinessType.getPetBusinessList()!=null) {
       petBusinessTypeDTO.setPetBusinessDTOList(
@@ -45,6 +49,8 @@ public class PetBusinessTypeMapper {
     PetBusinessTypeDTO petBusinessTypeDTO =new PetBusinessTypeDTO();
     petBusinessTypeDTO.setId(petBusinessType.getId());
     petBusinessTypeDTO.setTypeName(petBusinessType.getTypeName());
+    petBusinessTypeDTO.setSectorCode(petBusinessType.getSectorCode());
+    petBusinessTypeDTO.setTypeCode(petBusinessType.getTypeCode());
     petBusinessTypeDTO.setDescription(petBusinessType.getDescription());
     return petBusinessTypeDTO;
   }

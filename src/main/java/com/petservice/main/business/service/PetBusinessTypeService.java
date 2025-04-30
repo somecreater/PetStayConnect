@@ -37,7 +37,8 @@ public class PetBusinessTypeService implements PetBusinessTypeServiceInterface {
 
       petBusinessType.setTypeName(petBusinessTypeDTO.getTypeName());
       petBusinessType.setDescription(petBusinessTypeDTO.getDescription());
-
+      petBusinessType.setSectorCode(petBusinessTypeDTO.getSectorCode());
+      petBusinessType.setTypeCode(petBusinessTypeDTO.getTypeCode());
       return petBusinessTypeMapper.toBasicDTO(petBusinessTypeRepository.save(petBusinessType));
 
     }catch (Exception e){
@@ -124,11 +125,14 @@ public class PetBusinessTypeService implements PetBusinessTypeServiceInterface {
   @Override
   public boolean insertValidationType(PetBusinessTypeDTO petBusinessTypeDTO){
 
-    if(isBlank(petBusinessTypeDTO.getTypeName()) || isBlank(petBusinessTypeDTO.getDescription())){
+    if(isBlank(petBusinessTypeDTO.getTypeName())
+      || isBlank(petBusinessTypeDTO.getDescription())
+      || isBlank(petBusinessTypeDTO.getSectorCode())
+      || isBlank(petBusinessTypeDTO.getTypeCode())){
       return false;
     }
 
-    if(petBusinessTypeRepository.existsByTypeName(petBusinessTypeDTO.getTypeName())){
+    if(petBusinessTypeRepository.existsByTypeCode(petBusinessTypeDTO.getTypeCode())){
       return false;
     }
 
@@ -144,12 +148,16 @@ public class PetBusinessTypeService implements PetBusinessTypeServiceInterface {
     }
 
     if( isBlank(petBusinessTypeDTO.getTypeName())
-        || isBlank(petBusinessTypeDTO.getDescription())){
+        || isBlank(petBusinessTypeDTO.getDescription())
+        || isBlank(petBusinessTypeDTO.getSectorCode())
+        || isBlank(petBusinessTypeDTO.getTypeCode())){
       return false;
     }
 
     if(petBusinessType.getTypeName().equals(petBusinessTypeDTO.getTypeName())
-        && petBusinessType.getDescription().equals(petBusinessTypeDTO.getDescription())) {
+        && petBusinessType.getDescription().equals(petBusinessTypeDTO.getDescription())
+        && petBusinessType.getSectorCode().equals(petBusinessTypeDTO.getSectorCode())
+        && petBusinessType.getTypeCode().equals(petBusinessTypeDTO.getTypeCode())) {
       return false;
     }
 

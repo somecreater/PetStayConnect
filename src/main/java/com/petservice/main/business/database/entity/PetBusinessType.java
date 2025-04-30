@@ -20,6 +20,12 @@ public class PetBusinessType {
   @Column(name = "type_name", unique = true)
   private String typeName;
 
+  @Column(name="sector_code")
+  private String sectorCode;
+
+  @Column(name="type_code")
+  private String typeCode;
+
   @Column(columnDefinition = "TEXT")
   private String description;
 

@@ -9,4 +9,5 @@ public interface PetBusinessTypeRepository extends JpaRepository<PetBusinessType
 
   boolean existsByTypeName(String typeName);
 
+  boolean existsByTypeCode(String typeCode);
 }
