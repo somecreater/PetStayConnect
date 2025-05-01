@@ -7,7 +7,7 @@ function Modal(props){
   const {isOpen, onClose, children} = props;
   if (!isOpen) return null;
 
-  return(
+  return ReactDOM.createPortal(
     <>
       <div className="modal-backdrop" onClick={onClose} />
       <div className="modal-content">

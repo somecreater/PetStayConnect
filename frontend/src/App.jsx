@@ -11,6 +11,8 @@ import UpdatePage from './user/Page/UpdatePage';
 import DeletePage from './user/Page/DeletePage';
 
 import CustomErrorPage from './common/ErrorPage/CustomErrorPage';
+import BusinessTypePage from './businesstype/Page/BusinessTypePage';
+import BusinessTypeManagePage from './businesstype/Page/BusinessTypeManagePage';
 
 
 function App() {
@@ -26,6 +28,9 @@ function App() {
         <Route path="/user/update" element={<UpdatePage/>}/>
         <Route path="/user/delete" element={<DeletePage/>}/>
         
+        <Route path="/type/list" element={<BusinessTypePage/>} />
+        <Route path="/type/manage" element={<BusinessTypeManagePage/>} />
+
         <Route path="/error/:code" element={<CustomErrorPage />} />
         <Route path="*" element={<CustomErrorPage/>} />
       </Routes>
