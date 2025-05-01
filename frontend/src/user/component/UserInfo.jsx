@@ -79,6 +79,12 @@ function UserInfo(props){
     <>
       <div>
         <Button 
+          classtext="petButton" 
+          type="button" 
+          title={'펫 정보 보기기'}
+          onClick={()=>navigate('/user/petmanage')}
+        />
+        <Button 
           classtext="detailButton" 
           type="button" 
           title={buttonTitle}

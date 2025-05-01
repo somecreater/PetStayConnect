@@ -95,7 +95,9 @@ public class PetController {
 
             boolean deleted = petService.deletePet(petId);
             if (deleted) {
-                return ResponseEntity.noContent().build(); // 204 (body 없음)
+                result.put("result",true);
+                result.put("message","삭제 성공!!!!!");
+                return ResponseEntity.ok(result); // 204 (body 없음)
             } else {
                 result.put("result", false);
                 result.put("message", "펫 삭제 실패: 존재하지 않는 펫");
@@ -109,14 +111,17 @@ public class PetController {
     }
 
     // 특정 회원의 펫 목록 조회
-    @GetMapping("/user/{userId}")
+    @GetMapping("/user")
     public ResponseEntity<?> getPetsByUserId(
-        @AuthenticationPrincipal CustomUserDetails principal,
-        @PathVariable("userId") Long userId) {
+        @AuthenticationPrincipal CustomUserDetails principal) {
         Map<String, Object> result = new HashMap<>();
         List<PetDTO> pets = petService.getPetsByUserLoginId(principal.getUsername());
-        result.put("result", true);
-        result.put("pets", pets);
+        if(pets !=null) {
+            result.put("result", true);
+            result.put("pets", pets);
+        }else{
+            result.put("result", false);
+        }
         return ResponseEntity.ok(result);
     }
 

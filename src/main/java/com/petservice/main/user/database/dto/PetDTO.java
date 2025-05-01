@@ -14,6 +14,7 @@ public class PetDTO {
   private String species;
   private String breed;
   private LocalDate birthDate;
+  private Integer age;
   private String healthInfo;
   private Gender gender;
   private LocalDateTime createAt;

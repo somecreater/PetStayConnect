@@ -29,6 +29,9 @@ public class Pet extends TimeEntity {
   @Column(name = "birth_date")
   private LocalDate birthDate;
 
+  @Column
+  private Integer age;
+
   @Column(name = "health_info", columnDefinition = "TEXT")
   private String healthInfo;
 
