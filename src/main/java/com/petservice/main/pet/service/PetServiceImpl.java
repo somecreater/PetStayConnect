@@ -83,6 +83,7 @@ public class PetServiceImpl implements PetServiceInterface {
             existingPet.setSpecies(petDTO.getSpecies());
             existingPet.setBreed(petDTO.getBreed());
             existingPet.setBirthDate(petDTO.getBirthDate());
+            existingPet.setAge(petDTO.getAge());
             existingPet.setHealthInfo(petDTO.getHealthInfo());
             existingPet.setGender(petDTO.getGender());
 
@@ -98,7 +99,7 @@ public class PetServiceImpl implements PetServiceInterface {
     @Transactional
     public boolean deletePet(Long petId) {
         try {
-            if(petRepository.existsById(petId)){
+            if(!petRepository.existsById(petId)){
                 return false;
             }
             petRepository.deleteById(petId);
@@ -112,19 +113,43 @@ public class PetServiceImpl implements PetServiceInterface {
     // --- 유효성 검사 메서드 예시 ---
     @Override
     public boolean insertValidationPet(PetDTO petDTO) {
-        return petDTO != null
-                && petDTO.getName() != null && !petDTO.getName().trim().isEmpty()
-                && petDTO.getUserId() != null;
+        if(isBlank(petDTO.getName())
+            || isBlank(petDTO.getSpecies())
+            || isBlank(petDTO.getBreed())
+            || isBlank(petDTO.getGender().name())
+        ){
+            return false;
+        }
+        return true;
     }
 
     @Override
+    @Transactional(readOnly = true)
     public boolean updateValidationPet(PetDTO petDTO) {
-        return petDTO != null
-                && petDTO.getId() != null
-                && petDTO.getName() != null && !petDTO.getName().trim().isEmpty();
+        Pet pet=petRepository.findById(petDTO.getId()).orElse(null);
+        if(pet==null){
+            return false;
+        }
+
+        if(isBlank(petDTO.getName())
+            || isBlank(petDTO.getSpecies())
+            || isBlank(petDTO.getBreed())
+            || isBlank(petDTO.getGender().name())
+        ){
+            return false;
+        }
+
+        if(pet.getName().equals(petDTO.getName())
+            && pet.getSpecies().equals(petDTO.getSpecies())
+            && pet.getBreed().equals(petDTO.getBreed())
+            && pet.getGender().equals(petDTO.getGender())){
+            return false;
+        }
+        return true;
     }
 
     @Override
+    @Transactional(readOnly = true)
     public boolean isUserPet(String userLoginId, Long petId){
 
         PetDTO petDTO=getPetById(petId);
@@ -137,5 +162,9 @@ public class PetServiceImpl implements PetServiceInterface {
         return true;
     }
 
+    @Override
+    public boolean isBlank(String str){
+        return str == null || str.trim().isEmpty();
+    }
 
 }

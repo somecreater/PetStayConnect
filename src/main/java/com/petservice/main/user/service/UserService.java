@@ -90,8 +90,7 @@ public class UserService implements CustomUserServiceInterface, UserDetailsServi
         user = userRepository.save(newuser);
 
         petBusinessDTO.setUserId(user.getId());
-        //나중에 수정
-        petBusinessDTO.setPetBusinessTypeId(0L);
+
         petBusiness = petBusinessMapper.toEntity(petBusinessDTO);
         petBusinessRepository.save(petBusiness);
 

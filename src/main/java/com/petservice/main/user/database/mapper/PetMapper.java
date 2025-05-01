@@ -22,6 +22,7 @@ public class PetMapper {
     pet.setSpecies(petDTO.getSpecies());
     pet.setBreed(petDTO.getBreed());
     pet.setBirthDate(petDTO.getBirthDate());
+    pet.setAge(petDTO.getAge());
     pet.setHealthInfo(petDTO.getHealthInfo());
     pet.setGender(petDTO.getGender());
     pet.setCreatedAt(petDTO.getCreateAt());
@@ -40,6 +41,7 @@ public class PetMapper {
     petDTO.setSpecies(pet.getSpecies());
     petDTO.setBreed(pet.getBreed());
     petDTO.setBirthDate(pet.getBirthDate());
+    petDTO.setAge(pet.getAge());
     petDTO.setHealthInfo(pet.getHealthInfo());
     petDTO.setGender(pet.getGender());
     petDTO.setCreateAt(pet.getCreatedAt());
@@ -58,6 +60,7 @@ public class PetMapper {
     petDTO.setSpecies(pet.getSpecies());
     petDTO.setBreed(pet.getBreed());
     petDTO.setBirthDate(pet.getBirthDate());
+    petDTO.setAge(pet.getAge());
     petDTO.setHealthInfo(pet.getHealthInfo());
     petDTO.setGender(pet.getGender());
     petDTO.setCreateAt(pet.getCreatedAt());

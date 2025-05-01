@@ -26,4 +26,6 @@ public interface PetServiceInterface {
     public boolean updateValidationPet(PetDTO petDTO);
 
     public boolean isUserPet(String userLoginId, Long petId);
+
+    public boolean isBlank(String s);
 }

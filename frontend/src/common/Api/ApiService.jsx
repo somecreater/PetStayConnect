@@ -53,7 +53,7 @@ const ApiService = {
       headers: createHeaders(),
       withCredentials: true, 
     }),
-    userpet: (userId) => RefreshApi.get(`${API_ENDPOINTS.pets}/user/${userId}`,{
+    userpet: () => RefreshApi.get(`${API_ENDPOINTS.pets}/user`,{
       headers: createHeaders(),
       withCredentials: true, 
     }),
