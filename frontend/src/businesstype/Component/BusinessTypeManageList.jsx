@@ -5,31 +5,31 @@ import CusomP from "../../common/Ui/CusomP";
 import Modal from "../../common/Ui/Modal";
 import Button from "../../common/Ui/Button";
 import BusinessTypeUpdateForm from "../Form/BusinessTypeUpdateForm";
+import BusinessTypeDeleteButton from "../Component/BusinessTypeDeleteButton";
 
 function BusinessManageTypeList(props){
-  const [typelist,setTypelist]= useState([]);
-  const [isModalOpen,setModalOpen]=useState(false);
+  const {types, onRefresh}= props;
+  const [isModalOpen,setIsModalOpen]=useState(false);
+  const [selectedType, setSelectedType] = useState(null);
 
-  useEffect(()=>{
-    const fetchTypes = async () => {
-      const response = await ApiService.businessTypeService.list();
-      if(response.data.result === true){
-        const typelist=response.data.typeList;
-        setTypelist(typelist);
-      }else{
-        alert(response.data.message);
-      }
-    }
-    fetchTypes();
-  },[]);
+
+  const openEditModal = (type) => {
+    setSelectedType(type);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedType(null);
+  };
 
   return(
     <>
       <div>
       {
-        typelist !== null ?  
+        types && types.length>0 ?  
         <div className="BusinessTypeManageList">
-        {typelist.map((type) => 
+        {types.map((type) => 
         <>
           <div className="BusinessTypeManage">
             <BusinessType 
@@ -46,17 +46,9 @@ function BusinessManageTypeList(props){
                   classtext={'BusinessTypeButton'} 
                   type="button" 
                   title={'타입 수정'} 
-                  onClick={setModalOpen(!isModalOpen)}
+                  onClick={() => openEditModal(type)}
                 />
-                <Modal isOpen={isModalOpen} onClose={() => setModalOpen(false)}>
-                  <BusinessTypeUpdateForm 
-                    exId={type.id}
-                    exTypename={type.typeName}
-                    exSectorCode={type.sectorCode}
-                    exTypeCode={type.typeCode}
-                    exDescription={type.description}
-                  />
-                </Modal>
+              
             </div>
           </div>
         </>
@@ -66,6 +58,21 @@ function BusinessManageTypeList(props){
             <CusomP classtext={'noting'} title={'타입이 존재하지 않습니다.'}/>
         </div>
       }
+      {selectedType && (
+        <Modal isOpen={isModalOpen} onClose={closeModal}>
+          <BusinessTypeUpdateForm 
+            exId={selectedType.id}
+            exTypename={selectedType.typeName}
+            exSectorCode={selectedType.sectorCode}
+            exTypeCode={selectedType.typeCode}
+            exDescription={selectedType.description}
+            onSuccess={()=>{
+              onRefresh();
+              closeModal();
+            }}
+          />
+        </Modal>
+      )}
       </div>
     </>
   );

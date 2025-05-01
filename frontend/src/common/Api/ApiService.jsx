@@ -45,19 +45,19 @@ const ApiService = {
       headers: createHeaders(),
       withCredentials: true, 
     }),
-    update: (petId,dto) => RefreshApi.put(API_ENDPOINTS.pets+ `/${petId}`, dto,{
+    update: (petId,dto) => RefreshApi.put(`${API_ENDPOINTS.pets}/${petId}`, dto,{
       headers: createHeaders(),
       withCredentials: true, 
     }),
-    delete: (petId) => RefreshApi.delete( API_ENDPOINTS.pets+ `/${petId}`,{
+    delete: (petId) => RefreshApi.delete(`${API_ENDPOINTS.pets}/${petId}`,{
       headers: createHeaders(),
       withCredentials: true, 
     }),
-    userpet: (userId) => RefreshApi.get(API_ENDPOINTS.pets+ `/user/${userId}`,{
+    userpet: (userId) => RefreshApi.get(`${API_ENDPOINTS.pets}/user/${userId}`,{
       headers: createHeaders(),
       withCredentials: true, 
     }),
-    detail: (petId) => RefreshApi.get(API_ENDPOINTS.pets+ `/${petId}`,{
+    detail: (petId) => RefreshApi.get(`${API_ENDPOINTS.pets}/${petId}`,{
       headers: createHeaders(),
       withCredentials: true, 
     })
@@ -77,47 +77,47 @@ const ApiService = {
         headers: createHeaders(),
         withCredentials: true, 
       }),
-      detail: (question_id) => RefreshApi.get(API_ENDPOINTS.qna+ `/${question_id}`, {
+      detail: (question_id) => RefreshApi.get(`${API_ENDPOINTS.qna}/${question_id}`, {
         headers: createHeaders(),
         withCredentials: true, 
       }),
-      update: (question_id,dto) => RefreshApi.put(API_ENDPOINTS.qna+ `/${question_id}`, dto, 
+      update: (question_id,dto) => RefreshApi.put(`${API_ENDPOINTS.qna}/${question_id}`, dto, 
       {
         headers: createHeaders(),
         withCredentials: true, 
       }),
-      delete: (question_id) => RefreshApi.delete(API_ENDPOINTS.qna+ `/${question_id}`,{
+      delete: (question_id) => RefreshApi.delete(`${API_ENDPOINTS.qna}/${question_id}`,{
         headers: createHeaders(),
         withCredentials: true, 
       })
     },
     answer:{
-      register: (question_id,dto) => RefreshApi.post(API_ENDPOINTS.qna+ `/${question_id}/answer`, dto,
+      register: (question_id,dto) => RefreshApi.post(`${API_ENDPOINTS.qna}/${question_id}/answer`, dto,
       {
         headers: createHeaders(),
         withCredentials: true,  
       }),
-      list: (question_id) => RefreshApi.get(API_ENDPOINTS.qna+ `/${question_id}/answer`,{
+      list: (question_id) => RefreshApi.get(`${API_ENDPOINTS.qna}/${question_id}/answer`,{
         headers: createHeaders(),
         withCredentials: true,  
       }),
-      detaiil: (question_id,answer_id) => RefreshApi.get(API_ENDPOINTS.qna+ `/${question_id}/answer/${answer_id}`,
+      detaiil: (question_id,answer_id) => RefreshApi.get(`${API_ENDPOINTS.qna}/${question_id}/answer/${answer_id}`,
       {
         headers: createHeaders(),
         withCredentials: true,
       }),
-      update: (question_id,answer_id,dto) => RefreshApi.put(API_ENDPOINTS.qna+ `/${question_id}/answer/${answer_id}`,
+      update: (question_id,answer_id,dto) => RefreshApi.put(`${API_ENDPOINTS.qna}/${question_id}/answer/${answer_id}`,
       dto,
       {
         headers: createHeaders(),
         withCredentials: true,
       }),
-      delete: (question_id,answer_id) => RefreshApi.delete(API_ENDPOINTS.qna+ `/${question_id}/answer/${answer_id}`,
+      delete: (question_id,answer_id) => RefreshApi.delete(`${API_ENDPOINTS.qna}/${question_id}/answer/${answer_id}`,
       {
         headers: createHeaders(),
         withCredentials: true,
       }),
-      accept: (question_id,answer_id) => RefreshApi.post(API_ENDPOINTS.qna+ `/${question_id}/answer/${answer_id}/accept`,
+      accept: (question_id,answer_id) => RefreshApi.post(`${API_ENDPOINTS.qna}/${question_id}/answer/${answer_id}/accept`,
       {
         headers: createHeaders(),
         withCredentials: true,
@@ -129,7 +129,7 @@ const ApiService = {
       headers: createHeaders(),
       withCredentials: true,
     }),
-    detail: (type_id) => RefreshApi.get(API_ENDPOINTS.businesstype+ `/${type_id}`, {
+    detail: (type_id) => RefreshApi.get(`${API_ENDPOINTS.businesstype}/${type_id}`, {
       headers: createHeaders(),
       withCredentials: true,
     }),
@@ -137,17 +137,17 @@ const ApiService = {
       headers: createHeaders(),
       withCredentials: true,
     }),
-    update: (type_id,dto) => RefreshApi.put(API_ENDPOINTS.businesstype+ `/${type_id}`,
+    update: (type_id,dto) => RefreshApi.put(`${API_ENDPOINTS.businesstype}/${type_id}`,
     dto,
     {
       headers: createHeaders(),
       withCredentials: true,
     }),
-    delete: (type_id,dto) => RefreshApi.delete(API_ENDPOINTS.businesstype+ `${type_id}`,
-    dto,
+    delete: (type_id,dto) => RefreshApi.delete(`${API_ENDPOINTS.businesstype}/${type_id}`,
     {
       headers: createHeaders(),
       withCredentials: true,
+      data: dto
     })
   },
 

@@ -94,6 +94,7 @@ public class PetBusinessTypeController {
   @PutMapping("/{type_id}")
   public ResponseEntity<?> updateType(
     @AuthenticationPrincipal CustomUserDetails principal,
+    @PathVariable("type_id") Long typeId,
     @RequestBody PetBusinessTypeDTO petBusinessTypeDTO){
 
     if(!principal.getAuthorities()

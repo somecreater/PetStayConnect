@@ -44,7 +44,7 @@ function BusinessTypeDeleteButton(props){
           classtext={'BusinessTypeButton'}
           type="button"
           title={'타입 삭제(복구 불가)'}
-          onClick={handleTypeDelete(type_id,businesstype)}
+          onClick={()=>handleTypeDelete(type_id,businesstype)}
         />
       </Modal>
     </div>

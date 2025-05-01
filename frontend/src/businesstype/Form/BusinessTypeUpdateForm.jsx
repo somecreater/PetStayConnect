@@ -4,9 +4,10 @@ import CustomLabel from "../../common/Ui/CustomLabel";
 import TextInput from "../../common/Ui/TextInput";
 import Button from "../../common/Ui/Button";
 import ApiService from "../../common/Api/ApiService";
+import Modal from '../../common/Ui/Modal';  
 
 function BusinessTypeUpdateForm(props){
-  const {exId,exTypename,exDescription,exSectorCode,exTypeCode}=props;
+  const {exId,exTypename,exDescription,exSectorCode,exTypeCode,onSuccess}=props;
 
   const [isModalOpen,setModalOpen]=useState(false);
   const [typename,setTypename]= useState(exTypename);
@@ -23,7 +24,7 @@ function BusinessTypeUpdateForm(props){
       petBusinessDTOList: []
     }
 
-    const response = await ApiService.businessTypeService.update(typedto);
+    const response = await ApiService.businessTypeService.update(exId,typedto);
     const result=response.data;
     if(result.result){
       const newtype=result.type;
@@ -36,7 +37,7 @@ function BusinessTypeUpdateForm(props){
         + '\n 타입 코드: '+ newtype.typeCode
         + '\n 타입 설명: '+ newtype.description);
       setModalOpen(false);
-
+      onSuccess();
     }else{
       alert(result.message);
     }
@@ -54,6 +55,12 @@ function BusinessTypeUpdateForm(props){
           classtext={'alertText'}
           title={'섹터 코드와 타입 코드는 수정이 불가능합니다.'}
         />
+        <CustomLabel classtetxt={'BusinessTypeLabel'} title={'타입 아이디:'} for={'BusinessTypeInfo'}/>
+        <CusomP
+          classtext={'BusinessTypeInfo'}
+          title={exId}
+        />
+        <br/>
 
         <CustomLabel classtetxt={'BusinessTypeLabel'} title={'타입 이름:'} for={'UserUpdateInfo'}/>
         <TextInput 
@@ -63,6 +70,7 @@ function BusinessTypeUpdateForm(props){
           placeholderText="새로운 사업자 타입 이름을 입력하세요" 
           onChange={(e)=>setTypename(e.target.value)}
         />
+        <br/>
 
         <CustomLabel classtetxt={'BusinessTypeLabel'} title={'섹터 코드:'} for={'BusinessTypeInfo'}/>
         <CusomP
@@ -93,6 +101,7 @@ function BusinessTypeUpdateForm(props){
             classtext={'BusinessTypeButton'}
             type="submit"
             title={'타입 수정'}
+            onClick={handleTypeSubmit}
           />
         </Modal>
       </form>
