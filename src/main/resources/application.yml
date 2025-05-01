@@ -60,10 +60,15 @@ spring:
         dialect: ${SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT:""}
     database-platform: ${SPRING_JPA_DATABASE_PLATFORM:""}
     open-in-view: ${SPRING_JPA_OPEN_IN_VIEW:false}
+    defer-datasource-initialization: ${JPA_INIT_DATE:true}
 
   jwt:
     secret: ${SPRING_JWT_SECRET:""}
-
+  sql:
+    init:
+      mode: ${SPRING_SQL_INIT_MODE:""}
+      schema-locations: ${SQL_SHEMA:""}
+      data-locations: ${SQL_DATA:""}
 app:
   cors:
     enabled: ${APP_CORS_ENABLED:""}
