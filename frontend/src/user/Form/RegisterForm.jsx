@@ -9,7 +9,7 @@ import Button from '../../common/Ui/Button';
 import '../../common/Css/common.css';
 
 function RegisterForm(props){
-  
+
   const [registerform,setRegisterform]=useState({
     userLoginId: '',
     name: '',
@@ -41,13 +41,13 @@ function RegisterForm(props){
 
   const handleChange = (e, isProvider = false) => {
     const { name, value } = e.target;
-    isProvider 
+    isProvider
     ? setBiz(prev => ({ ...prev, [name]: value })):
     setRegisterform(prev => ({ ...prev, [name]: value }));
   };
 
   const navigate = useNavigate();
-  
+
   const handleRegister = async (e) => {
     e.preventDefault();
 
@@ -57,7 +57,7 @@ function RegisterForm(props){
     }
 
     const payload = {
-      ...registerform, 
+      ...registerform,
       petBusinessDTO:
       registerform.role === 'SERVICE_PROVIDER' ? { ...biz, userId: null } : null,
       petDTOList       : [],
@@ -76,7 +76,7 @@ function RegisterForm(props){
     }
 
   };
-  
+
   return(
     <>
       <div>
@@ -136,7 +136,7 @@ function RegisterForm(props){
             <option value="SERVICE_PROVIDER">사업자</option>
           </select>
         </div>
-        
+
         { registerform.role === 'SERVICE_PROVIDER' && (
           <fieldset className="BusinessInfo">
             <legend>사업자 정보</legend>
@@ -171,13 +171,13 @@ function RegisterForm(props){
           </fieldset>
         )}
 
-        <Button 
-          classtext="RegisterButton" 
-          type="submit" 
-          title="회원가입(사업자일 시 추가정보 입력 필요)" 
+        <Button
+          classtext="RegisterButton"
+          type="submit"
+          title="회원가입(사업자일 시 추가정보 입력 필요)"
         />
         </form>
-      </div>    
+      </div>
     </>
   );
 

@@ -25,7 +25,7 @@
     font-size: 1.5rem;
     cursor: pointer;
 }
-
+/*qna */
 .PostListItem {
   padding: 1rem;
   margin-bottom: 1rem;
@@ -48,4 +48,65 @@
   font-size: 0.9rem;
   color: #666;
 }
+
+/*qna answerUpdateForm*/
+
+/* AnswerUpdateForm */
+.AnswerUpdateForm {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.ErrorMessage {
+  color: #e74c3c;
+  font-size: 0.9rem;
+}
+
+.AnswerInput {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.FormActions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+.qa-item {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.qa-header {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.qa-content {
+  margin-bottom: 0.5rem;
+  white-space: pre-wrap;
+}
+
+.qa-footer {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.qa-footer small {
+  margin-right: 1rem;
+}
+
+.qa-footer button {
+  margin-left: 0.5rem;
+}
+
+
 
