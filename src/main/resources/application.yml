@@ -77,3 +77,11 @@ app:
       expiration: ${APP_JWT_ACCESS_TOKEN_EXPIRATION:900000}
     refresh-token:
       expiration: ${APP_JWT_REFRESH_TOKEN_EXPIRATION:12096000}
+  sql:
+    filepath: ${APP_FILEPATH:""}
+    local: ${APP_IS_LOCAL:true}
+naver:
+  api:
+    base-url: https://openapi.naver.com/v1/search/local.json
+    client-id: ${NAVER_CLIENT_ID:""}
+    client-secret: ${NAVER_CLIENT_SECRET:""}
