@@ -16,6 +16,8 @@ public class AddressMapper {
     Address address=new Address();
     address.setId(addressDTO.getId());
     address.setUserId(addressDTO.getUserId());
+    address.setCorX(addressDTO.getCorX());
+    address.setCorY(addressDTO.getCorY());
     address.setRoadAddress(addressDTO.getRoadAddress());
     address.setDetailAddress(addressDTO.getDetailAddress());
     address.setPostalAddress(addressDTO.getPostalAddress());
@@ -31,6 +33,8 @@ public class AddressMapper {
     AddressDTO addressDTO=new AddressDTO();
     addressDTO.setId(address.getId());
     addressDTO.setUserId(address.getUserId());
+    addressDTO.setCorX(address.getCorX());
+    addressDTO.setCorY(address.getCorY());
     addressDTO.setRoadAddress(address.getRoadAddress());
     addressDTO.setDetailAddress(address.getDetailAddress());
     addressDTO.setPostalAddress(address.getPostalAddress());

@@ -1,8 +1,11 @@
 package com.petservice.main.business.service.Interface;
 
+import com.petservice.main.business.database.dto.NaverPlaceItem;
 import com.petservice.main.business.database.dto.PetBusinessDTO;
 import com.petservice.main.business.database.dto.PetBusinessRoomDTO;
+import com.petservice.main.business.database.dto.PetBusinessTypeDTO;
 import com.petservice.main.user.database.dto.AddressDTO;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -10,10 +13,11 @@ public interface PetBusinessServiceInterface {
 
   /*
     서비스 내에 등록된 사업자만 포함 or MAP API를 통해 검색된 실제 사업자도 포함(is_service),
-    회원의 근처에 있는 실제 사업자만 검색(is_around), 다양한 검색 옵션(사업자 명, 사업 타입, 주소)
+    회원의 근처에 있는 실제 사업자만 검색(is_around), 다양한 검색 옵션(사업자 명, 섹터 코드(KSIC 분류코드), 타입 코드(색인어), 주소)
+    데이터를 전부다 보여주기에는 성능상 제약사항이 생기므로 특별한 방법이 필요하다. (ex,pageable을 이용해서 일부만 보여주든가 등등)
   */
-  public List<PetBusinessDTO> getBusinessList(String business_name, String type_name,
-      AddressDTO addressDTO, boolean is_service, boolean is_around);
+  public Page<PetBusinessDTO> getBusinessList(String businessName, String sectorCode, String typeCode,
+      AddressDTO userAddress, boolean is_around, int page, int size);
   public PetBusinessDTO getBusinessDto(Long business_id);
   public PetBusinessDTO registerBusiness(PetBusinessDTO petBusinessDTO);
   public PetBusinessDTO updateBusiness(PetBusinessDTO petBusinessDTO);

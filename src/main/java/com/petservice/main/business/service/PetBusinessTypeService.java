@@ -74,6 +74,16 @@ public class PetBusinessTypeService implements PetBusinessTypeServiceInterface {
 
   @Override
   @Transactional(readOnly = true)
+  public PetBusinessTypeDTO getTypeByTypeCode(String typeCode){
+    PetBusinessType petBusinessType = petBusinessTypeRepository.findByTypeCodeLike(typeCode);
+    if(petBusinessType == null){
+      return null;
+    }
+    return petBusinessTypeMapper.toBasicDTO(petBusinessType);
+  }
+
+  @Override
+  @Transactional(readOnly = true)
   public PetBusinessTypeDTO getType(Long id) {
     PetBusinessType petBusinessType = petBusinessTypeRepository.findById(id).orElse(null);
 

@@ -60,10 +60,15 @@ spring:
         dialect: ${SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT:""}
     database-platform: ${SPRING_JPA_DATABASE_PLATFORM:""}
     open-in-view: ${SPRING_JPA_OPEN_IN_VIEW:false}
+    defer-datasource-initialization: ${JPA_INIT_DATE:true}
 
   jwt:
     secret: ${SPRING_JWT_SECRET:""}
-
+  sql:
+    init:
+      mode: ${SPRING_SQL_INIT_MODE:""}
+      schema-locations: ${SQL_SHEMA:""}
+      data-locations: ${SQL_DATA:""}
 app:
   cors:
     enabled: ${APP_CORS_ENABLED:""}
@@ -72,3 +77,11 @@ app:
       expiration: ${APP_JWT_ACCESS_TOKEN_EXPIRATION:900000}
     refresh-token:
       expiration: ${APP_JWT_REFRESH_TOKEN_EXPIRATION:12096000}
+  sql:
+    filepath: ${APP_FILEPATH:""}
+    local: ${APP_IS_LOCAL:true}
+naver:
+  api:
+    base-url: https://openapi.naver.com/v1/search/local.json
+    client-id: ${NAVER_CLIENT_ID:""}
+    client-secret: ${NAVER_CLIENT_SECRET:""}

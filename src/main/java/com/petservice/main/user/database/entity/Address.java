@@ -17,6 +17,12 @@ public class Address {
   @Column(name ="user_id")
   private Long userId;
 
+  @Column(name = "cor_x")
+  private Double corX;
+
+  @Column(name = "cor_y")
+  private Double corY;
+
   @Column(name="road_address")
   private String roadAddress;
 

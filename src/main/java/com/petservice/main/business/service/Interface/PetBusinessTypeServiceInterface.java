@@ -8,6 +8,7 @@ public interface PetBusinessTypeServiceInterface {
 
   public PetBusinessTypeDTO registerType(PetBusinessTypeDTO petBusinessTypeDTO);
   public PetBusinessTypeDTO updateType(PetBusinessTypeDTO petBusinessTypeDTO);
+  public PetBusinessTypeDTO getTypeByTypeCode(String typeCode);
   public PetBusinessTypeDTO getType(Long id);
   public List<PetBusinessTypeDTO> getTypeList();
   public boolean deleteType(Long id);
