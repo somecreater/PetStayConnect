@@ -8,7 +8,7 @@ import com.petservice.main.business.database.repository.PetBusinessRepository;
 import com.petservice.main.business.service.Interface.PetBusinessServiceInterface;
 import com.petservice.main.business.service.Interface.PetBusinessTypeServiceInterface;
 import com.petservice.main.user.database.dto.AddressDTO;
-import com.petservice.main.user.database.repository.AddressRepository;
+import com.petservice.main.user.service.Interface.AddressServiceInterface;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -26,8 +26,8 @@ public class PetBusinessService implements PetBusinessServiceInterface {
 
   private final PetBusinessTypeServiceInterface petBusinessTypeService;
   private final PetBusinessRepository petBusinessRepository;
-  private final AddressRepository addressRepository;
 
+  private final AddressServiceInterface addressService;
   private final PetBusinessMapper petBusinessMapper;
 
   @Override
@@ -43,12 +43,14 @@ public class PetBusinessService implements PetBusinessServiceInterface {
   @Override
   @Transactional(readOnly = true)
   public Page<PetBusinessDTO> getBusinessList(String businessName, String sectorCode, String typeCode,
-      AddressDTO userAddress, boolean is_around, int page, int size) {
+      String userLoginId, boolean is_around, int page, int size) {
 
     Pageable pageable = PageRequest.of(page, size);
     Page<PetBusiness> petBusinessPage = null;
 
-    if (is_around && userAddress != null) {
+    if (is_around) {
+      log.info("city(시)를 기준으로 주변을 탐색합니다.");
+      AddressDTO userAddress=addressService.getAddressByUserLoginId(userLoginId);
       petBusinessPage=petBusinessRepository.findServiceAndAround(
         businessName,sectorCode,typeCode,userAddress.getCity(),pageable);
     }else{

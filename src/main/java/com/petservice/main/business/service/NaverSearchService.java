@@ -7,9 +7,8 @@ import com.petservice.main.business.database.entity.Varification;
 import com.petservice.main.business.service.Interface.NaverSearchServiceInterface;
 import com.petservice.main.business.service.Interface.PetBusinessTypeServiceInterface;
 import com.petservice.main.user.database.dto.AddressDTO;
-import com.petservice.main.user.database.entity.Address;
 import com.petservice.main.user.database.mapper.AddressMapper;
-import com.petservice.main.user.database.repository.AddressRepository;
+import com.petservice.main.user.service.Interface.AddressServiceInterface;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,7 +34,7 @@ import java.util.List;
 public class NaverSearchService implements NaverSearchServiceInterface {
 
   private final PetBusinessTypeServiceInterface petBusinessTypeService;
-  private final AddressRepository addressRepository;
+  private final AddressServiceInterface addressService;
 
   @Value("${naver.api.base-url}") private String baseUrl;
   @Value("${naver.api.client-id}") private String clientId;
@@ -44,11 +43,12 @@ public class NaverSearchService implements NaverSearchServiceInterface {
   private final AddressMapper addressMapper;
   private final ObjectMapper objectMapper = new ObjectMapper();
 
+  @Override
   public Page<PetBusinessDTO> searchNearPyBusinessDTO(
-      Long UserId, NaverSearchRequest request, Pageable pageable){
+      String userLoginId, NaverSearchRequest request, Pageable pageable){
     try {
 
-      Address address = addressRepository.findByUserId(UserId);
+      AddressDTO address = addressService.getAddressByUserLoginId(userLoginId);
 
       String searchKeyword = null;
       if(StringUtils.hasText(request.getBusinessName())
@@ -129,7 +129,7 @@ public class NaverSearchService implements NaverSearchServiceInterface {
           return true;
 
       }).map(naverPlaceItem -> {
-        PetBusinessDTO dto = ConvertBusinessDTO(naverPlaceItem, addressMapper.toDTO(address));
+        PetBusinessDTO dto = ConvertBusinessDTO(naverPlaceItem, address);
         PetBusinessTypeDTO typeDto = ConvertBusinessTypeDTO(naverPlaceItem.getCategoryGroupCode(),
             naverPlaceItem.getCategoryGroupName());
         dto.setPetBusinessTypeId(typeDto.getId());
