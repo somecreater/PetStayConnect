@@ -17,7 +17,7 @@ public interface PetBusinessServiceInterface {
     데이터를 전부다 보여주기에는 성능상 제약사항이 생기므로 특별한 방법이 필요하다. (ex,pageable을 이용해서 일부만 보여주든가 등등)
   */
   public Page<PetBusinessDTO> getBusinessList(String businessName, String sectorCode, String typeCode,
-      AddressDTO userAddress, boolean is_around, int page, int size);
+      String userLoginId, boolean is_around, int page, int size);
   public PetBusinessDTO getBusinessDto(Long business_id);
   public PetBusinessDTO registerBusiness(PetBusinessDTO petBusinessDTO);
   public PetBusinessDTO updateBusiness(PetBusinessDTO petBusinessDTO);

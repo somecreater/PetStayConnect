@@ -11,7 +11,8 @@ import org.springframework.data.domain.Pageable;
 public interface NaverSearchServiceInterface {
 
   //Naver Search api로 전체 or 회원 주변의 사업체 정보 가져오기
-  public Page<PetBusinessDTO> searchNearPyBusinessDTO(Long UserId, NaverSearchRequest naverSearchRequest, Pageable pageable);
+  public Page<PetBusinessDTO> searchNearPyBusinessDTO(String userLoginId,
+      NaverSearchRequest naverSearchRequest, Pageable pageable);
 
   //Naver Search api를 통해 조회된 애완동물 서비스 관련 사업체 정보를 PetBusinessDTO로 전환
   public PetBusinessDTO ConvertBusinessDTO(NaverPlaceItem placeItem, AddressDTO addressDTO);

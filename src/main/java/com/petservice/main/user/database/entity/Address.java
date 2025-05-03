@@ -17,6 +17,9 @@ public class Address {
   @Column(name ="user_id")
   private Long userId;
 
+  @Column(name = "user_login_id")
+  private String userLoginId;
+
   @Column(name = "cor_x")
   private Double corX;
 

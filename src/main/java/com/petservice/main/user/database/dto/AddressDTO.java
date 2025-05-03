@@ -6,6 +6,7 @@ import lombok.Data;
 public class AddressDTO {
   private Long id;
   private Long userId;
+  private String userLoginId;
   private Double corX;
   private Double corY;
   private String roadAddress;
