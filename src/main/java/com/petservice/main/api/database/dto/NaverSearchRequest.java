@@ -1,4 +1,4 @@
-package com.petservice.main.business.database.dto;
+package com.petservice.main.api.database.dto;
 
 import lombok.Data;
 

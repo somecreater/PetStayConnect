@@ -1,10 +1,13 @@
-package com.petservice.main.business.service;
+package com.petservice.main.api.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.petservice.main.api.database.dto.NaverApiResponse;
+import com.petservice.main.api.database.dto.NaverPlaceItem;
+import com.petservice.main.api.database.dto.NaverSearchRequest;
 import com.petservice.main.business.database.dto.*;
 import com.petservice.main.business.database.entity.BusinessStatus;
 import com.petservice.main.business.database.entity.Varification;
-import com.petservice.main.business.service.Interface.NaverSearchServiceInterface;
+import com.petservice.main.api.service.Interface.NaverSearchServiceInterface;
 import com.petservice.main.business.service.Interface.PetBusinessTypeServiceInterface;
 import com.petservice.main.user.database.dto.AddressDTO;
 import com.petservice.main.user.database.mapper.AddressMapper;

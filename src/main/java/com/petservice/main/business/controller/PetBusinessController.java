@@ -1,9 +1,9 @@
 package com.petservice.main.business.controller;
 
-import com.petservice.main.business.database.dto.NaverSearchRequest;
+import com.petservice.main.api.database.dto.NaverSearchRequest;
 import com.petservice.main.business.database.dto.PetBusinessDTO;
 import com.petservice.main.business.database.dto.SearchRequest;
-import com.petservice.main.business.service.Interface.NaverSearchServiceInterface;
+import com.petservice.main.api.service.Interface.NaverSearchServiceInterface;
 import com.petservice.main.business.service.Interface.PetBusinessServiceInterface;
 import com.petservice.main.user.database.dto.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
