@@ -1,4 +1,4 @@
-package com.petservice.main.business.database.dto;
+package com.petservice.main.api.database.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;

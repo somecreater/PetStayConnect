@@ -1,10 +1,7 @@
 package com.petservice.main.business.service.Interface;
 
-import com.petservice.main.business.database.dto.NaverPlaceItem;
 import com.petservice.main.business.database.dto.PetBusinessDTO;
 import com.petservice.main.business.database.dto.PetBusinessRoomDTO;
-import com.petservice.main.business.database.dto.PetBusinessTypeDTO;
-import com.petservice.main.user.database.dto.AddressDTO;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
