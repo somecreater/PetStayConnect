@@ -81,4 +81,7 @@ public interface PetBusinessRepository extends JpaRepository<PetBusiness,Long> {
 
   boolean existsByPetBusinessType_Id(Long id);
 
+  boolean existsByRegistrationNumber(String registrationNumber);
+
+  PetBusiness findByUser_UserLoginId(String userLoginId);
 }

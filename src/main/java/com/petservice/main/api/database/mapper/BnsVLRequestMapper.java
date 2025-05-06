@@ -15,15 +15,15 @@ public class BnsVLRequestMapper {
 
     BnsVLRequestEntity entity =  new BnsVLRequestEntity();
     entity.setId(null);
-    entity.setBNo(bnsVLRequest.getBNo());
+    entity.setBno(bnsVLRequest.getBNo());
     entity.setStartDt(bnsVLRequest.getStartDt());
-    entity.setPNm(bnsVLRequest.getPNm());
-    entity.setPNm2(bnsVLRequest.getPNm2());
-    entity.setBNm(bnsVLRequest.getBNm());
-    entity.setCorpNo(bnsVLRequest.getCorpNo());
-    entity.setBSector(bnsVLRequest.getBSector());
-    entity.setBType(bnsVLRequest.getBType());
-    entity.setBAdr(bnsVLRequest.getBAdr());
+    entity.setPnm(bnsVLRequest.getPNm());
+    entity.setPnm2(bnsVLRequest.getPNm2());
+    entity.setBno(bnsVLRequest.getBNm());
+    entity.setCorpno(bnsVLRequest.getCorpNo());
+    entity.setBsector(bnsVLRequest.getBSector());
+    entity.setBtype(bnsVLRequest.getBType());
+    entity.setBadr(bnsVLRequest.getBAdr());
     entity.setStatus(null);
 
     return entity;
@@ -32,15 +32,15 @@ public class BnsVLRequestMapper {
   public BnsVLRequest toDTO(BnsVLRequestEntity bnsVLRequest){
 
     BnsVLRequest DTO = new BnsVLRequest();
-    DTO.setBNo(bnsVLRequest.getBNo());
+    DTO.setBNo(bnsVLRequest.getBno());
     DTO.setStartDt(bnsVLRequest.getStartDt());
-    DTO.setPNm(bnsVLRequest.getPNm());
-    DTO.setPNm2(bnsVLRequest.getPNm2());
-    DTO.setBNm(bnsVLRequest.getBNm());
-    DTO.setCorpNo(bnsVLRequest.getCorpNo());
-    DTO.setBSector(bnsVLRequest.getBSector());
-    DTO.setBType(bnsVLRequest.getBType());
-    DTO.setBAdr(bnsVLRequest.getBAdr());
+    DTO.setPNm(bnsVLRequest.getPnm());
+    DTO.setPNm2(bnsVLRequest.getPnm2());
+    DTO.setBNm(bnsVLRequest.getBnm());
+    DTO.setCorpNo(bnsVLRequest.getCorpno());
+    DTO.setBSector(bnsVLRequest.getBsector());
+    DTO.setBType(bnsVLRequest.getBtype());
+    DTO.setBAdr(bnsVLRequest.getBadr());
 
     return  DTO;
   }

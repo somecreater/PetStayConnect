@@ -3,7 +3,6 @@ package com.petservice.main.user.service;
 import com.petservice.main.business.database.dto.PetBusinessDTO;
 import com.petservice.main.business.database.entity.PetBusiness;
 import com.petservice.main.business.database.mapper.PetBusinessMapper;
-import com.petservice.main.business.database.repository.PetBusinessRepository;
 import com.petservice.main.business.service.Interface.PetBusinessServiceInterface;
 import com.petservice.main.user.database.dto.CustomUserDetails;
 import com.petservice.main.user.database.dto.UserDTO;
@@ -34,7 +33,6 @@ public class UserService implements CustomUserServiceInterface, UserDetailsServi
 
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
-  private final PetBusinessRepository petBusinessRepository;
 
   private final PetBusinessServiceInterface petBusinessServiceInterface;
 
@@ -57,7 +55,6 @@ public class UserService implements CustomUserServiceInterface, UserDetailsServi
   @Transactional
   public UserDTO registerUser(UserDTO userDTO){
     User user=null;
-    PetBusiness petBusiness=null;
 
     if(!UserValidation(userDTO)){
       throw new IllegalArgumentException("Data is not valid");
@@ -79,10 +76,6 @@ public class UserService implements CustomUserServiceInterface, UserDetailsServi
     try {
       if (userDTO.getRole() == Role.SERVICE_PROVIDER && petBusinessDTO != null) {
 
-        if (petBusinessServiceInterface.existBusiness(petBusinessDTO)) {
-          throw new IllegalArgumentException("Business Information Invalid!!");
-        }
-
         //먼저 유저 정보를 저장하고 사업자 정보를 저장
         userDTO.setPetBusinessDTO(null);
         User newuser = userMapper.toEntity(userDTO);
@@ -90,11 +83,11 @@ public class UserService implements CustomUserServiceInterface, UserDetailsServi
         user = userRepository.save(newuser);
 
         petBusinessDTO.setUserId(user.getId());
-
-        petBusiness = petBusinessMapper.toEntity(petBusinessDTO);
-        petBusinessRepository.save(petBusiness);
-
-        user.setPetBusiness(petBusiness);
+        PetBusinessDTO InsertBusiness=petBusinessServiceInterface.registerBusiness(petBusinessDTO);
+        if (InsertBusiness == null) {
+          throw new IllegalArgumentException("Business Information Invalid!!");
+        }
+        user.setPetBusiness(petBusinessMapper.toEntity(InsertBusiness));
 
       } else {
         User newuser = userMapper.toEntity(userDTO);
@@ -264,9 +257,12 @@ public class UserService implements CustomUserServiceInterface, UserDetailsServi
       }else{
         //회원의 사업자 정보, 북마크, 펫 정보 삭제(자동)
         if(delete.getRole().equals(Role.SERVICE_PROVIDER)){
-          PetBusiness deletePetBusiness=petBusinessRepository.findByUser_Id(delete.getId());
-          petBusinessRepository.deleteById(deletePetBusiness.getId());
-          userRepository.deleteByUserLoginId(delete.getUserLoginId());
+
+          if(!petBusinessServiceInterface.deleteBusiness(delete.getId())||
+          userRepository.deleteByUserLoginId(delete.getUserLoginId())<=0){
+            throw new RuntimeException("회원 탈퇴가 비정상적으로 실행되었습니다." +
+                " 다시 시도하거나 관리자에게 문의하세요!!");
+          }
 
         }else {
           userRepository.deleteByUserLoginId(delete.getUserLoginId());
