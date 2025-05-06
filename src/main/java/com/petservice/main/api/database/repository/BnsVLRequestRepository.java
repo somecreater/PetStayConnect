@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public interface BnsVLRequestRepository extends JpaRepository<BnsVLRequestEntity, Long> {
 
-  BnsVLRequestEntity findByBNo(String bNo);
+  BnsVLRequestEntity findByBno(String bNo);
 
   @Query("SELECT r FROM BnsVLRequestEntity r WHERE r.status = 'NONE' ORDER BY r.id ASC LIMIT 100")
   List<BnsVLRequestEntity> getNoneRequestList();

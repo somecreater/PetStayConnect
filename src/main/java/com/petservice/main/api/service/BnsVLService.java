@@ -27,7 +27,7 @@ public class BnsVLService implements BnsVLServiceInterface {
     String RegisterNumber= bnsVLRequest.getBNo();
 
     //이미 요청이 존재할시 중복으로 저장하면 안된다.
-    if(bnsVLRequestRepository.findByBNo(RegisterNumber)!=null){
+    if(bnsVLRequestRepository.findByBno(RegisterNumber)!=null){
       return null;
     }
 
