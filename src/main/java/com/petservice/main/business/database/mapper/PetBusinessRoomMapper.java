@@ -25,6 +25,9 @@ public class PetBusinessRoomMapper {
     if(petBusinessRoomDTO.getPetBusinessId()!=null){
       petBusinessRoom.setPetBusiness(petBusinessRepository
           .findById(petBusinessRoomDTO.getPetBusinessId()).orElse(null));
+    }else if(petBusinessRoomDTO.getPetBusinessRegisterNumber()!=null){
+      petBusinessRoom.setPetBusiness(petBusinessRepository
+          .findByRegistrationNumber(petBusinessRoomDTO.getPetBusinessRegisterNumber()));
     }
     if(petBusinessRoomDTO.getReservationDTOList()!=null){
       petBusinessRoom.setReservationList(petBusinessRoomDTO.getReservationDTOList().stream()
@@ -42,6 +45,8 @@ public class PetBusinessRoomMapper {
     petbusinessRoomDTO.setRoomCount(petBusinessRoom.getRoomCount());
     if(petBusinessRoom.getPetBusiness()!=null){
       petbusinessRoomDTO.setPetBusinessId(petBusinessRoom.getPetBusiness().getId());
+      petbusinessRoomDTO.setPetBusinessRegisterNumber(
+          petBusinessRoom.getPetBusiness().getRegistrationNumber());
     }
     if(petBusinessRoom.getReservationList()!=null){
       petbusinessRoomDTO.setReservationDTOList(petBusinessRoom.getReservationList().stream()

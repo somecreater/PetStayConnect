@@ -10,6 +10,7 @@ public class PetBusinessRoomDTO {
 
     private Long id;
     private Long petBusinessId;
+    private String petBusinessRegisterNumber;
     private String roomType;
     private String description;
     private Integer roomCount;

@@ -36,10 +36,15 @@ public class ReservationMapper {
 
     if(reservationDTO.getUserId()!=null){
       reservation.setUser(userRepository.findById(reservationDTO.getUserId()).orElse(null));
+    }else if(reservationDTO.getUserLoginId() != null){
+      reservation.setUser(userRepository.findByUserLoginId(reservationDTO.getUserLoginId()).orElse(null));
     }
     if(reservationDTO.getPetBusinessId()!=null){
       reservation.setPetBusiness(petBusinessRepository.findById(reservationDTO.getPetBusinessId())
           .orElse(null));
+    }else if(reservationDTO.getPetBusinessRegisterNumber()!=null){
+      reservation.setPetBusiness(petBusinessRepository
+          .findByRegistrationNumber(reservationDTO.getPetBusinessRegisterNumber()));
     }
     if(reservationDTO.getPetBusinessRoomId()!=null){
       reservation.setPetBusinessRoom(petBusinessRoomRepository
@@ -73,9 +78,11 @@ public class ReservationMapper {
 
     if(reservation.getUser()!=null){
       reservationDTO.setUserId(reservation.getUser().getId());
+      reservationDTO.setUserLoginId(reservation.getUser().getUserLoginId());
     }
     if(reservation.getPetBusiness()!=null){
       reservationDTO.setPetBusinessId(reservation.getPetBusiness().getId());
+      reservationDTO.setPetBusinessRegisterNumber(reservation.getPetBusiness().getRegistrationNumber());
       reservationDTO.setPetBusinessName(reservation.getPetBusiness().getBusinessName());
     }
     if(reservation.getPetBusinessRoom()!=null){
@@ -109,10 +116,6 @@ public class ReservationMapper {
 
     if(reservation.getPayment()!=null){
       reservationDTO.setPaymentDTO(paymentMapper.toDTO(reservation.getPayment()));
-    }
-    if(reservation.getPetReservationList()!=null){
-      reservationDTO.setPetReservationDTOList(reservation.getPetReservationList().stream()
-          .map(petReservationMapper::toDTO).toList());
     }
     if(reservation.getReview()!=null){
       reservationDTO.setReviewDTO(reviewMapper.toDTO(reservation.getReview()));
