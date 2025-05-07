@@ -37,5 +37,6 @@ public class ReservationDTO {
 
     //추가 정보
     private String PetBusinessName;
+    private String petBusinessRegisterNumber;
     private String UserLoginId;
 }
