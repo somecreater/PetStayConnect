@@ -45,8 +45,15 @@ public class ReservationService implements ReservationServiceInterface {
 
   @Override
   @Transactional(readOnly = true)
-  public List<ReservationDTO> getResrvationList(String user_login_id) {
+  public List<ReservationDTO> getReservationList(String user_login_id) {
     List<Reservation> reservationList= reservationRepository.findByUser_UserLoginId(user_login_id);
+    return reservationList.stream().map(reservationMapper::toDTO).toList();
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public List<ReservationDTO> getReservationListByBusiness(Long Business_id){
+    List<Reservation> reservationList= reservationRepository.findByPetBusiness_Id(Business_id);
     return reservationList.stream().map(reservationMapper::toDTO).toList();
   }
 
@@ -58,12 +65,26 @@ public class ReservationService implements ReservationServiceInterface {
     if(reservation != null ){
       reservationDTO=reservationMapper.toDTO(reservation);
     }
-    if(Objects.equals(Objects.requireNonNull(reservationDTO).getUserLoginId(), user_login_id)){
+    if(!Objects.equals(Objects.requireNonNull(reservationDTO).getUserLoginId(), user_login_id)){
       return null;
     }
     return reservationDTO;
   }
 
+  @Override
+  @Transactional(readOnly = true)
+  public ReservationDTO getReservationByBusiness(String RegisterNumber, Long ReservationId){
+    Reservation reservation=reservationRepository.findById(ReservationId).orElse(null);
+    ReservationDTO reservationDTO=null;
+    if(reservation != null ){
+      reservationDTO=reservationMapper.toDTO(reservation);
+    }
+    if(!Objects.equals(Objects.requireNonNull(reservationDTO).getPetBusinessRegisterNumber(),
+        RegisterNumber)){
+      return null;
+    }
+    return reservationDTO;
+  }
   /*
   예약 진행 (일단 결제는 진행안하고 예약만 서버 상에 등록(PENDING 상태로 설정))
   여러 확인 필요(중복(다른 예약, 본인 애완동물) 여부, 동 시간대 예약, 사업자 상태 확인 필요)

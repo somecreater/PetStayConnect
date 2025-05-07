@@ -27,4 +27,5 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
   boolean existsByCheckInAndCheckOut(String loginId, LocalDate checkIn, LocalDate checkOut,
       Long petId);
 
+  List<Reservation> findByPetBusiness_Id(Long id);
 }
