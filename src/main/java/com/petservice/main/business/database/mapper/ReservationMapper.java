@@ -18,7 +18,6 @@ public class ReservationMapper {
   private final PetBusinessRepository petBusinessRepository;
   private final PetBusinessRoomRepository petBusinessRoomRepository;
   private final PaymentMapper paymentMapper;
-  private final PetReservationMapper petReservationMapper;
   private final ReviewMapper reviewMapper;
 
   public Reservation toEntity(ReservationDTO reservationDTO){
@@ -53,10 +52,6 @@ public class ReservationMapper {
     if(reservationDTO.getPaymentDTO()!=null){
       reservation.setPayment(paymentMapper.toEntity(reservationDTO.getPaymentDTO()));
     }
-    if(reservationDTO.getPetReservationDTOList()!=null){
-      reservation.setPetReservationList(reservationDTO.getPetReservationDTOList().stream()
-          .map(petReservationMapper::toEntity).toList());
-    }
     if(reservationDTO.getReviewDTO()!=null){
       reservation.setReview(reviewMapper.toEntity(reservationDTO.getReviewDTO()));
     }
@@ -90,10 +85,6 @@ public class ReservationMapper {
     }
     if(reservation.getPayment()!=null){
       reservationDTO.setPaymentDTO(paymentMapper.toDTO(reservation.getPayment()));
-    }
-    if(reservation.getPetReservationList()!=null){
-      reservationDTO.setPetReservationDTOList(reservation.getPetReservationList().stream()
-          .map(petReservationMapper::toDTO).toList());
     }
     if(reservation.getReview()!=null){
       reservationDTO.setReviewDTO(reviewMapper.toDTO(reservation.getReview()));

@@ -14,13 +14,21 @@ public interface BnsVLServiceInterface {
   public List<BnsVLRequest> getBnsVLRequestList();
 
   /*
-  사업자 인증 진행(한번에 100 건 or 여러 개의 요청 처리)
+  사업자 인증 진행(한번에 100 건 or 여러 개의 요청 처리)(PENDING 상태인 것을 먼저 진행)
   (요청이 정상적으로 처리되었으면 해당 요청들을 전부 삭제)
   (사업자 번호로 검색해서 삭제)
   */
-  public BnsVLResponse getBnsValidation(List<BnsVLRequest> bnsVLRequestList);
+  public BnsVLResponse getBnsValidation();
 
-  //사업자 인증 결과를 즉시 사업자 계정에 반영
-  public void UpdateBnsValidation(BnsVLResponse bnsVLResponse);
+  //사업자 인증 진행(ERROR 상태인 것을 다시 진행)
+  public BnsVLResponse getBnsValidationRetry();
 
+  //사업자 인증 진행(NONE 상태인 것을 다시 진행)
+  public BnsVLResponse getBnsValidationNoneRetry();
+
+  //사업자 인증 진행
+  public BnsVLResponse getBnsResponse(List<BnsVLRequest> requests);
+
+  //사업자 인증 관련 메일 전송
+  public void sendAlertMail(String to, String subject, String text);
 }
