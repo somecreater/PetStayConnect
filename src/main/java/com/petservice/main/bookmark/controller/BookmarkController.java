@@ -1,7 +1,7 @@
 package com.petservice.main.bookmark.controller;
 
-import com.petservice.main.bookmark.database.dto.BookmarkDTO;
-import com.petservice.main.bookmark.database.entity.Bookmark.ItemType;
+import com.petservice.main.user.database.dto.BookmarkDTO;
+import com.petservice.main.user.database.entity.BookmarkType;
 import com.petservice.main.bookmark.service.BookmarkServiceInterface;
 import com.petservice.main.user.database.dto.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
@@ -21,78 +21,89 @@ public class BookmarkController {
     private final BookmarkServiceInterface bookmarkService;
 
     @PostMapping
-    public ResponseEntity<?> addBookmark(
+    public ResponseEntity<?> createBookmark(
             @AuthenticationPrincipal CustomUserDetails principal,
-            @RequestParam ItemType itemType,
-            @RequestParam Long itemId
-    ) {
-        Map<String, Object> result = new HashMap<>();
-        if (principal == null) {
-            result.put("result", false);
-            result.put("message", "로그인이 필요합니다");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result);
-        }
+            @RequestParam BookmarkType bookmarkType,
+            @RequestParam Long targetId) {
+
+        Map<String, Object> response = new HashMap<>();
         try {
-            bookmarkService.addBookmark(principal.getUsername(), itemType, itemId);
-            result.put("result", true);
-            result.put("message", "북마크가 추가되었습니다");
-            return ResponseEntity.ok(result);
+            BookmarkDTO created = bookmarkService.createBookmark(
+                    principal.getUserId(),
+                    bookmarkType,
+                    targetId
+            );
+            response.put("result", true);
+            response.put("data", created);
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (Exception e) {
-            result.put("result", false);
-            result.put("message", e.getMessage());
-            return ResponseEntity.badRequest().body(result);
+            response.put("result", false);
+            response.put("message", e.getMessage());
+            return ResponseEntity.badRequest().body(response);
         }
     }
 
     @DeleteMapping
-    public ResponseEntity<?> removeBookmark(
+    public ResponseEntity<?> deleteBookmark(
             @AuthenticationPrincipal CustomUserDetails principal,
-            @RequestParam ItemType itemType,
-            @RequestParam Long itemId
-    ) {
-        Map<String, Object> result = new HashMap<>();
-        if (principal == null) {
-            result.put("result", false);
-            result.put("message", "로그인이 필요합니다");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result);
+            @RequestParam BookmarkType bookmarkType,
+            @RequestParam Long targetId) {
+
+        Map<String, Object> response = new HashMap<>();
+        try {
+            bookmarkService.deleteBookmark(
+                    principal.getUserId(),
+                    bookmarkType,
+                    targetId
+            );
+            response.put("result", true);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            response.put("result", false);
+            response.put("message", e.getMessage());
+            return ResponseEntity.badRequest().body(response);
         }
-        bookmarkService.removeBookmark(principal.getUsername(), itemType, itemId);
-        result.put("result", true);
-        result.put("message", "북마크가 삭제되었습니다");
-        return ResponseEntity.ok(result);
     }
 
     @GetMapping
     public ResponseEntity<?> getBookmarks(
-            @AuthenticationPrincipal CustomUserDetails principal
-    ) {
-        Map<String, Object> result = new HashMap<>();
-        if (principal == null) {
-            result.put("result", false);
-            result.put("message", "로그인이 필요합니다");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result);
+            @AuthenticationPrincipal CustomUserDetails principal) {
+
+        Map<String, Object> response = new HashMap<>();
+        try {
+            List<BookmarkDTO> bookmarks = bookmarkService.getBookmarksByUser(
+                    principal.getUserId()
+            );
+            response.put("result", true);
+            response.put("data", bookmarks);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            response.put("result", false);
+            response.put("message", e.getMessage());
+            return ResponseEntity.badRequest().body(response);
         }
-        List<BookmarkDTO> bookmarks = bookmarkService.getBookmarksByUser(principal.getUsername());
-        result.put("result", true);
-        result.put("bookmarks", bookmarks);
-        return ResponseEntity.ok(result);
     }
 
     @GetMapping("/check")
     public ResponseEntity<?> checkBookmark(
             @AuthenticationPrincipal CustomUserDetails principal,
-            @RequestParam ItemType itemType,
-            @RequestParam Long itemId
-    ) {
-        Map<String, Object> result = new HashMap<>();
-        if (principal == null) {
-            result.put("result", false);
-            result.put("message", "로그인이 필요합니다");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result);
+            @RequestParam BookmarkType bookmarkType,
+            @RequestParam Long targetId) {
+
+        Map<String, Object> response = new HashMap<>();
+        try {
+            boolean isBookmarked = bookmarkService.isBookmarked(
+                    principal.getUserId(),
+                    bookmarkType,
+                    targetId
+            );
+            response.put("result", true);
+            response.put("isBookmarked", isBookmarked);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            response.put("result", false);
+            response.put("message", e.getMessage());
+            return ResponseEntity.badRequest().body(response);
         }
-        boolean isBookmarked = bookmarkService.isBookmarked(principal.getUsername(), itemType, itemId);
-        result.put("result", true);
-        result.put("isBookmarked", isBookmarked);
-        return ResponseEntity.ok(result);
     }
 }

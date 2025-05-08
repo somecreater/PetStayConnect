@@ -1,81 +1,72 @@
 package com.petservice.main.bookmark.service;
 
-import com.petservice.main.bookmark.database.dto.BookmarkDTO;
-import com.petservice.main.bookmark.database.entity.Bookmark;
-import com.petservice.main.bookmark.database.entity.Bookmark.ItemType;
-import com.petservice.main.bookmark.database.mapper.BookmarkMapper;
-import com.petservice.main.bookmark.database.repository.BookmarkRepository;
+import com.petservice.main.user.database.dto.BookmarkDTO;
+import com.petservice.main.user.database.entity.Bookmark;
+import com.petservice.main.user.database.entity.BookmarkType;
+import com.petservice.main.user.database.entity.User;
+import com.petservice.main.user.database.mapper.BookmarkMapper;
+import com.petservice.main.user.database.repository.BookmarkRepository;
+import com.petservice.main.user.database.repository.UserRepository;
 import com.petservice.main.qna.database.repository.QnaPostRepository;
-// import com.petservice.main.hotel.database.repository.HotelRepository; // 호텔 리포지토리 필요시 주입
+import com.petservice.main.hotel.database.repository.HotelRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class BookmarkServiceImpl implements BookmarkServiceInterface {
 
     private final BookmarkRepository bookmarkRepository;
-    private final BookmarkMapper bookmarkMapper;
+    private final UserRepository userRepository;
     private final QnaPostRepository qnaPostRepository;
-    // private final HotelRepository hotelRepository; // 호텔 리포지토리 필요시 주입
+    private final HotelRepository hotelRepository;
+    private final BookmarkMapper bookmarkMapper;
 
     @Override
     @Transactional
-    public void addBookmark(String userId, ItemType itemType, Long itemId) {
-        if (bookmarkRepository.existsByUserIdAndItemTypeAndItemId(userId, itemType, itemId)) return;
-        boolean exists = false;
-        if (itemType == ItemType.QNA) {
-            exists = qnaPostRepository.existsById(itemId);
-        } else if (itemType == ItemType.HOTEL) {
-            // exists = hotelRepository.existsById(itemId);
-            exists = true; // 임시
-        }
-        if (!exists) throw new EntityNotFoundException("북마크하려는 항목이 존재하지 않습니다");
+    public BookmarkDTO createBookmark(Long userId, BookmarkType bookmarkType, Long targetId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+        validateTargetExists(bookmarkType, targetId);
+
         Bookmark bookmark = new Bookmark();
-        bookmark.setUserId(userId);
-        bookmark.setItemType(itemType);
-        bookmark.setItemId(itemId);
-        bookmarkRepository.save(bookmark);
+        bookmark.setBookmarkType(bookmarkType);
+        bookmark.setTargetId(targetId);
+        bookmark.setUser(user);
+
+        Bookmark saved = bookmarkRepository.save(bookmark);
+        return bookmarkMapper.toDTO(saved);
     }
 
     @Override
     @Transactional
-    public void removeBookmark(String userId, ItemType itemType, Long itemId) {
-        bookmarkRepository.deleteByUserIdAndItemTypeAndItemId(userId, itemType, itemId);
+    public void deleteBookmark(Long userId, BookmarkType bookmarkType, Long targetId) {
+        bookmarkRepository.deleteByUser_IdAndBookmarkTypeAndTargetId(userId, bookmarkType, targetId);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<BookmarkDTO> getBookmarksByUser(String userId) {
-        return bookmarkRepository.findByUserId(userId).stream()
-                .filter(bookmark -> isItemExists(bookmark.getItemType(), bookmark.getItemId()))
+    public List<BookmarkDTO> getBookmarksByUser(Long userId) {
+        return bookmarkRepository.findByUser_Id(userId).stream()
                 .map(bookmarkMapper::toDTO)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    @Transactional
-    public void cleanupDeletedItem(ItemType itemType, Long itemId) {
-        bookmarkRepository.deleteByItemTypeAndItemId(itemType, itemId);
+                .toList();
     }
 
     @Override
     @Transactional(readOnly = true)
-    public boolean isBookmarked(String userId, ItemType itemType, Long itemId) {
-        return bookmarkRepository.existsByUserIdAndItemTypeAndItemId(userId, itemType, itemId);
+    public boolean isBookmarked(Long userId, BookmarkType bookmarkType, Long targetId) {
+        return bookmarkRepository.existsByUser_IdAndBookmarkTypeAndTargetId(userId, bookmarkType, targetId);
     }
 
-    private boolean isItemExists(ItemType itemType, Long itemId) {
-        if (itemType == ItemType.QNA) {
-            return qnaPostRepository.existsById(itemId);
-        } else if (itemType == ItemType.HOTEL) {
-            // return hotelRepository.existsById(itemId);
-            return true; // 임시
-        }
-        return false;
+    private void validateTargetExists(BookmarkType type, Long targetId) {
+        boolean exists = switch (type) {
+            case QNA -> qnaPostRepository.existsById(targetId);
+            case HOTEL -> hotelRepository.existsById(targetId);
+        };
+        if (!exists) throw new EntityNotFoundException("Target resource not found");
     }
 }
