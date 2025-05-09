@@ -8,12 +8,12 @@ import com.petservice.main.user.database.mapper.BookmarkMapper;
 import com.petservice.main.user.database.repository.BookmarkRepository;
 import com.petservice.main.user.database.repository.UserRepository;
 import com.petservice.main.qna.database.repository.QnaPostRepository;
-import com.petservice.main.hotel.database.repository.HotelRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -22,51 +22,78 @@ public class BookmarkServiceImpl implements BookmarkServiceInterface {
     private final BookmarkRepository bookmarkRepository;
     private final UserRepository userRepository;
     private final QnaPostRepository qnaPostRepository;
-    private final HotelRepository hotelRepository;
     private final BookmarkMapper bookmarkMapper;
 
     @Override
     @Transactional
-    public BookmarkDTO createBookmark(Long userId, BookmarkType bookmarkType, Long targetId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+    public void addBookmark(String userLoginId, BookmarkType bookmarkType, Long targetId) {
+        User user = userRepository.findByUserLoginId(userLoginId)
+                .orElseThrow(() -> new EntityNotFoundException("사용자를 찾을 수 없습니다"));
 
-        validateTargetExists(bookmarkType, targetId);
+        // QNA 게시글 존재 여부 확인
+        if (bookmarkType == BookmarkType.QNA && !qnaPostRepository.existsById(targetId)) {
+            throw new EntityNotFoundException("QnA 게시글이 존재하지 않습니다.");
+        }
+
+        // 이미 북마크했는지 확인 (메모리상에서 체크)
+        boolean exists = bookmarkRepository.findAll().stream()
+                .anyMatch(b -> b.getUser().getId().equals(user.getId())
+                        && b.getBookmarkType() == bookmarkType
+                        && b.getTargetId().equals(targetId));
+        if (exists) return;
 
         Bookmark bookmark = new Bookmark();
+        bookmark.setUser(user);
         bookmark.setBookmarkType(bookmarkType);
         bookmark.setTargetId(targetId);
-        bookmark.setUser(user);
-
-        Bookmark saved = bookmarkRepository.save(bookmark);
-        return bookmarkMapper.toDTO(saved);
+        bookmarkRepository.save(bookmark);
     }
 
     @Override
     @Transactional
-    public void deleteBookmark(Long userId, BookmarkType bookmarkType, Long targetId) {
-        bookmarkRepository.deleteByUser_IdAndBookmarkTypeAndTargetId(userId, bookmarkType, targetId);
+    public void removeBookmark(String userLoginId, BookmarkType bookmarkType, Long targetId) {
+        User user = userRepository.findByUserLoginId(userLoginId)
+                .orElseThrow(() -> new EntityNotFoundException("사용자를 찾을 수 없습니다"));
+
+        // 메모리상에서 찾아서 삭제
+        bookmarkRepository.findAll().stream()
+                .filter(b -> b.getUser().getId().equals(user.getId())
+                        && b.getBookmarkType() == bookmarkType
+                        && b.getTargetId().equals(targetId))
+                .forEach(bookmarkRepository::delete);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<BookmarkDTO> getBookmarksByUser(Long userId) {
-        return bookmarkRepository.findByUser_Id(userId).stream()
+    public List<BookmarkDTO> getBookmarksByUser(String userLoginId) {
+        User user = userRepository.findByUserLoginId(userLoginId)
+                .orElseThrow(() -> new EntityNotFoundException("사용자를 찾을 수 없습니다"));
+
+        return bookmarkRepository.findAll().stream()
+                .filter(b -> b.getUser().getId().equals(user.getId()))
+                .filter(b -> b.getBookmarkType() != BookmarkType.QNA || qnaPostRepository.existsById(b.getTargetId()))
                 .map(bookmarkMapper::toDTO)
-                .toList();
+                .collect(Collectors.toList());
     }
 
     @Override
     @Transactional(readOnly = true)
-    public boolean isBookmarked(Long userId, BookmarkType bookmarkType, Long targetId) {
-        return bookmarkRepository.existsByUser_IdAndBookmarkTypeAndTargetId(userId, bookmarkType, targetId);
+    public boolean isBookmarked(String userLoginId, BookmarkType bookmarkType, Long targetId) {
+        User user = userRepository.findByUserLoginId(userLoginId)
+                .orElseThrow(() -> new EntityNotFoundException("사용자를 찾을 수 없습니다"));
+
+        return bookmarkRepository.findAll().stream()
+                .anyMatch(b -> b.getUser().getId().equals(user.getId())
+                        && b.getBookmarkType() == bookmarkType
+                        && b.getTargetId().equals(targetId));
     }
 
-    private void validateTargetExists(BookmarkType type, Long targetId) {
-        boolean exists = switch (type) {
-            case QNA -> qnaPostRepository.existsById(targetId);
-            case HOTEL -> hotelRepository.existsById(targetId);
-        };
-        if (!exists) throw new EntityNotFoundException("Target resource not found");
+    @Override
+    @Transactional
+    public void cleanupDeletedItem(BookmarkType bookmarkType, Long targetId) {
+        List<Bookmark> toDelete = bookmarkRepository.findAll().stream()
+                .filter(b -> b.getBookmarkType() == bookmarkType && b.getTargetId().equals(targetId))
+                .collect(Collectors.toList());
+        bookmarkRepository.deleteAll(toDelete);
     }
 }
