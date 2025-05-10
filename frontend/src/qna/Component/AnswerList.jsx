@@ -1,6 +1,6 @@
 import React from 'react'
 import AnswerUpdateForm from '../form/AnswerUpdateForm'
-import AnswerDeleteButton from '../component/AnswerDeleteButton'
+import AnswerDeleteButton from '../Component/AnswerDeleteButton'
 
 export default function AnswerList({
   postId,

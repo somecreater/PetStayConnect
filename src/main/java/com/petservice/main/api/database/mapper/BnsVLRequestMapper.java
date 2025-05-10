@@ -19,7 +19,7 @@ public class BnsVLRequestMapper {
     entity.setStartDt(bnsVLRequest.getStartDt());
     entity.setPnm(bnsVLRequest.getPNm());
     entity.setPnm2(bnsVLRequest.getPNm2());
-    entity.setBno(bnsVLRequest.getBNm());
+    entity.setBnm(bnsVLRequest.getBNm());
     entity.setCorpno(bnsVLRequest.getCorpNo());
     entity.setBsector(bnsVLRequest.getBSector());
     entity.setBtype(bnsVLRequest.getBType());

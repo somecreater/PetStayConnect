@@ -54,4 +54,7 @@ public class BnsVLRequestEntity {
   @Enumerated(EnumType.STRING)
   @Column(name = "status")
   private RequestStatus status;
+
+  @Column
+  private String email;
 }
