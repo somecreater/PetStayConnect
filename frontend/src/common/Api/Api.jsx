@@ -16,7 +16,11 @@ export const API_ENDPOINTS = {
   pets: `${API_BASE_URL}/api/pets`,
   qna: `${API_BASE_URL}/api/qnas`,
   businesstype:`${API_BASE_URL}/api/type`,
-  
+  business:{
+    list: `${API_BASE_URL}/api/provider/list`,
+    outerlist: `${API_BASE_URL}/api/provider/list/naver`
+  },
+  businessvalidation: `${API_BASE_URL}/api/validation`
 }
 
 export const createHeaders = () => ({

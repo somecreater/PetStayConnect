@@ -150,7 +150,26 @@ const ApiService = {
       data: dto
     })
   },
-
+  business:{
+    list: (dto,page,size) => RefreshApi.get(API_ENDPOINTS.business.list, dto, 
+    {
+      params:{page, size},
+      headers: createHeaders(),
+      withCredentials: true
+    }),
+    outerlist: (dto,page,size) => RefreshApi.get(API_ENDPOINTS.business.outerlist, dto,
+    {
+      params:{page, size},
+      headers: createHeaders(),
+      withCredentials: true
+    })
+  },
+  businessvalidation: {
+    validation: (dto) => RefreshApi.post(`${API_ENDPOINTS.businessvalidation}/business`, dto, {
+      headers: createHeaders(),
+      withCredentials: true,
+    })
+  },
   businessService:{
 
   },

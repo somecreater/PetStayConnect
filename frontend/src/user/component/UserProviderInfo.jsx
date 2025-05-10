@@ -1,8 +1,11 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { useUser } from '../../common/Context/UserContext';
 import CustomLabel from '../../common/Ui/CustomLabel';
 import CusomP from '../../common/Ui/CusomP';
 import '../../common/Css/common.css';
+import Button from '../../common/Ui/Button';
+import Modal from '../../common/Ui/Modal';
+import BusinessValidationForm from '../Form/BusinessValidationForm';
 
 function UserProviderInfo({petBusinessDTO}){
   const {
@@ -17,6 +20,15 @@ function UserProviderInfo({petBusinessDTO}){
     bankAccount,
     varification,
   } = petBusinessDTO;
+
+  const [isModalOpen,setIsModalOpen]=useState(false);
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
   return(
     <>
@@ -59,6 +71,28 @@ function UserProviderInfo({petBusinessDTO}){
       
       <CustomLabel classtetxt={'ProviderInfolabel'} title={'인증현황:'} for={'ProviderInfo'}/> 
       <CusomP classtext={'ProviderInfo'} title={varification}/>
+
+      {varification === 'NONE'? 
+      <>
+      <div>
+        <CusomP classtext={'ProviderInfo'} title={'인증을 진행해주세요!'}/>
+        <Button 
+          classtext={'ValidationButton'} 
+          type={'button'} 
+          title={'사업자 인증'}
+          onClick={openModal} 
+        />
+        <Modal isOpen={isModalOpen} onClose={closeModal}>
+          <BusinessValidationForm/>
+        </Modal>
+      </div>
+      </>
+      :
+      <>
+      <CusomP classtext={'ProviderInfo'} title={'이미 인증이 완료된 사업자 입니다.'}/>
+      </> 
+      }
+      
     </div>
     </>
   );

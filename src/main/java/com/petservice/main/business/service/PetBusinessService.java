@@ -99,7 +99,7 @@ public class PetBusinessService implements PetBusinessServiceInterface {
   @Transactional
   public PetBusinessDTO registerBusiness(PetBusinessDTO petBusinessDTO) {
 
-    if (!petBusinessRepository.existsByRegistrationNumber(petBusinessDTO.getRegistrationNumber())
+    if (petBusinessRepository.existsByRegistrationNumber(petBusinessDTO.getRegistrationNumber())
       || insertValidation(petBusinessDTO)) {
       return null;
     }
@@ -194,16 +194,24 @@ public class PetBusinessService implements PetBusinessServiceInterface {
     if(petBusinessDTO == null){
       return false;
     }
+    if (isBlank(petBusinessDTO.getBusinessName())
+        || isBlank(petBusinessDTO.getPetBusinessTypeName())) {
+      return false;
+    }
 
-    if(isBlank(petBusinessDTO.getBusinessName())
-        || isBlank(petBusinessDTO.getStatus().name())
-        || isBlank(petBusinessDTO.getRegistrationNumber())
-        || isBlank(petBusinessDTO.getVarification().name())
-        || isBlank(Integer.toString(petBusinessDTO.getMaxPrice()))
-        || isBlank(Integer.toString(petBusinessDTO.getMinPrice()))
-        || isBlank(petBusinessDTO.getStatus().name())
-        || isBlank(petBusinessDTO.getVarification().name())
-        || isBlank(petBusinessDTO.getPetBusinessTypeName())){
+    if (petBusinessDTO.getStatus() == null
+        || petBusinessDTO.getVarification() == null) {
+      return false;
+    }
+
+    if (petBusinessDTO.getMinPrice() == null
+        || petBusinessDTO.getMaxPrice() == null
+        || petBusinessDTO.getMinPrice() > petBusinessDTO.getMaxPrice()) {
+      return false;
+    }
+
+    String regNum = petBusinessDTO.getRegistrationNumber();
+    if (isBlank(regNum)) {
       return false;
     }
 

@@ -13,7 +13,7 @@ public class ScheduledValidation {
 
   private final BnsVLServiceInterface bnsVLService;
 
-  @Scheduled(cron = "0 0 * * * *")
+  @Scheduled(initialDelay = 0, fixedRate = 60 * 60 * 1000)
   public void RunValidation(){
     log.info("### 사업자 진위확인 배치 시작 ###");
     try{
