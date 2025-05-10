@@ -67,7 +67,7 @@ function PetManagePage() {
       <Modal isOpen={isModalOpen} onClose={() => setModalOpen(false)}>
           <PetUpdateForm pet={editingPet} onUpdate={handleUpdate} onCancel={() => setEditingPet(null)} />
         </Modal>
-      <PetList pets={pets} onEdit={handleEdit} onDelete={handleDelete} />
+      <PetList pets={pets} onEdit={handleEdit} onDelete={handleDelete} isDelete={true} />
     </div>
   );
 }
