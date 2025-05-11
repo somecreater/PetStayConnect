@@ -52,6 +52,15 @@ public class PetBusiness extends TimeEntity {
   @Column(name = "varification_status")
   private Varification varification;
 
+  @Column
+  private String province;
+
+  @Column
+  private String city;
+
+  @Column
+  private String town;
+
   @OneToOne(fetch = FetchType.LAZY, optional = true)
   @JoinColumn(name = "user_id", nullable = true)
   private User user;

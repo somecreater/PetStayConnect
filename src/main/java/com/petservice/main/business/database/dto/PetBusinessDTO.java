@@ -22,6 +22,9 @@ public class PetBusinessDTO {
   private String registrationNumber;
   private String bankAccount;
   private Varification varification;
+  private String province;
+  private String city;
+  private String town;
   private Long userId;
   private String petBusinessTypeName;
   private Long petBusinessTypeId;

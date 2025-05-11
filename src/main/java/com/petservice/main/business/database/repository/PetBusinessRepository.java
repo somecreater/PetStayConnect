@@ -19,28 +19,28 @@ public interface PetBusinessRepository extends JpaRepository<PetBusiness,Long> {
    *    - 사업체명(businessName) like 검색
    *    - sectorCode / typeCode = null 허용
    *    - 'is_around' true: 같은 city(시)만
+   *    (주소 관련 문제 발생, 애완동물 사업자 엔티티와 주소 엔티티 연관 관계 없음)
    */
+
   @Query(value = """
-        SELECT pb.* 
+        SELECT pb.*
           FROM pet_business pb
-          JOIN users u ON pb.user_id = u.id
-          JOIN address a ON a.user_id = u.id
-          JOIN pet_business_type t ON pb.business_type_id = t.id
-         WHERE (:businessName IS NULL OR pb.business_name LIKE %:businessName%)
-           AND (:sectorCode   IS NULL OR t.sector_code = :sectorCode)
-           AND (:typeCode     IS NULL OR t.type_code   = :typeCode)
-           AND (:city         IS NULL OR a.city         = :city)
+          LEFT JOIN pet_business_type t ON pb.business_type_id = t.id
+         WHERE (:businessName IS NULL OR :businessName = '' 
+           OR pb.business_name LIKE CONCAT('%', :businessName, '%'))
+           AND (:sectorCode   IS NULL OR :sectorCode   = '' OR t.sector_code = :sectorCode)
+           AND (:typeCode     IS NULL OR :typeCode     = '' OR t.type_code   = :typeCode)
+           AND (:city         IS NULL OR :city         = '' OR pb.city         = :city)
         """,
       countQuery = """
-        SELECT COUNT(*) 
+        SELECT COUNT(*)
           FROM pet_business pb
-          JOIN users u ON pb.user_id = u.id
-          JOIN address a ON a.user_id = u.id
-          JOIN pet_business_type t ON pb.business_type_id = t.id
-         WHERE (:businessName IS NULL OR pb.business_name LIKE %:businessName%)
-           AND (:sectorCode   IS NULL OR t.sector_code = :sectorCode)
-           AND (:typeCode     IS NULL OR t.type_code   = :typeCode)
-           AND (:city         IS NULL OR a.city         = :city)
+          LEFT JOIN pet_business_type t ON pb.business_type_id = t.id
+         WHERE (:businessName IS NULL OR :businessName = '' 
+           OR pb.business_name LIKE CONCAT('%', :businessName, '%'))
+           AND (:sectorCode   IS NULL OR :sectorCode   = '' OR t.sector_code = :sectorCode)
+           AND (:typeCode     IS NULL OR :typeCode     = '' OR t.type_code   = :typeCode)
+           AND (:city         IS NULL OR :city         = '' OR pb.city         = :city)
         """,
       nativeQuery = true)
   Page<PetBusiness> findServiceAndAround(
@@ -56,20 +56,22 @@ public interface PetBusinessRepository extends JpaRepository<PetBusiness,Long> {
    *    - 주변 조건 제외, 전체 조회
    */
   @Query(value = """
-        SELECT pb.* 
+        SELECT pb.*
           FROM pet_business pb
-          JOIN pet_business_type t ON pb.business_type_id = t.id
-         WHERE (:businessName IS NULL OR pb.business_name LIKE %:businessName%)
-           AND (:sectorCode   IS NULL OR t.sector_code = :sectorCode)
-           AND (:typeCode     IS NULL OR t.type_code   = :typeCode)
+          LEFT JOIN pet_business_type t ON pb.business_type_id = t.id
+         WHERE (:businessName IS NULL OR :businessName = '' 
+           OR pb.business_name LIKE CONCAT('%', :businessName, '%'))
+           AND (:sectorCode   IS NULL OR :sectorCode   = '' OR t.sector_code = :sectorCode)
+           AND (:typeCode     IS NULL OR :typeCode     = '' OR t.type_code   = :typeCode)
         """,
       countQuery = """
-        SELECT COUNT(*) 
+        SELECT COUNT(*)
           FROM pet_business pb
-          JOIN pet_business_type t ON pb.business_type_id = t.id
-         WHERE (:businessName IS NULL OR pb.business_name LIKE %:businessName%)
-           AND (:sectorCode   IS NULL OR t.sector_code = :sectorCode)
-           AND (:typeCode     IS NULL OR t.type_code   = :typeCode)
+          LEFT JOIN pet_business_type t ON pb.business_type_id = t.id
+         WHERE (:businessName IS NULL OR :businessName = '' 
+           OR pb.business_name LIKE CONCAT('%', :businessName, '%'))
+           AND (:sectorCode   IS NULL OR :sectorCode   = '' OR t.sector_code = :sectorCode)
+           AND (:typeCode     IS NULL OR :typeCode     = '' OR t.type_code   = :typeCode)
         """,
       nativeQuery = true)
   Page<PetBusiness> findServiceAll(
