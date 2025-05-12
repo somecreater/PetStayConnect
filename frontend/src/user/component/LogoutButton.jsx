@@ -27,14 +27,12 @@ function LogoutButton(props){
     };
 
     return (
-        <>
-        <Button
-          classtext={'LogoutButton'} 
-          type={'button'} 
-          onClick={handleLogout} 
-          title={'로그아웃'}
-        />
-        </>
+    <Button
+      classtext="btn btn-outline-secondary"
+      type="button"
+      onClick={handleLogout}
+      title="로그아웃"
+    />
     );
   
 }

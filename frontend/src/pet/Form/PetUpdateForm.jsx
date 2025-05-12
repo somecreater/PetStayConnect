@@ -44,76 +44,107 @@ function PetUpdateForm({ pet, onUpdate, onCancel }) {
   };
 
   return (
-    <form className="PetUpdateForm" onSubmit={handleSubmit}>
-      
-      
-      <CustomLabel classtext="petlabel" title="ID:" />
-      <CusomP classtext="petInfo" title={pet.id} />
+    <div className="container py-4">
+      <form onSubmit={handleSubmit} className="border p-4 rounded bg-light">
+        <h5 className="mb-3">펫 정보 수정</h5>
 
-      <CustomLabel classtext="petlabel" title="이름:" />
-      <TextInput
-        classtext={'petregister'}
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        placeholderText="이름"
-      />
+        <div className="mb-3 row">
+          <label className="col-sm-3 col-form-label">ID</label>
+          <div className="col-sm-9">
+            <CusomP classtext="form-control-plaintext" title={pet.id} />
+          </div>
+        </div>
 
-      <CustomLabel classtext="petlabel" title="종류:" />
-      <TextInput
-        classtext={'petregister'}
-        value={species}
-        onChange={(e) => setSpecies(e.target.value)}
-        placeholderText="종류"
-      />
+        <div className="mb-3">
+          <label className="col-sm-3 col-form-label">이름</label>
+          <TextInput
+            classtext="form-control"
+            id="name"
+            value={name}
+            onChange={e => setName(e.target.value)}
+            placeholderText="이름"
+          />
+        </div>
 
-      <CustomLabel classtext="petlabel" title="나이:" />
-      <input
-        className="petregister"
-        value={age}
-        onChange={(e) => setAge(e.target.value)}
-        placeholder="나이"
-      />
+        <div className="mb-3">
+          <label className="col-sm-3 col-form-label">종류</label>
+          <TextInput
+            classtext="form-control"
+            id="species"
+            value={species}
+            onChange={e => setSpecies(e.target.value)}
+            placeholderText="종류"
+          />
+        </div>
 
-      <CustomLabel classtext="petlabel" title="성별:" />
-      <div className='Select'>
-          <label htmlFor="role">성별: </label>
+        <div className="mb-3">
+          <label className="col-sm-3 col-form-label">나이</label>
+          <input
+            type="number"
+            className="form-control"
+            value={age}
+            onChange={e => setAge(e.target.value)}
+          />
+        </div>
+
+        <div className="mb-3">
+          <label className="col-sm-3 col-form-label">성별</label>
           <select
-            id="gender"
-            name="gender"
+            className="form-select"
             value={gender}
-            onChange={(e) => setGender(e.target.value)}
+            onChange={e => setGender(e.target.value)}
           >
             <option value="MAN">수컷</option>
             <option value="WOMAN">암컷</option>
           </select>
-      </div>
+        </div>
 
-      <CustomLabel classtext="petlabel" title="생년월일:" />
-      <input
-        classtext={'petregister'}
-        type="date"
-        value={birthDate}
-        onChange={(e) => setBirthDate(e.target.value)}
-        placeholder="생년월일"
-      />
+        <div className="mb-3">
+          <label className="col-sm-3 col-form-label" for="birthDate">생년월일:</label>
+          <input
+            type="date"
+            className="form-control"
+            value={birthDate}
+            onChange={e => setBirthDate(e.target.value)}
+          />
+        </div>
 
-      <CustomLabel classtext="petlabel" title="임신여부:" />
-      <TextInput
-        classtext={'petregister'}
-        value={breed}
-        onChange={(e) => setBreed(e.target.value)}
-        placeholderText="임신여부"
-      />
+        <div className="mb-3">
+          <label className="col-sm-3 col-form-label" for="breed">임신여부</label>
+          <TextInput
+            classtext="form-control"
+            value={breed}
+            onChange={e => setBreed(e.target.value)}
+            placeholderText="임신여부"
+          />
+        </div>
 
-      <CustomLabel classtext="petlabel" title="건강상 특이사항:" />
-      <textarea className="petlonginfo" name="description" value={healthInfo}
-        placeholder="건강 정보" onChange={e => setHealthInfo(e.target.value)}/>
-      
-      <button type="submit">수정</button>
-      <button type="button" onClick={onCancel}>
-        취소
-      </button>
-    </form>
+        <div className="mb-4">
+          <label className="col-sm-3 col-form-label" for="healthInfo">건강 정보</label>
+          <textarea
+            className="form-control"
+            rows={3}
+            value={healthInfo}
+            onChange={e => setHealthInfo(e.target.value)}
+            placeholder="건강 정보"
+          />
+        </div>
+
+        <div className="d-flex gap-2">
+          <Button
+            classtext="btn btn-primary"
+            type="submit"
+            title="수정"
+          />
+          <Button
+            classtext="btn btn-secondary"
+            type="button"
+            title="취소"
+            onClick={onCancel}
+          />
+        </div>
+      </form>
+    </div>
   );
 }
 

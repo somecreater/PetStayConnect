@@ -25,61 +25,56 @@ export default function QnaListPage() {
   }, [page, size])
 
   return (
-    <div className="QnaListPage">
-      <h1 className="PageTitle">질문 목록</h1>
-      <section className="QnaListPage-Actions">
+    <div className="container py-4">
+      <div className="d-flex justify-content-between align-items-center mb-3">
+        <h1>질문 목록</h1>
         <Button
           type="button"
           title="질문 등록"
-          classtext="PrimaryButton"
+          classtext="btn btn-primary"
           onClick={() => navigate('/qnas/register')}
         />
-      </section>
-      <ul className="PostList">
+      </div>
+
+      <ul className="list-group mb-4">
         {posts.map((post) => (
-          <li key={post.id} className="PostListItem">
-            <p className="PostListItem-Header">
-              <span className="PostListItem-Id">#{post.id}</span>
-              <span className="PostListItem-Title">
-                <Link to={`/qnas/${post.id}`} className="PostListItem-Link">
-                  {post.title}
-                </Link>
-              </span>
-            </p>
-            <p className="PostListItem-Meta">
-              <span className="Meta-Views">조회수: {post.viewCount}</span>
-              <span className="Meta-Date">
-                작성일: {new Date(post.createdAt).toLocaleString()}
-              </span>
-            </p>
+          <li key={post.id} className="list-group-item">
+            <div className="d-flex justify-content-between">
+              <Link to={`/qnas/${post.id}`} className="h5 mb-1 text-decoration-none">
+                #{post.id} {post.title}
+              </Link>
+              <small className="text-muted">
+                조회수 {post.viewCount}
+              </small>
+            </div>
+            <small className="text-muted">
+              작성일 {new Date(post.createdAt).toLocaleString()}
+            </small>
           </li>
         ))}
       </ul>
-      <nav className="PostListPage-Pagination">
-        <Button
-          type="button"
-          title="Prev"
-          classtext="PageButton"
-          onClick={() => setPage((p) => Math.max(p - 1, 0))}
-          disabled={page === 0}
-        />
-        {[...Array(totalPages)].map((_, idx) => (
-          <Button
-            key={idx}
-            type="button"
-            title={`${idx + 1}`}
-            classtext={`PageButton${idx === page ? 'Active' : ''}`}
-            onClick={() => setPage(idx)}
-          />
-        ))}
-        <Button
-          type="button"
-          title="Next"
-          classtext="PageButton"
-          onClick={() => setPage((p) => Math.min(p + 1, totalPages - 1))}
-          disabled={page + 1 >= totalPages}
-        />
+
+      <nav>
+        <ul className="pagination justify-content-center">
+          <li className={`page-item ${page === 0 ? 'disabled' : ''}`}>
+            <button className="page-link" onClick={() => setPage(p => Math.max(p - 1, 0))}>
+              Previous
+            </button>
+          </li>
+          {[...Array(totalPages)].map((_, idx) => (
+            <li key={idx} className={`page-item ${idx === page ? 'active' : ''}`}>
+              <button className="page-link" onClick={() => setPage(idx)}>
+                {idx + 1}
+              </button>
+            </li>
+          ))}
+          <li className={`page-item ${page + 1 >= totalPages ? 'disabled' : ''}`}>
+            <button className="page-link" onClick={() => setPage(p => Math.min(p + 1, totalPages - 1))}>
+              Next
+            </button>
+          </li>
+        </ul>
       </nav>
     </div>
-  )
+  );
 }

@@ -6,14 +6,12 @@ function BusinessTypePage(props){
 
 
   return (
-    <>
-      <div className="BusinessTypePage">
-        <CusomP classtext={'alertText'} title={'사업자 타입 리스트'}/>
-
-        <BusinessTypeList/>
-        
+    <div className="container py-4">
+      <div className="mb-3">
+        <CusomP classtext="h4 mb-0" title="사업자 타입 리스트" />
       </div>
-    </>
+      <BusinessTypeList />
+    </div>
   );
 }
 

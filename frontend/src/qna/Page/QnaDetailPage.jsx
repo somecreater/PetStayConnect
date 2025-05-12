@@ -62,46 +62,60 @@ export default function QnaDetailPage() {
   };
 
    return (
-      <main className="QnaDetailPage">
-        {isEditingPost ? (
-          <PostUpdateForm
-            initialData={post}
-            onSuccess={() => { setIsEditingPost(false); loadData(); }}
-          />
-        ) : (
-          <article>
+    <div className="container py-4">
+      {isEditingPost ? (
+        <div className="card mb-4">
+          <div className="card-body">
+            <PostUpdateForm
+              initialData={post}
+              onSuccess={() => { setIsEditingPost(false); loadData(); }}
+            />
+          </div>
+        </div>
+      ) : (
+        <div className="card mb-4">
+          <div className="card-body">
             <h2>#{post.id} {post.title}</h2>
+            <p className="text-muted">{new Date(post.createdAt).toLocaleString()}</p>
             <p>{post.content}</p>
-            <p>{new Date(post.createdAt).toLocaleString()}</p>
             {canEditPost && (
-              <div>
-                <Button title="Edit" onClick={() => setIsEditingPost(true)} />
-                <PostDeleteButton postId={post.id} onDeleted={() => navigate('/qnas')} />
+              <div className="mt-3">
+                <Button
+                  type="button"
+                  title="수정"
+                  classtext="btn btn-secondary me-2"
+                  onClick={() => setIsEditingPost(true)}
+                />
+                <PostDeleteButton
+                  postId={post.id}
+                  onDeleted={() => navigate('/qnas')}
+                />
               </div>
             )}
-          </article>
-        )}
+          </div>
+        </div>
+      )}
 
-        <hr />
-
-        <section>
-          <h3>Answers</h3>
+      <div className="card mb-4">
+        <div className="card-body">
+          <h3 className="mb-3">답변</h3>
           {isBiz && editingAnswerId == null && (
             <AnswerRegisterForm postId={id} onSuccess={loadData} />
           )}
           <AnswerList
-              postId={id}
-              answers={answers}
-              editingAnswerId={editingAnswerId}
-              setEditingAnswerId={setEditingAnswerId}
-              onAccept={handleAccept}
-              onDeleted={loadData}
-              user={user}
-              isBiz={isBiz}
-            />
-          </section>
+            postId={id}
+            answers={answers}
+            editingAnswerId={editingAnswerId}
+            setEditingAnswerId={setEditingAnswerId}
+            onAccept={handleAccept}
+            onDeleted={loadData}
+            user={user}
+            isBiz={isBiz}
+          />
+        </div>
+      </div>
 
-          <Link to="/qnas">Back to list</Link>
-        </main>
-      );
+      <Link to="/qnas" className="btn btn-link">목록으로 돌아가기</Link>
+    </div>
+  );
 }

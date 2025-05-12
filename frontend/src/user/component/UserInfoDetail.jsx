@@ -1,59 +1,84 @@
 import React from 'react';
 import { useUser } from '../../common/Context/UserContext';
-import '../../common/Css/common.css';
 import UserProviderInfo from './UserProviderInfo';
 import CustomLabel from '../../common/Ui/CustomLabel';
 import CusomP from '../../common/Ui/CusomP';
 
-function UserInfoDetail(props){
-
-  const { user }= useUser();
+function UserInfoDetail(props) {
+  const { user } = useUser();
 
   return (
     <>
-    <div className='UserInfoDetail'>
+      <div className="card mb-4">
+        <div className="card-header">상세 사용자 정보</div>
+        <div className="card-body">
+          <dl className="row mb-0">
+            <dt className="col-sm-3">아이디</dt>
+            <dd className="col-sm-9">
+              <CusomP classtext="UserInfo" title={user.userLoginId} />
+            </dd>
 
-      <CustomLabel classtetxt={'UserInfolabel'} title={'아이디:'} for={'UserInfo'}/> 
-      <CusomP classtext={'UserInfo'} title={user.userLoginId}/>
+            <dt className="col-sm-3">이름</dt>
+            <dd className="col-sm-9">
+              <CusomP classtext="UserInfo" title={user.name} />
+            </dd>
 
-      <CustomLabel classtetxt={'UserInfolabel'} title={'이름:'} for={'UserInfo'}/> 
-      <CusomP classtext={'UserInfo'} title={user.name}/>
+            <dt className="col-sm-3">권한</dt>
+            <dd className="col-sm-9">
+              <CusomP classtext="UserInfo" title={user.role} />
+            </dd>
 
-      <CustomLabel classtetxt={'UserInfolabel'} title={'권한:'} for={'UserInfo'}/> 
-      <CusomP classtext={'UserInfo'} title={user.role}/> 
+            <dt className="col-sm-3">이메일</dt>
+            <dd className="col-sm-9">
+              <CusomP classtext="UserInfo" title={user.email || '미등록'} />
+            </dd>
 
-      <CustomLabel classtetxt={'UserInfolabel'} title={'이메일:'} for={'UserInfo'}/> 
-      <CusomP classtext={'UserInfo'} title={user.email}/>
-      
-      <CustomLabel classtetxt={'UserInfolabel'} title={'전화번호:'} for={'UserInfo'}/> 
-      <CusomP classtext={'UserInfo'} title={user.phone}/>
-      
-      <CustomLabel classtetxt={'UserInfolabel'} title={'로그인 타입:'} for={'UserInfo'}/> 
-      <CusomP classtext={'UserInfo'} title={user.loginType}/>
-      
-      <CustomLabel classtetxt={'UserInfolabel'} title={'애완동물 수:'} for={'UserInfo'}/> 
-      <CusomP classtext={'UserInfo'} title={user.petNumber}/>
-      
-      <CustomLabel classtetxt={'UserInfolabel'} title={'QNA점수:'} for={'UserInfo'}/> 
-      <CusomP classtext={'UserInfo'} title={user.qnaScore}/>
+            <dt className="col-sm-3">전화번호</dt>
+            <dd className="col-sm-9">
+              <CusomP classtext="UserInfo" title={user.phone || '미등록'} />
+            </dd>
 
-      <CustomLabel classtetxt={'UserInfolabel'} title={'회원의 포인트:'} for={'UserInfo'}/> 
-      <CusomP classtext={'UserInfo'} title={user.point}/>
-      
-      <CustomLabel classtetxt={'UserInfolabel'} title={'생성일자:'} for={'UserInfo'}/> 
-      <CusomP classtext={'UserInfo'} title={user.createAt}/>
-      
-      <CustomLabel classtetxt={'UserInfolabel'} title={'수정일자:'} for={'UserInfo'}/> 
-      <CusomP classtext={'UserInfo'} title={user.updateAt}/>
-    </div>
-    {
-      user.petBusinessDTO!==null&&(
-        <UserProviderInfo  petBusinessDTO={user.petBusinessDTO}/>
-      )
-    }
+            <dt className="col-sm-3">로그인 타입</dt>
+            <dd className="col-sm-9">
+              <CusomP classtext="UserInfo" title={user.loginType} />
+            </dd>
+
+            <dt className="col-sm-3">애완동물 수</dt>
+            <dd className="col-sm-9">
+              <CusomP classtext="UserInfo" title={user.petNumber} />
+            </dd>
+
+            <dt className="col-sm-3">QNA 점수</dt>
+            <dd className="col-sm-9">
+              <CusomP classtext="UserInfo" title={user.qnaScore} />
+            </dd>
+
+            <dt className="col-sm-3">포인트</dt>
+            <dd className="col-sm-9">
+              <CusomP classtext="UserInfo" title={user.point} />
+            </dd>
+
+            <dt className="col-sm-3">생성일자</dt>
+            <dd className="col-sm-9">
+              <CusomP classtext="UserInfo" title={user.createAt} />
+            </dd>
+
+            <dt className="col-sm-3">수정일자</dt>
+            <dd className="col-sm-9">
+              <CusomP classtext="UserInfo" title={user.updateAt} />
+            </dd>
+          </dl>
+        </div>
+      </div>
+
+      {user.petBusinessDTO && (
+        <div className="container">
+          <h6 className="mb-3">제공 사업체 정보</h6>
+          <UserProviderInfo petBusinessDTO={user.petBusinessDTO} />
+        </div>
+      )}
     </>
   );
-  
 }
 
 export default UserInfoDetail;

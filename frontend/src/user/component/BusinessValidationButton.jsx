@@ -37,14 +37,12 @@ function BusinessValidationButton(props){
   }
 
   return (
-    <>
-      <Button 
-        classtext={'ValidationButton'} 
-        type={'button'} 
-        onClick={validationRequest} 
-        title={'사업자 인증'}
-      />
-    </>
+    <Button
+      classtext="btn btn-success w-100"
+      type="button"
+      onClick={validationRequest}
+      title="사업자 인증"
+    />
   );
 
 }

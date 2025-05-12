@@ -6,14 +6,12 @@ import '../../common/Css/common.css';
 function UpdateButton(props){
   const navigate=useNavigate();
   return(
-    <>
-      <Button 
-        classtext={'UserUpdateButton'} 
-        type={'button'} 
-        onClick={(e)=>{navigate('/user/update')}} 
-        title={'회원정보 수정'}
-      />
-    </>
+    <Button
+      classtext="btn btn-outline-primary"
+      type="button"
+      onClick={() => navigate('/user/update')}
+      title="회원정보 수정"
+    />
   );
 }
 

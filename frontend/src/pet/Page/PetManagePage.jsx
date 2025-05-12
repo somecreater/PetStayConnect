@@ -42,7 +42,7 @@ function PetManagePage() {
     fetchPets();
   };
   const handleDelete = async (petId) => {
-    if (window.confirm('정말 삭제하시겠습니까?(복구 불가)(일부 기록이 삭제될수 있습니다!!!!)')) {
+    if (window.confirm('정말 삭제하시겠습니까?(복구 불가)(일부 기록이 삭제될수 있습니다)')) {
       const response=await ApiService.pet.delete(petId);
       if(!response.data.result){
         alert(response.data.message);
@@ -54,20 +54,41 @@ function PetManagePage() {
   };
 
   return (
-    <div className="PetManagePage">
-      <h2>내 반려동물 관리</h2>
-      <Button 
-        classtext={'button'}
-        type="button"
-        title={'마이 페이지로 이동'}
-        onClick={()=>navigate('/user/info')}
-      />
-      <PetRegisterForm onRegister={handleRegister} /> 
-      
+    <div className="container py-4">
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <h2 className="mb-0">내 반려동물 관리</h2>
+        <Button
+          classtext="btn btn-outline-primary"
+          type="button"
+          title="마이 페이지로 이동"
+          onClick={() => navigate('/user/info')}
+        />
+      </div>
+
+      <div className="mb-4">
+        <PetRegisterForm onRegister={handleRegister} />
+      </div>
+
       <Modal isOpen={isModalOpen} onClose={() => setModalOpen(false)}>
-          <PetUpdateForm pet={editingPet} onUpdate={handleUpdate} onCancel={() => setEditingPet(null)} />
-        </Modal>
-      <PetList pets={pets} onEdit={handleEdit} onDelete={handleDelete} isDelete={true} />
+        {editingPet && (
+          <PetUpdateForm
+            pet={editingPet}
+            onUpdate={handleUpdate}
+            onCancel={() => {
+              setEditingPet(null);
+              setModalOpen(false);
+            }}
+          />
+        )}
+      </Modal>
+
+      <PetList
+        pets={pets}
+        onEdit={handleEdit}
+        isEdit={true}
+        onDelete={handleDelete}
+        isDelete={true}
+      />
     </div>
   );
 }

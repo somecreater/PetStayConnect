@@ -19,6 +19,9 @@ function UserProviderInfo({petBusinessDTO}){
     registrationNumber,
     bankAccount,
     varification,
+    province,
+    city,
+    town
   } = petBusinessDTO;
 
   const [isModalOpen,setIsModalOpen]=useState(false);
@@ -31,70 +34,104 @@ function UserProviderInfo({petBusinessDTO}){
   };
 
   return(
-    <>
-    <div className='UserProviderInfo'>
-      <CustomLabel classtetxt={'ProviderInfolabel'} title={'사업체 이름:'} for={'ProviderInfo'}/> 
-      <CusomP classtext={'ProviderInfo'} title={businessName}/>
+    <div className="card mb-4">
+      <div className="card-header">제공 사업체 정보</div>
+      <div className="card-body">
+        <dl className="row g-2 mb-4">
+          <dt className="col-sm-3">사업체 이름</dt>
+          <dd className="col-sm-9">
+            <CusomP classtext="ProviderInfo" title={businessName} />
+          </dd>
 
-      <CustomLabel classtetxt={'ProviderInfolabel'} title={'현재 상태:'} for={'ProviderInfo'}/> 
-      <CusomP classtext={'ProviderInfo'} title={status}/>
-      
-      <CustomLabel classtetxt={'ProviderInfolabel'} title={'최소가격:'} for={'ProviderInfo'}/> 
-      <CusomP classtext={'ProviderInfo'} title={minPrice}/>
-      
-      <CustomLabel classtetxt={'ProviderInfolabel'} title={'최대가격:'} for={'ProviderInfo'}/> 
-      <CusomP classtext={'ProviderInfo'} title={maxPrice}/>
+          <dt className="col-sm-3">현재 상태</dt>
+          <dd className="col-sm-9">
+            <CusomP classtext="ProviderInfo" title={status} />
+          </dd>
 
-      <CusomP classtext={'ProviderInfo'} title={'서비스 요약란'}/>
-      <textarea className='ProviderLongInfo'>
-        {facilities}
-      </textarea>
-      
-      <CusomP classtext={'ProviderInfo'} title={'서비스 설명란'}/>
-      <textarea className='ProviderLongInfo'>
-        {description}
-      </textarea>
+          <dt className="col-sm-3">최소 가격</dt>
+          <dd className="col-sm-9">
+            <CusomP classtext="ProviderInfo" title={minPrice} />
+          </dd>
 
-      <br/>
-            
-      <CustomLabel classtetxt={'ProviderInfolabel'} title={'평점:'} for={'ProviderInfo'}/> 
-      <CusomP classtext={'ProviderInfo'} title={avgRate}/>
+          <dt className="col-sm-3">최대 가격</dt>
+          <dd className="col-sm-9">
+            <CusomP classtext="ProviderInfo" title={maxPrice} />
+          </dd>
+        </dl>
 
-      
-      <CustomLabel classtetxt={'ProviderInfolabel'} title={'사업자 번호:'} for={'ProviderInfo'}/> 
-      <CusomP classtext={'ProviderInfo'} title={registrationNumber}/>
+        <div className="mb-4">
+          <label className="form-label">서비스 요약</label>
+          <textarea
+            className="form-control"
+            rows={3}
+            readOnly
+            value={facilities || ''}
+          />
+        </div>
 
-      
-      <CustomLabel classtetxt={'ProviderInfolabel'} title={'계좌번호:'} for={'ProviderInfo'}/> 
-      <CusomP classtext={'ProviderInfo'} title={bankAccount}/>
+        <div className="mb-4">
+          <label className="form-label">서비스 설명</label>
+          <textarea
+            className="form-control"
+            rows={3}
+            readOnly
+            value={description || ''}
+          />
+        </div>
 
-      
-      <CustomLabel classtetxt={'ProviderInfolabel'} title={'인증현황:'} for={'ProviderInfo'}/> 
-      <CusomP classtext={'ProviderInfo'} title={varification}/>
+        <dl className="row g-2 mb-4">
+          <dt className="col-sm-3">평점</dt>
+          <dd className="col-sm-9">
+            <CusomP classtext="ProviderInfo" title={avgRate} />
+          </dd>
 
-      {varification === 'NONE'? 
-      <>
-      <div>
-        <CusomP classtext={'ProviderInfo'} title={'인증을 진행해주세요!'}/>
-        <Button 
-          classtext={'ValidationButton'} 
-          type={'button'} 
-          title={'사업자 인증'}
-          onClick={openModal} 
-        />
-        <Modal isOpen={isModalOpen} onClose={closeModal}>
-          <BusinessValidationForm/>
-        </Modal>
+          <dt className="col-sm-3">사업자 번호</dt>
+          <dd className="col-sm-9">
+            <CusomP classtext="ProviderInfo" title={registrationNumber} />
+          </dd>
+
+          <dt className="col-sm-3">계좌번호</dt>
+          <dd className="col-sm-9">
+            <CusomP classtext="ProviderInfo" title={bankAccount || '미등록'} />
+          </dd>
+
+          <dt className="col-sm-3">인증 현황</dt>
+          <dd className="col-sm-9">
+            <CusomP classtext="ProviderInfo" title={varification} />
+          </dd>
+
+          <dt className="col-sm-3">주소</dt>
+          <dd className="col-sm-9">
+            <CusomP
+              classtext="ProviderInfo"
+              title={`${province || ''} ${city || ''} ${town || ''}`.trim()}
+            />
+          </dd>
+        </dl>
+
+        {varification === 'NONE' ? (
+          <div className="mt-3">
+            <CusomP classtext="ProviderInfo" title="인증을 진행해주세요!" />
+            <Button
+              classtext="btn btn-primary mt-2"
+              type="button"
+              title="사업자 인증"
+              onClick={openModal}
+            />
+            <Modal isOpen={isModalOpen} onClose={closeModal}>
+              <BusinessValidationForm />
+            </Modal>
+          </div>
+        ) : (
+          <div className="mt-3">
+            <CusomP
+              classtext="ProviderInfo"
+              title="이미 인증이 완료된 사업자입니다."
+            />
+          </div>
+        )}
       </div>
-      </>
-      :
-      <>
-      <CusomP classtext={'ProviderInfo'} title={'이미 인증이 완료된 사업자 입니다.'}/>
-      </> 
-      }
-      
     </div>
-    </>
   );
 }
 

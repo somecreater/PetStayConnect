@@ -26,61 +26,58 @@ export default function PostListPage() {
   }, [page]);
 
   return (
-    <div className="PostListPage">
-      <h1 className="PageTitle">질문 목록</h1>
+    <div className="container py-4">
+      <h1 className="mb-4">질문 목록</h1>
 
-      <div className="Actions">
+      <div className="mb-3">
         <Button
           type="button"
           title="질문 등록"
-          classtext="PrimaryButton"
+          classtext="btn btn-primary"
           onClick={() => navigate('/qnas/register')}
         />
       </div>
 
-      <ul className="PostList">
+      <ul
+        className="list-group mb-4 overflow-auto"
+        style={{ maxHeight: '60vh' }}
+      >
         {posts.map(post => (
-          <li key={post.id} className="PostListItem">
-              <div className="PostHeader">
-                  <span className="PostId">#{post.id}</span>
-                  <Link to={`/qnas/${post.id}`} className="PostLink">
-                        {post.title}
-                  </Link>
-               </div>
-                <span className="PostMeta">
-                조회수: {post.viewCount} | 작성일: {new Date(post.createdAt).toLocaleString()}
-                </span>
-               </li>
-            ))}
-        </ul>
-
-      <div className="Pagination">
-        <Button
-          type="button"
-          title="Prev"
-          classtext="PageButton"
-          onClick={() => setPage(p => p - 1)}
-          disabled={page === 0}
-        />
-
-        {[...Array(totalPages)].map((_, idx) => (
-          <Button
-            key={idx}
-            type="button"
-            title={`${idx + 1}`}
-            classtext={`PageButton${idx === page ? 'Active' : ''}`}
-            onClick={() => setPage(idx)}
-          />
+          <li key={post.id} className="list-group-item d-flex justify-content-between align-items-start">
+            <div>
+              <span className="badge bg-secondary me-2">#{post.id}</span>
+              <Link to={`/qnas/${post.id}`} className="fw-bold text-decoration-none">
+                {post.title}
+              </Link>
+            </div>
+            <small className="text-muted">
+              조회수: {post.viewCount} | {new Date(post.createdAt).toLocaleString()}
+            </small>
+          </li>
         ))}
+      </ul>
 
-        <Button
-          type="button"
-          title="Next"
-          classtext="PageButton"
-          onClick={() => setPage(p => p + 1)}
-          disabled={page + 1 >= totalPages}
-        />
-      </div>
+      <nav>
+        <ul className="pagination justify-content-center">
+          <li className={`page-item${page === 0 ? ' disabled' : ''}`}>
+            <button className="page-link" onClick={() => setPage(p => p - 1)}>
+              Prev
+            </button>
+          </li>
+          {[...Array(totalPages)].map((_, idx) => (
+            <li key={idx} className={`page-item${idx === page ? ' active' : ''}`}>
+              <button className="page-link" onClick={() => setPage(idx)}>
+                {idx + 1}
+              </button>
+            </li>
+          ))}
+          <li className={`page-item${page + 1 >= totalPages ? ' disabled' : ''}`}>
+            <button className="page-link" onClick={() => setPage(p => p + 1)}>
+              Next
+            </button>
+          </li>
+        </ul>
+      </nav>
     </div>
   );
 }

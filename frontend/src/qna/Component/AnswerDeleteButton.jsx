@@ -13,11 +13,11 @@ export default function AnswerDeleteButton({ postId, answerId, onDeleted }) {
   };
 
   return (
-    <div className="DeleteButtonWrapper">
+    <div className="d-inline-block">
       <Button
         type="button"
         title="삭제"
-        classtext="DeleteButton"
+        classtext="btn btn-danger btn-sm"
         onClick={handleDelete}
       />
     </div>

@@ -8,13 +8,9 @@ function DeletePage(props){
   const navigate = useNavigate();
 
   return (
-    <>
-      <div className="UserDeletePage">
-
-        <DeleteForm/>
-
-      </div>
-    </>
+    <div className="container py-5" style={{ maxWidth: 400 }}>
+      <DeleteForm />
+    </div>
   );
 }
 

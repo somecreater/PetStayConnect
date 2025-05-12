@@ -4,7 +4,7 @@ import { Outlet } from 'react-router-dom';
 
 export default function ReviewPage() {
   return (
-    <main className="ReviewPage">
+    <main className="container py-4">
       <Outlet />
     </main>
   );

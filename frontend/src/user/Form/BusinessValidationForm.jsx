@@ -21,89 +21,40 @@ function BusinessValidationForm(props){
     setValidationform(prev => ({ ...prev, [name]: value }));
   };
 
-  return (
-    <>
-      <form className='BusinessValidationForm'>
-        <p className='BusinessValidation'>
-          사업자 명이 회원가입시 등록하신 회원 이름과 불일치하면 알림 메일이 안갈 수 있습니다!!
+  return  (
+    <div className="container py-4" style={{ maxWidth: 500 }}>
+      <form className="border p-4 rounded bg-light">
+        <p className="text-danger mb-3">
+          사업자 명이 회원가입시 등록하신 회원 이름과 불일치하면 알림 메일이 안갈 수 있습니다!
         </p>
-        <TextInput
-          classtext="BusinessValidation"
-          name="bNo"
-          value={validationform.bNo}
-          placeholderText="사업자 등록번호(필수)"
-          onChange={handleChange}
-        />
-        <TextInput
-          classtext="BusinessValidation"
-          name="startDt"
-          value={validationform.startDt}
-          placeholderText="개업일자(00000000)(필수)"
-          onChange={handleChange}
-        />
-        <TextInput
-          classtext="BusinessValidation"
-          name="pNm"
-          value={validationform.pNm}
-          placeholderText="사업자 명(필수)"
-          onChange={handleChange}
-        />
-        <TextInput
-          classtext="BusinessValidation"
-          name="pNm2"
-          value={validationform.pNm2}
-          placeholderText="사업자 명2"
-          onChange={handleChange}
-        />
-        <TextInput
-          classtext="BusinessValidation"
-          name="bNm"
-          value={validationform.bNm}
-          placeholderText="상호"
-          onChange={handleChange}
-        />
-        <TextInput
-          classtext="BusinessValidation"
-          name="corpNo"
-          value={validationform.corpNo}
-          placeholderText="법인등록번호"
-          onChange={handleChange}
-        />
-        <TextInput
-          classtext="BusinessValidation"
-          name="bSector"
-          value={validationform.bSector}
-          placeholderText="업태"
-          onChange={handleChange}
-        />
-        <TextInput
-          classtext="BusinessValidation"
-          name="bType"
-          value={validationform.bType}
-          placeholderText="종목"
-          onChange={handleChange}
-        />
-        <TextInput
-          classtext="BusinessValidation"
-          name="bAdr"
-          value={validationform.bAdr}
-          placeholderText="사업장주소"
-          onChange={handleChange}
-        />
 
-        <BusinessValidationButton 
-          bNo={validationform.bNo} 
-          startDt={validationform.startDt} 
-          pNm={validationform.pNm} 
-          pNm2={validationform.pNm2} 
-          bNm={validationform.bNm} 
-          corpNo={validationform.corpNo} 
-          bSector={validationform.bSector} 
-          bType={validationform.bType} 
-          bAdr={validationform.bAdr}
-        />
+        {[
+          { name: 'bNo', placeholder: '사업자 등록번호(필수)' },
+          { name: 'startDt', placeholder: '개업일자(00000000)(필수)' },
+          { name: 'pNm', placeholder: '사업자 명(필수)' },
+          { name: 'pNm2', placeholder: '사업자 명2' },
+          { name: 'bNm', placeholder: '상호' },
+          { name: 'corpNo', placeholder: '법인등록번호' },
+          { name: 'bSector', placeholder: '업태' },
+          { name: 'bType', placeholder: '종목' },
+          { name: 'bAdr', placeholder: '사업장주소' },
+        ].map(field => (
+          <div className="mb-3" key={field.name}>
+            <TextInput
+              classtext="form-control"
+              name={field.name}
+              value={validationform[field.name]}
+              placeholderText={field.placeholder}
+              onChange={handleChange}
+            />
+          </div>
+        ))}
+
+        <div className="text-center">
+          <BusinessValidationButton {...validationform} />
+        </div>
       </form>
-    </>
+    </div>
   );
 }
 

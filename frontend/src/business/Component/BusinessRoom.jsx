@@ -5,18 +5,17 @@ function BusinessRoom(props){
   const {id, roomType, description} = props;
 
   return (
-    <>
-      <div className='BusinessRoom'>
-        <label className='infoLabel' htmlFor='info'>아이디</label>
-        <p className='info'>{id}</p>
-
-        <label className='infoLabel' htmlFor='info'>방 종류</label>
-        <p className='info'>{roomType}</p>
-        
-        <label className='infoLabel' htmlFor='info'>설명</label>
-        <p className='info'>{description}</p>
-      </div>
-    </>
+    <div className="card mb-3">
+      <div className="card-header">방 #{id}</div>
+      <ul className="list-group list-group-flush">
+        <li className="list-group-item d-flex justify-content-between">
+          <strong>종류</strong><span>{roomType}</span>
+        </li>
+        <li className="list-group-item d-flex justify-content-between">
+          <strong>설명</strong><span>{description || '—'}</span>
+        </li>
+      </ul>
+    </div>
   );
 }
 

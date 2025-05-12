@@ -4,6 +4,9 @@ import './common/Api/Api'
 import './common/Api/RefreshApi';
 import './common/Api/ApiService'
 
+import CustomErrorPage from './common/ErrorPage/CustomErrorPage';
+import BusinessSearchPage from './business/Page/BusinessSearchPage';
+
 import RegisterPage from './user/Page/RegisterPage';
 import LoginPage from './user/Page/LoginPage';
 import UserInfoPage from './user/Page/UserInfoPage';
@@ -14,7 +17,13 @@ import PetManagePage from './pet/Page/PetManagePage';
 import BusinessTypePage from './businesstype/Page/BusinessTypePage';
 import BusinessTypeManagePage from './businesstype/Page/BusinessTypeManagePage';
 
-import CustomErrorPage from './common/ErrorPage/CustomErrorPage';
+import QnaListPage from './qna/Page/QnaListPage';
+import PostRegisterPage from './qna/Page/PostRegisterPage';
+import QnaDetailPage from './qna/Page/QnaDetailPage';
+
+import ReviewListPage from './review/Page/ReviewListPage'; 
+import ReviewDetailPage from './review/Page/ReviewDetailPage';
+import ReviewRegisterPage from './review/Page/ReviewRegisterPage';
 
 function App() {
 
@@ -29,8 +38,19 @@ function App() {
         <Route path="/user/update" element={<UpdatePage/>}/>
         <Route path="/user/delete" element={<DeletePage/>}/>
         <Route path="/user/petmanage" element={<PetManagePage/>} />
+        
         <Route path="/type/list" element={<BusinessTypePage/>} />
         <Route path="/type/manage" element={<BusinessTypeManagePage/>} />
+        
+        <Route path="/business/list" element={<BusinessSearchPage/>}/>
+
+        <Route path="/qnas" element={<QnaListPage/>}/>
+        <Route path="/qnas/register" element={<PostRegisterPage/>}/>
+        <Route path="/qnas/:id" element={<QnaDetailPage/>}/>
+        
+        <Route path="/reviews" element={<ReviewListPage/>}/>
+        <Route path="/reviews/:id" element={<ReviewDetailPage/>}/>
+        <Route path="/reviews/register" element={<ReviewRegisterPage/>}/>
 
         <Route path="/error/:code" element={<CustomErrorPage />} />
         <Route path="*" element={<CustomErrorPage/>} />

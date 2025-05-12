@@ -39,37 +39,44 @@ export default function PostUpdateForm({ initialData, onSuccess }) {
   };
 
   return (
-    <div className="PostUpdateForm">
-      <form onSubmit={handleSubmit}>
-        {error && <div style={{ color: 'red' }}>{error}</div>}
-
+    <form onSubmit={handleSubmit}>
+      {error && <div className="text-danger mb-3">{error}</div>}
+      <div className="mb-3">
         <TextInput
+          classtext="form-control"
           name="title"
           value={form.title}
           onChange={handleChange}
           placeholderText="제목을 수정하세요"
         />
-
+      </div>
+      <div className="mb-3">
         <textarea
+          className="form-control"
           name="content"
           value={form.content}
           onChange={handleChange}
           placeholder="내용을 수정하세요"
           rows={6}
         />
-
-
-       <select name="category" value={form.category} onChange={handleChange}>
-            <option value="">카테고리 선택 안함</option>
-            <option value="GENERAL">GENERAL</option>
-            <option value="TECHNICAL">TECHNICAL</option>
-            <option value="BUSINESS">BUSINESS</option>
-            <option value="ETC">ETC</option>
-       </select>
-
-
-        <Button type="submit" title="수정" />
-      </form>
-    </div>
+      </div>
+      <div className="mb-3">
+        <select
+          className="form-select"
+          name="category"
+          value={form.category}
+          onChange={handleChange}
+        >
+          <option value="">카테고리 선택</option>
+          <option value="GENERAL">GENERAL</option>
+          <option value="TECHNICAL">TECHNICAL</option>
+          <option value="BUSINESS">BUSINESS</option>
+          <option value="ETC">ETC</option>
+        </select>
+      </div>
+      <div className="d-grid">
+        <Button type="submit" title="수정" classtext="btn btn-primary" />
+      </div>
+    </form>
 );
 }

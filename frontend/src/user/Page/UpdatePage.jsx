@@ -8,11 +8,9 @@ function UpdatePage(props){
   const navigate = useNavigate();
 
   return (
-    <>
-    
-      <UpdateForm/>
-
-    </>
+    <div className="container py-5" style={{ maxWidth: 500 }}>
+      <UpdateForm />
+    </div>
   );
 }
 

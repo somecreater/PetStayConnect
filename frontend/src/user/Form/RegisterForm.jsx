@@ -35,6 +35,9 @@ function RegisterForm(props){
     registrationNumber: '',
     bankAccount: '',
     varification: 'NONE',
+    province: '',
+    city: '',
+    town: '',
     userId: '',
     petBusinessTypeId: ''
   });
@@ -77,57 +80,85 @@ function RegisterForm(props){
 
   };
   
-  return(
-    <>
-      <div>
-        <form className="UserRegisterForm" onSubmit={handleRegister}>
-        <TextInput
-          classtext="UserLoginIdInput"
-          name="userLoginId"
-          value={registerform.userLoginId}
-          placeholderText="아이디를 입력하시오"
-          onChange={handleChange}
-        />
-        <TextInput
-          classtext="NameInput"
-          name="name"
-          value={registerform.name}
-          placeholderText="이름을 입력하시오"
-          onChange={handleChange}
-        />
-        <TextInput
-          classtext="EmailInput"
-          name="email"
-          value={registerform.email}
-          placeholderText="이메일을 입력하시오"
-          onChange={handleChange}
-        />
-        <TextInput
-          classtext="PhoneInput"
-          name="phone"
-          value={registerform.phone}
-          placeholderText="전화번호를를 입력하시오"
-          onChange={handleChange}
-        />
+  const isProvider = registerform.role === 'SERVICE_PROVIDER';
 
-        <PasswordInput
-          classtext="PasswordInput"
-          name="password"
-          value={registerform.password}
-          placeholderText="비밀번호를 입력하시오"
-          onChange={handleChange}
-        />
-        <PasswordInput
-          classtext="ConfirmPasswordInput"
-          name="confirmPassword"
-          value={registerform.confirmPassword}
-          placeholderText="비밀번호를 다시 입력하시오"
-          onChange={handleChange}
-        />
-        <div className='SelectRole'>
-          <label htmlFor="role">Role: </label>
+  return (
+    <div className="container py-4">
+      <form onSubmit={handleRegister} className="border p-4 rounded bg-light">
+        <h4 className="mb-4">회원가입</h4>
+
+        <div className="mb-3">
+          <label className="form-label">아이디</label>
+          <TextInput
+            classtext="form-control"
+            name="userLoginId"
+            value={registerform.userLoginId}
+            placeholderText="아이디를 입력하세요"
+            onChange={handleChange}
+          />
+        </div>
+
+        <div className="row g-3">
+          <div className="col-md-6">
+            <label className="form-label">이름</label>
+            <TextInput
+              classtext="form-control"
+              name="name"
+              value={registerform.name}
+              placeholderText="이름"
+              onChange={handleChange}
+            />
+          </div>
+          <div className="col-md-6">
+            <label className="form-label">이메일</label>
+            <TextInput
+              classtext="form-control"
+              name="email"
+              value={registerform.email}
+              placeholderText="이메일"
+              onChange={handleChange}
+            />
+          </div>
+        </div>
+
+        <div className="mb-3 mt-3">
+          <label className="form-label">전화번호</label>
+          <TextInput
+            classtext="form-control"
+            name="phone"
+            value={registerform.phone}
+            placeholderText="전화번호"
+            onChange={handleChange}
+          />
+        </div>
+
+        <div className="row g-3">
+          <div className="col-md-6">
+            <label className="form-label">비밀번호</label>
+            <PasswordInput
+              classtext="form-control"
+              name="password"
+              value={registerform.password}
+              placeholderText="비밀번호"
+              onChange={handleChange}
+            />
+          </div>
+          <div className="col-md-6">
+            <label className="form-label">비밀번호 확인</label>
+            <PasswordInput
+              classtext="form-control"
+              name="confirmPassword"
+              value={registerform.confirmPassword}
+              placeholderText="비밀번호 확인"
+              onChange={handleChange}
+            />
+          </div>
+        </div>
+
+        <div className="mb-3 mt-3">
+          <label className="form-label">Role</label>
           <select
-            id="role"
+            className="form-select"
             name="role"
             value={registerform.role}
             onChange={handleChange}
@@ -136,49 +167,145 @@ function RegisterForm(props){
             <option value="SERVICE_PROVIDER">사업자</option>
           </select>
         </div>
-        
-        { registerform.role === 'SERVICE_PROVIDER' && (
-          <fieldset className="BusinessInfo">
-            <legend>사업자 정보</legend>
 
-            <TextInput classtext="BusinessNameInput" name="businessName" value={biz.businessName}
-              placeholderText="업체명" onChange={e => handleChange(e, true)} />
+        {isProvider && (
+          <fieldset className="border rounded p-3 mb-4">
+            <legend className="float-none w-auto px-2">사업자 정보</legend>
 
-            <TextInput classtext="RegistrationNumberInput" name="registrationNumber" value={biz.registrationNumber}
-              placeholderText="사업자 등록번호" onChange={e => handleChange(e, true)} />
+            <div className="mb-3">
+              <label className="form-label">업체명</label>
+              <TextInput
+                classtext="form-control"
+                name="businessName"
+                value={biz.businessName}
+                placeholderText="업체명"
+                onChange={e => handleChange(e, true)}
+              />
+            </div>
 
-            <TextInput classtext="BankAccountInput" name="bankAccount" value={biz.bankAccount}
-              placeholderText="정산 계좌" onChange={e => handleChange(e, true)} />
+            <div className="row g-3">
+              <div className="col-md-6">
+                <label className="form-label">등록번호</label>
+                <TextInput
+                  classtext="form-control"
+                  name="registrationNumber"
+                  value={biz.registrationNumber}
+                  placeholderText="사업자 등록번호"
+                  onChange={e => handleChange(e, true)}
+                />
+              </div>
+              <div className="col-md-6">
+                <label className="form-label">계좌번호</label>
+                <TextInput
+                  classtext="form-control"
+                  name="bankAccount"
+                  value={biz.bankAccount}
+                  placeholderText="정산 계좌"
+                  onChange={e => handleChange(e, true)}
+                />
+              </div>
+            </div>
 
-            <TextInput classtext="MinPriceInput" name="minPrice" value={biz.minPrice}
-              placeholderText="최소 요금" onChange={e => handleChange(e, true)} />
+            <div className="row g-3 mt-3">
+              <div className="col-md-4">
+                <label className="form-label">최소 요금</label>
+                <TextInput
+                  classtext="form-control"
+                  name="minPrice"
+                  value={biz.minPrice}
+                  placeholderText="최소 요금"
+                  onChange={e => handleChange(e, true)}
+                />
+              </div>
+              <div className="col-md-4">
+                <label className="form-label">최대 요금</label>
+                <TextInput
+                  classtext="form-control"
+                  name="maxPrice"
+                  value={biz.maxPrice}
+                  placeholderText="최대 요금"
+                  onChange={e => handleChange(e, true)}
+                />
+              </div>
+              <div className="col-md-4">
+                <label className="form-label">업종 ID</label>
+                <TextInput
+                  classtext="form-control"
+                  name="petBusinessTypeId"
+                  value={biz.petBusinessTypeId}
+                  placeholderText="업종 ID"
+                  onChange={e => handleChange(e, true)}
+                  type="number"
+                />
+              </div>
+            </div>
 
-            <TextInput classtext="MaxPriceInput" name="maxPrice" value={biz.maxPrice}
-              placeholderText="최대 요금" onChange={e => handleChange(e, true)} />
+            <div className="mb-3 mt-3">
+              <label className="form-label">주소</label>
+              <div className="row g-2">
+                <div className="col">
+                  <TextInput
+                    classtext="form-control"
+                    name="province"
+                    value={biz.province}
+                    placeholderText="도"
+                    onChange={e => handleChange(e, true)}
+                  />
+                </div>
+                <div className="col">
+                  <TextInput
+                    classtext="form-control"
+                    name="city"
+                    value={biz.city}
+                    placeholderText="시"
+                    onChange={e => handleChange(e, true)}
+                  />
+                </div>
+                <div className="col">
+                  <TextInput
+                    classtext="form-control"
+                    name="town"
+                    value={biz.town}
+                    placeholderText="동"
+                    onChange={e => handleChange(e, true)}
+                  />
+                </div>
+              </div>
+            </div>
 
-            <TextInput classtext="FacilitiesInput" name="facilities" value={biz.facilities}
-              placeholderText="시설 요약(쉼표 구분)" onChange={e => handleChange(e, true)} />
+            <div className="mb-3">
+              <label className="form-label">시설 요약</label>
+              <TextInput
+                classtext="form-control"
+                name="facilities"
+                value={biz.facilities}
+                placeholderText="쉼표로 구분"
+                onChange={e => handleChange(e, true)}
+              />
+            </div>
 
-            <textarea className="DescriptionInput" name="description" value={biz.description}
-              placeholder="상세 설명" onChange={e => handleChange(e, true)} />
-
-            <label className="BusinessTypeInput">
-              업종 ID(추후 수정):
-              <input className="NumberInput" type="number" name="petBusinessTypeId" value={biz.petBusinessTypeId}
-                   onChange={e => handleChange(e, true)} />
-            </label>
-
+            <div className="mb-3">
+              <label className="form-label">상세 설명</label>
+              <textarea
+                className="form-control"
+                name="description"
+                rows={3}
+                value={biz.description}
+                onChange={e => handleChange(e, true)}
+              />
+            </div>
           </fieldset>
         )}
 
-        <Button 
-          classtext="RegisterButton" 
-          type="submit" 
-          title="회원가입(사업자일 시 추가정보 입력 필요)" 
-        />
-        </form>
-      </div>    
-    </>
+        <div className="d-grid">
+          <Button
+            classtext="btn btn-primary"
+            type="submit"
+            title="회원가입"
+          />
+        </div>
+      </form>
+    </div>
   );
 
 }
