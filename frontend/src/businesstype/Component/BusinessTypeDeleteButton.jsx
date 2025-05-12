@@ -31,23 +31,30 @@ function BusinessTypeDeleteButton(props){
   }
   return (
     <>
-    <div className="BusinessTypeComponent">
       <Button
-        classtext={'BusinessTypeButton'}
+        classtext="btn btn-outline-danger btn-sm"
         type="button"
-        title={'사업 타입 삭제'}
-        onClick={()=>setModalOpen(true)}
+        onClick={() => setModalOpen(true)}
+        title="삭제"
       />
+
       <Modal isOpen={isModalOpen} onClose={() => setModalOpen(false)}>
-        <CusomP classtext={'alertText'} title={'정말로 삭제하겠습니까?'}/>
-        <Button
-          classtext={'BusinessTypeButton'}
-          type="button"
-          title={'타입 삭제(복구 불가)'}
-          onClick={()=>handleTypeDelete(type_id,businesstype)}
-        />
+        <CusomP classtext="mb-3" title="정말로 삭제하겠습니까?" />
+        <div className="text-end">
+          <Button
+            classtext="btn btn-secondary me-2"
+            type="button"
+            title="취소"
+            onClick={() => setModalOpen(false)}
+          />
+          <Button
+            classtext="btn btn-danger"
+            type="button"
+            title="타입 삭제 (복구 불가)"
+            onClick={handleTypeDelete}
+          />
+        </div>
       </Modal>
-    </div>
     </>
   );
 }

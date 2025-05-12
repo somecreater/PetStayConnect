@@ -28,31 +28,38 @@ export default function ReviewDetailPage() {
   if (!review) return <div>Loading...</div>;
 
   return (
-    <main className="ReviewDetailPage">
-      <h2>리뷰 #{review.id}</h2>
-      <p>평점: {review.rating}</p>
-      <p>내용: {review.content}</p>
-      <p>업체명: {review.petBusinessName}</p>
-      <p>위치: {review.petBusinessLocation}</p>
-      <p>작성일: {new Date(review.createdAt).toLocaleString()}</p>
+    <div className="container py-4">
+      <div className="card mb-3">
+        <div className="card-header d-flex justify-content-between align-items-center">
+          <h5 className="mb-0">리뷰 #{review.id}</h5>
+          {!isEditing && (
+            <div className="btn-group">
+              <Button type="button" title="수정" classtext="btn btn-outline-secondary" onClick={() => setIsEditing(true)} />
+              <ReviewDeleteButton reviewId={review.id} onDeleted={() => navigate('/reviews')} />
+            </div>
+          )}
+        </div>
 
-      {!isEditing ? (
-        <>
-          <Button type="button" title="수정" onClick={() => setIsEditing(true)} />
-          <ReviewDeleteButton
-            reviewId={review.id}
-            onDeleted={() => navigate('/reviews')}
-          />
-        </>
-      ) : (
-        <ReviewUpdateForm
-          review={review}
-          onSuccess={() => { setIsEditing(false); loadReview(); }}
-          onCancel={() => setIsEditing(false)}
-        />
-      )}
+        <div className="card-body">
+          {isEditing ? (
+            <ReviewUpdateForm
+              review={review}
+              onSuccess={() => { setIsEditing(false); }}
+              onCancel={() => setIsEditing(false)}
+            />
+          ) : (
+            <>
+              <p><strong>평점:</strong> {review.rating}</p>
+              <p><strong>내용:</strong> {review.content}</p>
+              <p><strong>업체명:</strong> {review.petBusinessName}</p>
+              <p><strong>위치:</strong> {review.petBusinessLocation}</p>
+              <p className="text-muted"><strong>작성일:</strong> {new Date(review.createdAt).toLocaleString()}</p>
+            </>
+          )}
+        </div>
+      </div>
 
-      <Link to="/reviews">목록으로 돌아가기</Link>
-    </main>
+      <Link to="/reviews" className="btn btn-link">목록으로 돌아가기</Link>
+    </div>
   );
 }

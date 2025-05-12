@@ -1,34 +1,35 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import CusomP from '../../common/Ui/CusomP';
 
 function Business({businesssDTO}){
   
     const { businessName, status, minPrice, maxPrice, facilities, description, avgRate,
-        petBusinessTypeName, registrationNumber  } = businesssDTO;
-  
+        petBusinessTypeName, registrationNumber, province, city, town  } = businesssDTO;
+    
+    const items = [
+    ['상태 ', status],
+    ['최저 가격 ', `${minPrice}원`],
+    ['최고 가격 ', `${maxPrice}원`],
+    ['편의시설 ', facilities],
+    ['설명 ', description],
+    ['평점 ', avgRate],
+    ['주소 ', `${province} ${city} ${town}`],
+    ['서비스 타입 ', petBusinessTypeName],
+    ['등록번호 ', registrationNumber],
+  ];
+
   return(
-    <>
-      <div className='Business'>
-        <label className='BusinessLabel' htmlFor='BusinessInfo'>사업체 이름</label>
-        <CusomP classtext={'BusinessInfo'} title={businessName}/>
-        <label className='BusinessLabel' htmlFor='BusinessInfo'>사업체 상태</label>
-        <CusomP classtext={'BusinessInfo'} title={status}/>
-        <label className='BusinessLabel' htmlFor='BusinessInfo'>최소 가격</label>
-        <CusomP classtext={'BusinessInfo'} title={minPrice}/>
-        <label className='BusinessLabel' htmlFor='BusinessInfo'>최대 가격</label>
-        <CusomP classtext={'BusinessInfo'} title={maxPrice}/>
-        <label className='BusinessLabel' htmlFor='BusinessInfo'>편의시설</label>
-        <CusomP classtext={'BusinessInfo'} title={facilities}/>
-        <label className='BusinessLabel' htmlFor='BusinessInfo'>설명</label>
-        <CusomP classtext={'BusinessInfo'} title={description}/>
-        <label className='BusinessLabel' htmlFor='BusinessInfo'>평점</label>
-        <CusomP classtext={'BusinessInfo'} title={avgRate}/>
-        <label className='BusinessLabel' htmlFor='BusinessInfo'>서비스 타입</label>
-        <CusomP classtext={'BusinessInfo'} title={petBusinessTypeName}/>
-        <label className='BusinessLabel' htmlFor='BusinessInfo'>사업자 등록번호</label>
-        <CusomP classtext={'BusinessInfo'} title={registrationNumber}/>
-      </div>
-    </>
+    <div className="card mb-3">
+      <div className="card-header">{businessName}</div>
+      <ul className="list-group list-group-flush">
+        {items.map(([label, value]) => (
+          <li key={label} className="list-group-item d-flex justify-content-between">
+            <strong>{label}</strong>
+            <span>{value || '—'}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
 

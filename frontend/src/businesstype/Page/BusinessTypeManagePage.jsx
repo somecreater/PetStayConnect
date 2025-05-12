@@ -28,27 +28,23 @@ function BusinessTypeManagePage(props){
   }, []);
 
   return(
-    <>
-      <div className="BusinessTypePage">
-        
+    <div className="container py-4">
+      <div className="d-flex justify-content-between align-items-center mb-3">
+        <CusomP classtext="h5 mb-0" title="사업자 타입 리스트 (관리용)" />
         <Button
-          classtext={'BusinessTypeButton'}
+          classtext="btn btn-success"
           type="button"
-          title={'사업 타입 추가'}
-          onClick={()=>setModalOpen(true)}
-          />
-        <CusomP classtext={'alertText'} title={'사업자 타입 리스트(관리용)'}/>
-        <BusinessManageTypeList
-        types={typelist}
-        onRefresh={updateTypeList}
+          title="타입 추가"
+          onClick={() => setModalOpen(true)}
         />
-        
-        <Modal isOpen={isModalOpen} onClose={() => setModalOpen(false)}>
-          <BusinessTypeRegisterForm/>  
-        </Modal>
       </div>
 
-    </>
+      <BusinessManageTypeList types={typelist} onRefresh={updateTypeList} />
+
+      <Modal isOpen={isModalOpen} onClose={() => setModalOpen(false)}>
+        <BusinessTypeRegisterForm />
+      </Modal>
+    </div>
   );
 }
 

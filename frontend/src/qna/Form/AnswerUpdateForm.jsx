@@ -30,18 +30,21 @@ export default function AnswerUpdateForm({ postId, answer, onSuccess }) {
    };
 
    return (
-     <form className="AnswerUpdateForm" onSubmit={handleSubmit}>
-       {error && <div>{error}</div>}
-
-       <TextInput
-         name="content"
-         value={content}
-         onChange={handleChange}
-         placeholderText="답변을 수정하세요"
-       />
-
-       <Button type="submit" title="수정" />
-     </form>
+     <form className="mb-3" onSubmit={handleSubmit}>
+      {error && <div className="text-danger mb-2">{error}</div>}
+      <div className="mb-3">
+        <TextInput
+          classtext="form-control"
+          name="content"
+          value={content}
+          onChange={handleChange}
+          placeholderText="답변을 수정하세요"
+        />
+      </div>
+      <div className="d-grid gap-2 d-md-flex justify-content-md-end">
+        <Button type="submit" title="수정" classtext="btn btn-primary" />
+      </div>
+    </form>
    );
  }
 

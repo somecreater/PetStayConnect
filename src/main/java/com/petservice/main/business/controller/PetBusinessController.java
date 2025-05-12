@@ -31,7 +31,7 @@ public class PetBusinessController {
   @GetMapping("/list")
   public ResponseEntity<?> getPetBusinessList(
     @AuthenticationPrincipal CustomUserDetails principal,
-    @RequestBody SearchRequest request,
+    @ModelAttribute SearchRequest request,
     @RequestParam(defaultValue = "0") int page,
     @RequestParam(defaultValue = "5") int size ){
 
@@ -63,6 +63,7 @@ public class PetBusinessController {
           ", 타입 코드: "+request.getTypeCode()+", 주변 여부: "+ request.is_around();
       result.put("message","검색 쿼리: " + SearchRequest);
       result.put("search", petBusinessDTOS);
+      result.put("totalPages",petBusinessDTOS.getTotalPages());
     }
 
     return ResponseEntity.ok(result);
@@ -73,7 +74,7 @@ public class PetBusinessController {
   @GetMapping("/list/naver")
   public ResponseEntity<?> getPetBusinessList(
       @AuthenticationPrincipal CustomUserDetails principal,
-      @RequestBody NaverSearchRequest request,
+      @ModelAttribute NaverSearchRequest request,
       @RequestParam(defaultValue = "0") int page,
       @RequestParam(defaultValue = "5") int size ){
 
@@ -101,6 +102,7 @@ public class PetBusinessController {
           ", 타입 코드: "+request.getTypeCode()+", 주변 여부: "+ request.isNear();
       result.put("message","검색 쿼리: " + SearchRequest);
       result.put("search", petBusinessDTOS);
+      result.put("totalPages",petBusinessDTOS.getTotalPages());
     }
 
     return ResponseEntity.ok(result);

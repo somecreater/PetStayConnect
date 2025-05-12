@@ -8,13 +8,9 @@ function RegisterPage(props){
   const navigate = useNavigate();
 
   return (
-    <>
-      <div>
-
-        <RegisterForm/>
-
-      </div>
-    </>
+    <div className="container py-5" style={{ maxWidth: 500 }}>
+      <RegisterForm />
+    </div>
   );
 }
 

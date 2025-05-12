@@ -44,69 +44,86 @@ function BusinessTypeRegisterForm(props){
   }
   
   return (
-    <>
-      <form className="BusinessTypeForm" onSubmit={handleTypeSubmit}>
-        
-        <CusomP
-          classtext={'alertText'}
-          title={'타입 추가 창'}
-        />
-        <CusomP
-          classtext={'alertText'}
-          title={'별도의 타입을 추가해보세요!'}
-        />
+    <div className="container py-4">
+      <form onSubmit={handleTypeSubmit} className="border p-4 rounded">
+        <h5>타입 추가 창</h5>
+        <p className="text-muted mb-4">별도의 타입을 추가해보세요!</p>
 
-        <CustomLabel classtext={'BusinessTypeLabel'} title={'타입 이름:'} for={'UserUpdateInfo'}/>
-        <TextInput 
-          classtext="BusinessTypeInput"
-          name="typeName" 
-          value={typename} 
-          placeholderText="새로운 사업자 타입 이름을 입력하세요" 
-          onChange={(e)=>setTypename(e.target.value)}
-        />
-        <br/>
-        <CustomLabel classtext={'BusinessTypeLabel'} title={'섹터 코드:'} for={'UserUpdateInfo'}/>
-        <TextInput 
-          classtext="BusinessTypeInput"
-          name="sectorCode" 
-          value={sectorCode} 
-          placeholderText="새로운 섹터 코드를 입력하세요" 
-          onChange={(e)=>setSectorCode(e.target.value)}
-        />
-        <br/>
-        
-        <CustomLabel classtext={'BusinessTypeLabel'} title={'타입 코드:'} for={'UserUpdateInfo'}/>
-        <TextInput 
-          classtext="BusinessTypeInput"
-          name="typeCode" 
-          value={typeCode} 
-          placeholderText="새로운 타입 코드을 입력하세요" 
-          onChange={(e)=>setTypeCode(e.target.value)}
-        />
-        <br/>
+        <div className="mb-3">
+          <CustomLabel classtext="" title="타입 이름" for="typeName" />
+          <TextInput
+            classtext="form-control"
+            id="typeName"
+            name="typeName"
+            value={typename}
+            placeholderText="새로운 사업자 타입 이름을 입력하세요"
+            onChange={e => setTypename(e.target.value)}
+          />
+        </div>
 
-        <CustomLabel classtext={'BusinessTypeLabel'} title={'타입 설명:'} for={'UserUpdateInfo'}/>
-        <textarea className="" name="" value={description} 
-        placeholder="사업자 타입에 대한 설명을 작성해 주세요." onChange={(e)=>setDescription(e.target.value)}/>
+        <div className="mb-3">
+          <CustomLabel classtext="" title="섹터 코드" for="sectorCode" />
+          <TextInput
+            classtext="form-control"
+            id="sectorCode"
+            name="sectorCode"
+            value={sectorCode}
+            placeholderText="새로운 섹터 코드를 입력하세요"
+            onChange={e => setSectorCode(e.target.value)}
+          />
+        </div>
 
-        <Button 
-          classtext={'BusinessTypeButton'}
+        <div className="mb-3">
+          <CustomLabel classtext="" title="타입 코드" for="typeCode" />
+          <TextInput
+            classtext="form-control"
+            id="typeCode"
+            name="typeCode"
+            value={typeCode}
+            placeholderText="새로운 타입 코드를 입력하세요"
+            onChange={e => setTypeCode(e.target.value)}
+          />
+        </div>
+
+        <div className="mb-4">
+          <CustomLabel classtext="" title="타입 설명" for="description" />
+          <textarea
+            id="description"
+            name="description"
+            className="form-control"
+            rows={3}
+            placeholder="사업자 타입에 대한 설명을 작성해 주세요."
+            value={description}
+            onChange={e => setDescription(e.target.value)}
+          />
+        </div>
+
+        <Button
+          classtext="btn btn-primary me-2"
           type="button"
-          title={'사업 타입 추가'}
+          title="사업 타입 추가"
           onClick={()=>setModalOpen(true)}
         />
 
         <Modal isOpen={isModalOpen} onClose={() => setModalOpen(false)}>
-          <CusomP classtext={'alertText'} title={'정말로 추가 하겠습니까?'}/>
-          <Button
-            classtext={'BusinessTypeButton'}
-            type="submit"
-            title={'타입 추가'}
-            onClick={handleTypeSubmit}
-          />
+          <CusomP classtext="mb-3" title="정말로 추가 하겠습니까?" />
+          <div className="mt-3 text-end">
+            <Button
+              classtext="btn btn-danger me-2"
+              type="button"
+              title="아니요"
+              onClick={() => setModalOpen(false)}
+            />
+            <Button
+              classtext="btn btn-success"
+              type="submit"
+              title="예"
+              onClick={handleTypeSubmit}
+            />
+          </div>
         </Modal>
       </form>
-    </>
+    </div>
   );
 }
 

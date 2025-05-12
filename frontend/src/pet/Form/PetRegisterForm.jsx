@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import ApiService from "../../common/Api/ApiService";
 import TextInput from "../../common/Ui/TextInput";
-
+import Button from "../../common/Ui/Button";
 function PetRegisterForm({ onRegister }) {
 
   const [name, setName] = useState("");
@@ -55,63 +55,81 @@ function PetRegisterForm({ onRegister }) {
   };
 
   return (
-    <form className="PetRegisterForm" onSubmit={handleSubmit}>
+    <div className="container py-4">
+      <form onSubmit={handleSubmit} className="border p-4 rounded bg-light">
+        <h5 className="mb-4">펫 정보 등록</h5>
 
-      <TextInput
-        classtext={'petregister'}
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        placeholderText="이름"
-      />
+        <div className="mb-3">
+          <TextInput
+            classtext="form-control"
+            value={name}
+            placeholderText="이름"
+            onChange={e => setName(e.target.value)}
+          />
+        </div>
 
-      <TextInput
-        classtext={'petregister'}
-        value={species}
-        onChange={(e) => setSpecies(e.target.value)}
-        placeholderText="종류"
-      />
+        <div className="mb-3">
+          <TextInput
+            classtext="form-control"
+            value={species}
+            placeholderText="종류"
+            onChange={e => setSpecies(e.target.value)}
+          />
+        </div>
 
-      <input
-        className="petregister"
-        value={age}
-        onChange={(e) => setAge(e.target.value)}
-        placeholder="나이"
-      />
+        <div className="mb-3">
+          <input
+            type="number"
+            className="form-control"
+            value={age}
+            placeholder="나이"
+            onChange={e => setAge(e.target.value)}
+          />
+        </div>
 
-      <div className='Select'>
-          <label htmlFor="role">성별: </label>
+        <div className="mb-3">
+          <label className="form-label">성별</label>
           <select
-            id="gender"
-            name="gender"
+            className="form-select"
             value={gender}
-            onChange={(e) => setGender(e.target.value)}
+            onChange={e => setGender(e.target.value)}
           >
             <option value="MAN">수컷</option>
             <option value="WOMAN">암컷</option>
           </select>
-      </div>
-      
-      <input
-        classtext={'petregister'}
-        type="date"
-        value={birthDate}
-        onChange={(e) => setBirthDate(e.target.value)}
-        placeholder="생년월일"
-      />
+        </div>
 
-      <TextInput
-        classtext={'petregister'}
-        value={breed}
-        onChange={(e) => setBreed(e.target.value)}
-        placeholderText="임신여부"
-      />
-      
-      <textarea className="petlonginfo" name="description" value={healthInfo}
-        placeholder="건강 정보" onChange={e => setHealthInfo(e.target.value)}/>
+        <div className="mb-3">
+          <input
+            type="date"
+            className="form-control"
+            value={birthDate}
+            onChange={e => setBirthDate(e.target.value)}
+          />
+        </div>
 
-      
-      <button type="submit">등록</button>
-    </form>
+        <div className="mb-3">
+          <TextInput
+            classtext="form-control"
+            value={breed}
+            placeholderText="임신여부"
+            onChange={e => setBreed(e.target.value)}
+          />
+        </div>
+
+        <div className="mb-4">
+          <textarea
+            className="form-control"
+            rows={3}
+            placeholder="건강 정보"
+            value={healthInfo}
+            onChange={e => setHealthInfo(e.target.value)}
+          />
+        </div>
+
+        <Button classtext="btn btn-success w-100" type="submit" title="등록" />
+      </form>
+    </div>
   );
 }
 

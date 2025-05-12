@@ -21,11 +21,11 @@ function UserInfo(props){
       getuserInfo();
     }
   }, []);
-  const handleInfoClick=() =>{
-    if(isDetail === false && isDetailRun === false){
+
+  const handleInfoClick= async () =>{
+    if(!isDetail){
       setIsDetail(true);
-      setIsDetailRun(true);
-      getuserDetailInfo(user.userLoginId);
+      await getuserDetailInfo(user.userLoginId);
       setButtonTitle('간단한 정보 보기');
     }else{
       setIsDetail(false);
@@ -35,16 +35,13 @@ function UserInfo(props){
 
   const getuserDetailInfo = async (UserId) => {
     try{
-
       const response = await ApiService.userService.detail(UserId);
       if(response.data.auth){
-        console.log('get detail user');
         const mapped=response.data.userDetail;
         updateUser(mapUserDto(mapped));
       }else{
         console.log('자세한 사용자 정보 없음');
       }
-
     }catch(err){
       console.error('자세한 사용자 정보 가져오기 오류:', err);
     }
@@ -53,7 +50,6 @@ function UserInfo(props){
   const getuserInfo = async () => {
     try{
       const response=await ApiService.userService.info();
-
       if(response.data.auth){
         updateUser({
           name: response.data.UserName,
@@ -76,38 +72,47 @@ function UserInfo(props){
   }
 
   return (
-    <>
-      <div>
-        <Button 
-          classtext="petButton" 
-          type="button" 
-          title={'펫 정보 보기기'}
-          onClick={()=>navigate('/user/petmanage')}
+    <div className="container py-4">
+      <div className="d-flex mb-3">
+        <Button
+          classtext="me-2"
+          type="button"
+          title="펫 정보 보기"
+          onClick={() => navigate('/user/petmanage')}
         />
-        <Button 
-          classtext="detailButton" 
-          type="button" 
+        <Button
+          classtext=""
+          type="button"
           title={buttonTitle}
           onClick={handleInfoClick}
         />
-        { isDetail === true ?(
-            <UserInfoDetail/>
-        ):(
-          <div className='UserInfo'>
-
-            <CustomLabel classtetxt={'UserInfolabel'} title={'아이디:'} for={'UserLoginId'}/> 
-            <CustomP classtext={'UserLoginId'} title={user.userLoginId}/>
-
-            <CustomLabel classtetxt={'UserInfolabel'} title={'이름:'} for={'UserName'}/> 
-            <CustomP classtext={'UserName'} title={user.name}/>
-
-            <CustomLabel classtetxt={'UserInfolabel'} title={'권한:'} for={'UserRole'}/> 
-            <CustomP classtext={'UserRole'} title={user.role}/> 
-
-          </div>
-        )}
       </div>
-    </>
+
+      <div className="card">
+        <div className="card-body">
+          {isDetail ? (
+            <UserInfoDetail />
+          ) : (
+            <dl className="row mb-0">
+              <dt className="col-sm-3">아이디</dt>
+              <dd className="col-sm-9">
+                <CustomP classtext="UserLoginId" title={user.userLoginId} />
+              </dd>
+
+              <dt className="col-sm-3">이름</dt>
+              <dd className="col-sm-9">
+                <CustomP classtext="UserName" title={user.name} />
+              </dd>
+
+              <dt className="col-sm-3">권한</dt>
+              <dd className="col-sm-9">
+                <CustomP classtext="UserRole" title={user.role} />
+              </dd>
+            </dl>
+          )}
+        </div>
+      </div>
+    </div>
   );
 }
 

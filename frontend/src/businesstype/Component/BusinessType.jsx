@@ -4,27 +4,25 @@ import CustomLabel from "../../common/Ui/CustomLabel";
 function BusinessType(props){
   
   const {id, sectorCode, typeCode, typeName, description} = props;
+
+  const items = [
+    ['타입 이름', typeName],
+    ['섹터 코드', sectorCode],
+    ['타입 코드', typeCode],
+    ['설명', description],
+  ];
+
   return (
-    <>
-    <div className="BusinessType">
-
-      <CustomLabel classtext={'BusinessTypeLabel'} title={'아이디'} for={'BusinessTypeInfo'}/>
-      <CusomP classtext={'BusinessTypeInfo'} title={id}/>
-      
-      <CustomLabel classtext={'BusinessTypeLabel'} title={'타입 이름'} for={'BusinessTypeInfo'}/>
-      <CusomP classtext={'BusinessTypeInfo'} title={typeName}/>
-
-      <CustomLabel classtext={'BusinessTypeLabel'} title={'섹터 코드'} for={'BusinessTypeInfo'}/>
-      <CusomP classtext={'BusinessTypeInfo'} title={sectorCode}/>
-
-      <CustomLabel classtext={'BusinessTypeLabel'} title={'타입 코드'} for={'BusinessTypeInfo'}/>
-      <CusomP classtext={'BusinessTypeInfo'} title={typeCode}/>
-
-      <CustomLabel classtext={'BusinessTypeLabel'} title={'타입 설명'} for={'BusinessTypeInfo'}/>
-      <CusomP classtext={'BusinessTypeInfo'} title={description}/>
-    
+    <div className="card mb-3">
+      <div className="card-header">타입 #{id}</div>
+      <ul className="list-group list-group-flush">
+        {items.map(([label, value]) => (
+          <li key={label} className="list-group-item d-flex justify-content-between">
+            <strong>{label}</strong><span>{value || '—'}</span>
+          </li>
+        ))}
+      </ul>
     </div>
-    </>
   );
 }
 

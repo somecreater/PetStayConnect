@@ -19,33 +19,36 @@ function UpdateForm(props){
   const { user,mapUserDto,updateUser }= useUser();
 
   const [nomalUser, SetNomalUser]=useState({
-    id:           user.id,
-    userLoginId:  user.userLoginId,
-    name:         user.name,
-    email:        user.email,
-    phone:        user.phone,
-    qnaScore:     user.qnaScore,
-    point:        user.point,
-    loginType:    user.loginType,
-    petNumber:    user.petNumber,
-    role:         user.role,
-    createAt:     user.createAt,
-    updateAt:     user.updateAt,
+    id:           user.id ?? '',
+    userLoginId:  user.userLoginId ?? '',
+    name:         user.name ?? '',
+    email:        user.email ?? '',
+    phone:        user.phone ?? '',
+    qnaScore:     user.qnaScore ?? '',
+    point:        user.point ?? '',
+    loginType:    user.loginType ?? '',
+    petNumber:    user.petNumber ?? '',
+    role:         user.role ?? '',
+    createAt:     user.createAt ?? '',
+    updateAt:     user.updateAt ?? '',
   });
 
   const [bizUser,SetBizUser]=useState({
-    businessName:         user.petBusinessDTO?.businessName           || '',
-    status:               user.petBusinessDTO?.status                 || '',
-    minPrice:             user.petBusinessDTO?.minPrice               || '',
-    maxPrice:             user.petBusinessDTO?.maxPrice               || '',
-    facilities:           user.petBusinessDTO?.facilities             || '',
-    description:          user.petBusinessDTO?.description            || '',
-    avgRate:              user.petBusinessDTO?.avgRate                || '',
-    registrationNumber:   user.petBusinessDTO?.registrationNumber     || '',
-    bankAccount:          user.petBusinessDTO?.bankAccount            || '',
-    varification:         user.petBusinessDTO?.varification           || '',
-    petBusinessTypeName:  user.petBusinessDTO?.petBusinessTypeName    || '',
-    petBusinessTypeId:    user.petBusinessDTO?.petBusinessTypeId      || '',
+    businessName:         user.petBusinessDTO?.businessName ?? '',
+    status:               user.petBusinessDTO?.status ?? 'OPERATION',
+    minPrice:             user.petBusinessDTO?.minPrice ?? '',
+    maxPrice:             user.petBusinessDTO?.maxPrice ?? '',
+    facilities:           user.petBusinessDTO?.facilities ?? '',
+    description:          user.petBusinessDTO?.description ?? '',
+    avgRate:              user.petBusinessDTO?.avgRate ?? '',
+    registrationNumber:   user.petBusinessDTO?.registrationNumber ?? '',
+    bankAccount:          user.petBusinessDTO?.bankAccount ?? '',
+    varification:         user.petBusinessDTO?.varification ?? '',
+    province:             user.petBusinessDTO?.province ?? '',
+    city:                 user.petBusinessDTO?.city ?? '',
+    town:                 user.petBusinessDTO?.town ?? '',
+    petBusinessTypeName:  user.petBusinessDTO?.petBusinessTypeName ?? '',
+    petBusinessTypeId:    user.petBusinessDTO?.petBusinessTypeId ?? '',
   });
 
   const handleChange = (e, isUpdateBiz = false) => {
@@ -67,19 +70,31 @@ function UpdateForm(props){
 
         updateUser(mapUserDto(dto));
         SetNomalUser({
-          id:          dto.id,
-          userLoginId: dto.userLoginId,
-          name:        dto.name,
-          email:       dto.email,
-          phone:       dto.phone,
-          qnaScore:    dto.qnaScore,
-          loginType:   dto.loginType,
-          petNumber:   dto.petNumber,
-          role:        dto.role,
-          createAt:    dto.createAt,
-          updateAt:    dto.updateAt,
+          id:          dto.id ?? '',
+          userLoginId: dto.userLoginId ?? '',
+          name:        dto.name ?? '',
+          email:       dto.email ?? '',
+          phone:       dto.phone ?? '',
+          qnaScore:    dto.qnaScore ?? '',
+          loginType:   dto.loginType ?? '',
+          petNumber:   dto.petNumber ?? '',
+          role:        dto.role ?? '',
+          createAt:    dto.createAt ?? '',
+          updateAt:    dto.updateAt ?? '',
         });
-        SetBizUser(dto.petBusinessDTO || {});
+        SetBizUser({
+          businessName: dto.petBusinessDTO?.businessName ?? '',
+          status:dto.petBusinessDTO?.status ?? 'OPERATION',
+          registrationNumber: dto.petBusinessDTO?.registrationNumber ?? '',
+          bankAccount: dto.petBusinessDTO?.bankAccount ?? '',
+          minPrice: dto.petBusinessDTO?.minPrice ?? '',
+          maxPrice: dto.petBusinessDTO?.maxPrice ?? '',
+          province: dto.petBusinessDTO?.province ?? '',
+          city: dto.petBusinessDTO?.city ?? '',
+          town: dto.petBusinessDTO?.town ?? '',
+          facilities: dto.petBusinessDTO?.facilities ?? '',
+          description: dto.petBusinessDTO?.description ?? '',
+        });
 
       }else{
         console.log('자세한 사용자 정보 없음');
@@ -97,13 +112,29 @@ function UpdateForm(props){
     e.preventDefault();
     try{
       const payload={
-        ...nomalUser,
+        id:          nomalUser.id,
+        userLoginId: nomalUser.userLoginId,
+        name:        nomalUser.name,
+        email:       nomalUser.email,
+        phone:       nomalUser.phone,
+        role:        nomalUser.role,
         petBusinessDTO:
-        nomalUser.role === 'SERVICE_PROVIDER' ? { ...bizUser, userId: nomalUser.id } : null,
-        petDTOList       : [],
-        bookmarkDTOList  : [],
-        qnaPostDTOList   : [],
-        qnaAnswerDTOList : [],
+        nomalUser.role === 'SERVICE_PROVIDER'
+                ? {
+                    businessName: bizUser.businessName,
+                    status:       bizUser.status,
+                    registrationNumber:  bizUser.registrationNumber,  
+                    bankAccount:  bizUser.bankAccount,
+                    minPrice:     parseInt(bizUser.minPrice, 10),
+                    maxPrice:     parseInt(bizUser.maxPrice, 10),
+                    province:     bizUser.province,
+                    city:         bizUser.city,
+                    town:         bizUser.town,
+                    facilities:   bizUser.facilities,
+                    description:  bizUser.description,
+                    userId:       nomalUser.id,
+                  }
+                  : null,
       };
 
       const response = await ApiService.userService.update(payload);
@@ -126,97 +157,178 @@ function UpdateForm(props){
 
   const isBiz = user.role === 'SERVICE_PROVIDER';
   const isNomal = user.loginType === 'NORMAL';
-  return (
-    <>
-      <form className="UserUpdateForm" onSubmit={handleUpdate}>
-        
-        <CustomLabel classtetxt={'UserInfolabel'} title={'로그인 아이디:'} for={'UserUpdateInfo'}/>
-        <CusomP
-          classtext="UserUpdateInfo"
-          title={nomalUser.userLoginId}
-        />
+  return(
+    <div className="container py-4">
+      <form onSubmit={handleUpdate} className="border p-4 rounded bg-light">
+        <h5 className="mb-4">회원정보 수정</h5>
 
-        <CustomLabel classtetxt={'UserInfolabel'} title={'역할:'} for={'UserUpdateInfo'}/>
-        <CusomP
-          classtext="UserUpdateInfo"
-          title={nomalUser.role}
-        />
+        <div className="mb-3 row">
+          <label className="col-sm-3 col-form-label">아이디</label>
+          <div className="col-sm-9">
+            <CusomP classtext="form-control-plaintext" title={nomalUser.userLoginId} />
+          </div>
+        </div>
 
-        <CusomP classtext={'UserInfo'} title={'회원 이름:'}/>
-        <TextInput 
-          classtext="UserUpdateInput"
-          name="name" 
-          value={nomalUser.name} 
-          placeholderText="새로운 이름을 입력하세요" 
-          onChange={handleChange}
-        />
-        {
-          isNomal ?(
-          <>
-          <CusomP classtext={'UserInfo'} title={'회원 이메일:'}/>
-          <TextInput 
-          classtext="UserUpdateInput"
-          name="email"
-          value={nomalUser.email} 
-          placeholderText="새로운 이메일을 입력하세요"
-          onChange={handleChange}
+        <div className="mb-3 row">
+          <label className="col-sm-3 col-form-label">역할</label>
+          <div className="col-sm-9">
+            <CusomP classtext="form-control-plaintext" title={nomalUser.role} />
+          </div>
+        </div>
+
+        <div className="mb-3">
+          <CustomLabel title="이름" for="name" />
+          <TextInput
+            classtext="form-control"
+            id="name"
+            name="name"
+            value={nomalUser.name}
+            onChange={handleChange}
+            placeholderText="새로운 이름"
           />
-          </>  
-        ):(
-          <>
-          <CusomP classtext={'UserInfo'} title={"구글로 가입된 회원은 이메일 변경이 불가능 합니다."}/>
-          <CusomP classtext={'UserInfo'} title={nomalUser.email}/>
-          </>
-        )
-        }
+        </div>
 
-        <CusomP classtext={'UserInfo'} title={'회원 전화번호:'}/>
-        <TextInput 
-          classtext="UserUpdateInput"
-          name="phone" 
-          value={nomalUser.phone} 
-          placeholderText="새로운 전화번호를 입력하세요" 
-          onChange={handleChange}
-        />
+        {isNomal ? (
+          <div className="mb-3">
+            <CustomLabel title="이메일" for="email" />
+            <TextInput
+              classtext="form-control"
+              id="email"
+              name="email"
+              value={nomalUser.email}
+              onChange={handleChange}
+              placeholderText="새로운 이메일"
+            />
+          </div>
+        ) : (
+          <div className="mb-3">
+            <CusomP classtext="text-muted" title="구글 회원은 이메일 변경 불가" />
+            <CusomP classtext="form-control-plaintext" title={nomalUser.email} />
+          </div>
+        )}
 
-        {
-          isBiz && (
-            <fieldset className="BusinessUpdateInfo">
-              <legend>새로운 사업자 정보</legend>
-              
-              <CustomLabel classtetxt={'BusinessUpdatelabel'} title={'업체명:'} for={'BusinessUpdateInput'}/>
-              <TextInput classtext="BusinessUpdateInput" name="businessName" value={bizUser.businessName}
-                placeholderText="업체명" onChange={e => handleChange(e, true)} />
-              
-              <CustomLabel classtetxt={'BusinessUpdatelabel'} title={'정산 계좌:'} for={'BusinessUpdateInput'}/>
-              <TextInput classtext="BusinessUpdateInput" name="bankAccount" value={bizUser.bankAccount}
-                placeholderText="정산 계좌" onChange={e => handleChange(e, true)} />
-              
-              <CustomLabel classtetxt={'BusinessUpdatelabel'} title={'최소 요금:'} for={'BusinessUpdateInput'}/>
-              <TextInput classtext="BusinessUpdateInput" name="minPrice" value={bizUser.minPrice}
-                placeholderText="최소 요금" onChange={e => handleChange(e, true)} />
-              
-              <CustomLabel classtetxt={'BusinessUpdatelabel'} title={'최대 요금:'} for={'BusinessUpdateInput'}/>
-              <TextInput classtext="BusinessUpdateInput" name="maxPrice" value={bizUser.maxPrice}
-                placeholderText="최대 요금" onChange={e => handleChange(e, true)} />
-              
-              <CustomLabel classtetxt={'BusinessUpdatelabel'} title={'시설 요약(쉼표 구분):'} for={'BusinessUpdateInput'}/>
-              <TextInput classtext="BusinessUpdateInput" name="facilities" value={bizUser.facilities}
-                placeholderText="시설 요약(쉼표 구분)" onChange={e => handleChange(e, true)} />
-                
-              <CustomLabel classtetxt={'BusinessUpdatelabel'} title={'상세 설명:'} for={'BusinessLongUpdateInput'}/>
-              <textarea className="BusinessLongUpdateInput" name="description" value={bizUser.description}
-                placeholder="상세 설명" onChange={e => handleChange(e, true)} />
-              </fieldset>
-          )
-        }
-        <Button
-          classtext="UserUpdateButton"
-          type="submit" 
-          title="회원정보 수정" 
-        />
+        <div className="mb-3">
+          <CustomLabel title="전화번호" for="phone" />
+          <TextInput
+            classtext="form-control"
+            id="phone"
+            name="phone"
+            value={nomalUser.phone}
+            onChange={handleChange}
+            placeholderText="새로운 전화번호"
+          />
+        </div>
+
+        {isBiz && (
+          <fieldset className="border rounded p-3 mb-4">
+            <legend className="float-none w-auto px-2">사업자 정보</legend>
+
+            <div className="mb-3">
+              <CustomLabel title="업체명" for="businessName" />
+              <TextInput
+                classtext="form-control"
+                id="businessName"
+                name="businessName"
+                value={bizUser.businessName}
+                onChange={e => handleChange(e, true)}
+              />
+            </div>
+            <div className="mb-3">
+              <CustomLabel title="사업체 상태" for="status" />
+                <select
+                  id="status"
+                  name="status"
+                  className="form-select"
+                  value={bizUser.status}
+                  onChange={e => handleChange(e, true)}
+                >
+                  <option value="OPERATION">운영 중</option>
+                  <option value="CLOSED">폐업</option>
+              </select>
+            </div>
+            <div className="mb-3">
+              <CustomLabel title="계좌번호" for="bankAccount" />
+              <TextInput
+                classtext="form-control"
+                id="bankAccount"
+                name="bankAccount"
+                value={bizUser.bankAccount}
+                onChange={e => handleChange(e, true)}
+              />
+            </div>
+
+            <div className="row g-3">
+              <div className="col-md-6">
+                <CustomLabel title="최소 요금" for="minPrice" />
+                <TextInput
+                  classtext="form-control"
+                  id="minPrice"
+                  name="minPrice"
+                  value={bizUser.minPrice}
+                  onChange={e => handleChange(e, true)}
+                />
+              </div>
+              <div className="col-md-6">
+                <CustomLabel title="최대 요금" for="maxPrice" />
+                <TextInput
+                  classtext="form-control"
+                  id="maxPrice"
+                  name="maxPrice"
+                  value={bizUser.maxPrice}
+                  onChange={e => handleChange(e, true)}
+                />
+              </div>
+            </div>
+
+            <div className="row g-3 mt-3">
+              {['province','city','town'].map(field => (
+                <div key={field} className="col-md-4">
+                  <CustomLabel title={field} for={field} />
+                  <TextInput
+                    classtext="form-control"
+                    id={field}
+                    name={field}
+                    value={bizUser[field]}
+                    onChange={e => handleChange(e, true)}
+                  />
+                </div>
+              ))}
+            </div>
+
+            <div className="mb-3 mt-3">
+              <CustomLabel title="시설 요약" for="facilities" />
+              <TextInput
+                classtext="form-control"
+                id="facilities"
+                name="facilities"
+                value={bizUser.facilities}
+                onChange={e => handleChange(e, true)}
+              />
+            </div>
+
+            <div className="mb-3">
+              <CustomLabel title="상세 설명" for="description" />
+              <textarea
+                className="form-control"
+                id="description"
+                name="description"
+                rows={3}
+                value={bizUser.description}
+                onChange={e => handleChange(e, true)}
+              />
+            </div>
+          </fieldset>
+        )}
+
+        <div className="d-grid">
+          <Button
+            classtext="btn btn-primary"
+            type="submit"
+            title="회원정보 수정"
+          />
+        </div>
       </form>
-    </>
+    </div>
   );
 }
 

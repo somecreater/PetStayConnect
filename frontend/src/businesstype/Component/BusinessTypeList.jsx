@@ -19,31 +19,34 @@ function BusinessTypeList(props){
     fetchTypes();
   },[]);
 
+  if (!typelist || typelist.length === 0) {
+    return (
+      <div className="container py-4">
+        <div className="alert alert-warning">
+          <CusomP classtext="text-center" title="타입이 존재하지 않습니다." />
+        </div>
+      </div>
+    );
+  }
   return(
-    <>
-      <div>
-      {
-        typelist !== null ?  
-        <div className="BusinessTypeList">
-        {typelist.map((type) => 
-        <>
-            <BusinessType 
-              key={type.id} 
-              id={type.id} 
+    <div className="container py-4">
+      <div
+        className="row g-4 overflow-auto"
+        style={{ maxHeight: '70vh' }}
+      >
+        {typelist.map(type => (
+          <div key={type.id} className="col-sm-6 col-lg-4">
+            <BusinessType
+              id={type.id}
               typeName={type.typeName}
               sectorCode={type.sectorCode}
               typeCode={type.typeCode}
               description={type.description}
             />
-        </>
-        )}
-        </div>
-        :<div className="BusinessTypeList">
-            <CusomP classtext={'noting'} title={'타입이 존재하지 않습니다.'}/>
-        </div>
-      }
+          </div>
+        ))}
       </div>
-    </>
+    </div>
   );
 }
 

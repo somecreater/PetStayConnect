@@ -34,6 +34,7 @@ public class PetBusinessService implements PetBusinessServiceInterface {
   private final PetBusinessMapper petBusinessMapper;
 
   @Override
+  @Transactional(readOnly = true)
   public PetBusinessDTO getBusinessDto(Long business_id) {
     PetBusiness petBusiness=petBusinessRepository.findById(business_id).orElse(null);
     if(petBusiness ==null){
@@ -44,6 +45,8 @@ public class PetBusinessService implements PetBusinessServiceInterface {
     return petBusinessDTO;
   }
 
+  @Override
+  @Transactional(readOnly = true)
   public PetBusinessDTO getBusinessDtoByUserLoginId(String userLoginId){
     PetBusiness petBusiness= petBusinessRepository.findByUser_UserLoginId(userLoginId);
 
@@ -55,6 +58,8 @@ public class PetBusinessService implements PetBusinessServiceInterface {
     return petBusinessDTO;
   }
 
+  @Override
+  @Transactional(readOnly = true)
   public PetBusinessDTO getBusinessDtoBYUserId(Long User_id){
     PetBusiness petBusiness = petBusinessRepository.findByUser_Id(User_id);
 
@@ -129,6 +134,9 @@ public class PetBusinessService implements PetBusinessServiceInterface {
     exPetBusiness.setFacilities(petBusinessDTO.getFacilities());
     exPetBusiness.setDescription(petBusinessDTO.getDescription());
     exPetBusiness.setBankAccount(petBusinessDTO.getBankAccount());
+    exPetBusiness.setProvince(petBusinessDTO.getProvince());
+    exPetBusiness.setCity(petBusinessDTO.getCity());
+    exPetBusiness.setTown(petBusinessDTO.getTown());
     exPetBusiness.setUpdatedAt(LocalDateTime.now());
 
     PetBusiness updatePetBusiness=petBusinessRepository.save(exPetBusiness);
@@ -195,7 +203,10 @@ public class PetBusinessService implements PetBusinessServiceInterface {
       return false;
     }
     if (isBlank(petBusinessDTO.getBusinessName())
-        || isBlank(petBusinessDTO.getPetBusinessTypeName())) {
+        || isBlank(petBusinessDTO.getPetBusinessTypeName())
+        || isBlank(petBusinessDTO.getProvince())
+        || isBlank(petBusinessDTO.getCity())
+        || isBlank(petBusinessDTO.getTown())) {
       return false;
     }
 
@@ -235,6 +246,9 @@ public class PetBusinessService implements PetBusinessServiceInterface {
         || isBlank(Integer.toString(petBusinessDTO.getMinPrice()))
         || isBlank(petBusinessDTO.getStatus().name())
         || isBlank(petBusinessDTO.getVarification().name())
+        || isBlank(petBusinessDTO.getProvince())
+        || isBlank(petBusinessDTO.getCity())
+        || isBlank(petBusinessDTO.getTown())
         || isBlank(petBusinessDTO.getPetBusinessTypeName())){
       return false;
     }
@@ -250,7 +264,10 @@ public class PetBusinessService implements PetBusinessServiceInterface {
       && petBusinessDTO.getMaxPrice().compareTo(petBusiness.getMaxPrice())==0
       && petBusinessDTO.getFacilities().equals(petBusiness.getFacilities())
       && petBusinessDTO.getDescription().equals(petBusiness.getDescription())
-      && petBusinessDTO.getBankAccount().equals(petBusiness.getBankAccount())){
+      && petBusinessDTO.getBankAccount().equals(petBusiness.getBankAccount())
+      && petBusinessDTO.getProvince().equals(petBusiness.getProvince())
+      && petBusinessDTO.getCity().equals(petBusiness.getCity())
+      && petBusinessDTO.getTown().equals(petBusiness.getTown())){
 
       return false;
     }

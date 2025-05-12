@@ -32,6 +32,9 @@ public class PetBusinessMapper {
     petBusiness.setRegistrationNumber(petBusinessDTO.getRegistrationNumber());
     petBusiness.setBankAccount(petBusinessDTO.getBankAccount());
     petBusiness.setVarification(petBusinessDTO.getVarification());
+    petBusiness.setProvince(petBusinessDTO.getProvince());
+    petBusiness.setCity(petBusinessDTO.getCity());
+    petBusiness.setTown(petBusinessDTO.getTown());
     petBusiness.setCreatedAt(petBusinessDTO.getCreatedAt());
     petBusiness.setUpdatedAt(petBusinessDTO.getUpdatedAt());
     if(petBusinessDTO.getUserId()!=null) {
@@ -69,6 +72,9 @@ public class PetBusinessMapper {
     petBusinessDTO.setRegistrationNumber(petBusiness.getRegistrationNumber());
     petBusinessDTO.setBankAccount(petBusiness.getBankAccount());
     petBusinessDTO.setVarification(petBusiness.getVarification());
+    petBusinessDTO.setProvince(petBusiness.getProvince());
+    petBusinessDTO.setCity(petBusiness.getCity());
+    petBusinessDTO.setTown(petBusiness.getTown());
     petBusinessDTO.setCreatedAt(petBusiness.getCreatedAt());
     petBusinessDTO.setUpdatedAt(petBusiness.getUpdatedAt());
 
@@ -105,6 +111,9 @@ public class PetBusinessMapper {
     petBusinessDTO.setRegistrationNumber(petBusiness.getRegistrationNumber());
     petBusinessDTO.setBankAccount(petBusiness.getBankAccount());
     petBusinessDTO.setVarification(petBusiness.getVarification());
+    petBusinessDTO.setProvince(petBusiness.getProvince());
+    petBusinessDTO.setCity(petBusiness.getCity());
+    petBusinessDTO.setTown(petBusiness.getTown());
     petBusinessDTO.setCreatedAt(petBusiness.getCreatedAt());
     petBusinessDTO.setUpdatedAt(petBusiness.getUpdatedAt());
     if(petBusiness.getPetBusinessType()!=null){

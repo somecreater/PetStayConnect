@@ -8,16 +8,18 @@ import '../../common/Css/common.css';
 function UserInfoPage(props){
   
   return (
-    <>
-      <div className='UserInfoPage'>
-
-        <UserInfo/>
-        <LogoutButton/>
-        <UpdateButton/>
-        <DeleteButton/>
-        
+    <div className="container py-4">
+      <div className="row mb-4">
+        <div className="col">
+          <UserInfo />
+        </div>
       </div>
-    </>
+      <div className="d-flex gap-2">
+        <LogoutButton />
+        <UpdateButton />
+        <DeleteButton />
+      </div>
+    </div>
   );
 }
 

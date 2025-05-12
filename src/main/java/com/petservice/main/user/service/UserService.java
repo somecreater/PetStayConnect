@@ -191,7 +191,6 @@ public class UserService implements CustomUserServiceInterface, UserDetailsServi
   @Override
   @Transactional
   public UserDTO UpdateUser(CustomUserDetails userDetails, UserDTO userDTO){
-
     if (userDetails == null || !UserValidation(userDTO)) {
       return null;
     }
@@ -223,12 +222,16 @@ public class UserService implements CustomUserServiceInterface, UserDetailsServi
       PetBusiness existPetBusiness= existUser.getPetBusiness();
 
       existPetBusiness.setBusinessName(updatePetBusiness.getBusinessName());
+      existPetBusiness.setStatus(updatePetBusiness.getStatus());
       existPetBusiness.setBankAccount(updatePetBusiness.getBankAccount());
       existPetBusiness.setMinPrice(updatePetBusiness.getMinPrice());
       existPetBusiness.setMaxPrice(updatePetBusiness.getMaxPrice());
       existPetBusiness.setFacilities(updatePetBusiness.getFacilities());
       existPetBusiness.setDescription(updatePetBusiness.getDescription());
       existPetBusiness.setUpdatedAt(LocalDateTime.now());
+      existPetBusiness.setProvince(updatePetBusiness.getProvince());
+      existPetBusiness.setCity(updatePetBusiness.getCity());
+      existPetBusiness.setTown(updatePetBusiness.getTown());
 
       existUser.setPetBusiness(existPetBusiness);
     }
@@ -282,7 +285,6 @@ public class UserService implements CustomUserServiceInterface, UserDetailsServi
       if (userDTO == null) {
         return false;
       }
-
       if (isBlank(userDTO.getUserLoginId())
           || isBlank(userDTO.getEmail())
           || isBlank(userDTO.getRole().name())
@@ -293,17 +295,14 @@ public class UserService implements CustomUserServiceInterface, UserDetailsServi
 
       if (userDTO.getRole().equals(Role.SERVICE_PROVIDER)) {
         PetBusinessDTO petBusinessDTO = userDTO.getPetBusinessDTO();
-
         if (petBusinessDTO == null) {
           return false;
         }
 
         if (isBlank(petBusinessDTO.getBusinessName())
           || isBlank(petBusinessDTO.getStatus().name())
-          || isBlank(petBusinessDTO.getAvgRate().toString())
           || isBlank(petBusinessDTO.getRegistrationNumber())
-          || isBlank(petBusinessDTO.getBankAccount())
-          || isBlank(petBusinessDTO.getVarification().name())) {
+          || isBlank(petBusinessDTO.getBankAccount())) {
           return false;
         }
 

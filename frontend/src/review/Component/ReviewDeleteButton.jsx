@@ -13,8 +13,13 @@ export default function ReviewDeleteButton({ reviewId, onDeleted }) {
   };
 
   return (
-    <div className="ReviewDeleteButton">
-      <Button type="button" title="삭제" classtext="DeleteButton" onClick={handleDelete} />
+    <div className="d-inline-block">
+      <Button
+        type="button"
+        classtext="btn btn-sm btn-danger"
+        title="삭제"
+        onClick={handleDelete}
+      />
     </div>
   );
 }

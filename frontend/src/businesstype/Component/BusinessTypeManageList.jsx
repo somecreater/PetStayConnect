@@ -24,40 +24,47 @@ function BusinessManageTypeList(props){
   };
 
   return(
-    <>
-      <div>
-      {
-        types && types.length>0 ?  
-        <div className="BusinessTypeManageList">
-        {types.map((type) => 
-        <>
-          <div className="BusinessTypeManage">
-            <BusinessType 
-              key={type.id} 
-              id={type.id} 
-              typeName={type.typeName}
-              sectorCode={type.sectorCode}
-              typeCode={type.typeCode}
-              description={type.description}
-            />
-            <div className="buttonset">
-                <BusinessTypeDeleteButton type_id={type.id} businesstype={type}/>
-                <Button 
-                  classtext={'BusinessTypeButton'} 
-                  type="button" 
-                  title={'타입 수정'} 
-                  onClick={() => openEditModal(type)}
-                />
-              
+    <div className="container py-4">
+      {types && types.length > 0 ? (
+        <div
+          className="row g-4 overflow-auto"
+          style={{ maxHeight: '70vh' }}
+        >
+          {types.map(type => (
+            <div key={type.id} className="col-md-6 col-lg-4">
+              <div className="card h-100">
+                <div className="card-body d-flex flex-column">
+                  <BusinessType 
+                    id={type.id} 
+                    typeName={type.typeName}
+                    sectorCode={type.sectorCode}
+                    typeCode={type.typeCode}
+                    description={type.description}
+                  />
+
+                  <div className="mt-auto d-flex gap-2">
+                    <BusinessTypeDeleteButton 
+                      type_id={type.id} 
+                      businesstype={type}
+                    />
+                    <Button 
+                      classtext="btn btn-outline-secondary"
+                      type="button"
+                      title="타입 수정"
+                      onClick={() => openEditModal(type)}
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-        </>
-        )}
+          ))}
         </div>
-        :<div className="BusinessTypeList">
-            <CusomP classtext={'noting'} title={'타입이 존재하지 않습니다.'}/>
+      ) : (
+        <div className="alert alert-warning text-center">
+          <CusomP classtext="mb-0" title="타입이 존재하지 않습니다." />
         </div>
-      }
+      )}
+
       {selectedType && (
         <Modal isOpen={isModalOpen} onClose={closeModal}>
           <BusinessTypeUpdateForm 
@@ -66,15 +73,14 @@ function BusinessManageTypeList(props){
             exSectorCode={selectedType.sectorCode}
             exTypeCode={selectedType.typeCode}
             exDescription={selectedType.description}
-            onSuccess={()=>{
+            onSuccess={() => {
               onRefresh();
               closeModal();
             }}
           />
         </Modal>
       )}
-      </div>
-    </>
+    </div>
   );
 }
 

@@ -9,14 +9,10 @@ function LoginPage(props){
   
 
   return (
-    <>
-      <div>
-
-        <LoginForm/>
-        
-      </div>
-    </>
-  );  
+    <div className="container py-5" style={{ maxWidth: 400 }}>
+      <LoginForm />
+    </div>
+  );
 }
 
 export default LoginPage;

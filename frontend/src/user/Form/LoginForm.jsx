@@ -38,45 +38,52 @@ function LoginForm(props){
 
 
     return(
-        <>
-          <div>
-            <form className='UserLoginForm' onSubmit={handleLogin}>
-              <TextInput 
-                classtext={'LoginIdInput'}
-                name={'username'} 
-                value={username} 
-                placeholderText={'아이디를 입력하시오'} 
-                onChange={(e)=>{setUsername(e.target.value)}}
-              />
-              <PasswordInput
-                classtext={'PasswordInput'}
-                name={'password'} 
-                value={password} 
-                placeholderText={'비밀번호를 입력하시오'} 
-                onChange={(e)=>{setPassword(e.target.value)}}
-              />
-              <br/>
-              <div className='LoginFormBottom'>
-                <Button 
-                  classtext={'GoogleLoginButton'}
-                  type={'button'}
-                  onClick={handleGoogleLogin}
-                  title={'Google Login'}/>
-                <Button 
-                  classtext={'LoginButton'} 
-                  type={'submit'} 
-                  onClick={handleLogin} 
-                  title={'로그인'}/>
-                <Button
-                  classtext={'RegisterButton'} 
-                  type={'button'} 
-                  onClick={(e)=>{navigate('/user/register')}} 
-                  title={'회원가입'}/>
-              </div>
-            </form>
-          </div>
-        </>
-    );
+    <div className="container py-5" style={{ maxWidth: 400 }}>
+      <form className="border p-4 rounded bg-light" onSubmit={handleLogin}>
+        <h4 className="mb-4 text-center">로그인</h4>
+        <div className="mb-3">
+          <TextInput
+            classtext="form-control"
+            name="username"
+            value={username}
+            placeholderText="아이디"
+            onChange={e => setUsername(e.target.value)}
+          />
+        </div>
+        <div className="mb-4">
+          <PasswordInput
+            classtext="form-control"
+            name="password"
+            value={password}
+            placeholderText="비밀번호"
+            onChange={e => setPassword(e.target.value)}
+          />
+        </div>
+        <div className="d-grid gap-2 mb-3">
+          <Button
+            classtext="btn btn-primary"
+            type="submit"
+            onClick={handleLogin}
+            title="로그인"
+          />
+          <Button
+            classtext="btn btn-outline-danger"
+            type="button"
+            onClick={handleGoogleLogin}
+            title="Google 로그인"
+          />
+        </div>
+        <div className="text-center">
+          <Button
+            classtext="btn btn-link"
+            type="button"
+            onClick={() => navigate('/user/register')}
+            title="회원가입"
+          />
+        </div>
+      </form>
+    </div>
+  );
 }
 
 export default LoginForm;

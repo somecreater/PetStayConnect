@@ -151,15 +151,15 @@ const ApiService = {
     })
   },
   business:{
-    list: (dto,page,size) => RefreshApi.get(API_ENDPOINTS.business.list, dto, 
+    list: (dto,page,size) => RefreshApi.get(API_ENDPOINTS.business.list, 
     {
-      params:{page, size},
+      params:{ ...dto, page, size},
       headers: createHeaders(),
       withCredentials: true
     }),
-    outerlist: (dto,page,size) => RefreshApi.get(API_ENDPOINTS.business.outerlist, dto,
+    outerlist: (dto,page,size) => RefreshApi.get(API_ENDPOINTS.business.outerlist,
     {
-      params:{page, size},
+      params:{ ...dto, page, size},
       headers: createHeaders(),
       withCredentials: true
     })

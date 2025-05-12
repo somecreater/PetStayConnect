@@ -46,57 +46,44 @@ function CustomErrorPage(props){
   const errorSubject = errorSubjectMap[finalStatus] || "오류가 발생했습니다";
 
   return (
-    <>
-    <div className="CustomErrorPage">
-    <main role="main">
-      <section role="alert" aria-labelledby="client_error_title">
-        
-        <header>
-          <h1 className="client_error_title">{pageTitle}</h1>
-        </header>
-
-        <div className="ErrorBody">
-
-          <CusomP 
-            classtext={'errorMessage'}
-            title={errorSubject}
-          />
-
-          <CusomP 
-            classtext={'errorMessage'}
-            title={`${error} : ${message}`}
-          />
-
-          <div className="ErrorBottom">
-
-            <Button 
-              classText={'LoginButton'} 
-              type={'button'} 
-              onClick={(e)=>{navigate('/user/login')}} 
-              title={'다시 로그인 하기'}
-            />
-
-            <Button
-              classtext={'HomeButton'} 
-              type={'button'} 
-              onClick={(e)=>{navigate('/user/info')}} 
-              title={'홈으로 돌아가기(아직은 유저 정보 페이지(추후 수정))'}
-            />
-            
-            <Button
-              classtext={'HomeButton'} 
-              type={'button'} 
-              onClick={(e)=>{navigate(-1)}} 
-              title={'뒤로가기'}
-            />
-
+    <div className="container py-5">
+      <div className="row justify-content-center">
+        <div className="col-lg-8">
+          <div className="card border-danger">
+            <div className="card-header bg-danger text-white text-center">
+              <h1 className="m-0">{status} – {pageTitle}</h1>
             </div>
+            <div className="card-body text-center">
+              <p className="lead">{errorSubject}</p>
+              <CusomP
+                classtext="text-muted mb-3"
+                title={`${error} : ${message}`}
+              />
+              <div className="d-flex justify-content-center gap-2 flex-wrap">
+                <Button
+                  type="button"
+                  classtext="btn btn-outline-primary"
+                  title="다시 로그인하기"
+                  onClick={() => navigate("/user/login")}
+                />
+                <Button
+                  type="button"
+                  classtext="btn btn-outline-secondary"
+                  title="홈으로 돌아가기"
+                  onClick={() => navigate("/user/info")}
+                />
+                <Button
+                  type="button"
+                  classtext="btn btn-outline-dark"
+                  title="뒤로가기"
+                  onClick={() => navigate(-1)}
+                />
+              </div>
+            </div>
+          </div>
         </div>
-
-      </section>
-    </main>
+      </div>
     </div>
-    </>
   );
   
 }

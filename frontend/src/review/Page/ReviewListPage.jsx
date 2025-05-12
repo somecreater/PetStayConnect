@@ -25,26 +25,31 @@ export default function ReviewListPage() {
   }, []);
 
   return (
-    <div className="ReviewListPage">
-      <h2>나의 리뷰</h2>
-      <Button
-        type="button"
-        title="리뷰 작성"
-        onClick={() => navigate('/reviews/register')}
-      />
-      <ul>
-        {reviews.length > 0 ? (
-          reviews.map(r => (
-            <li key={r.id}>
-              <Link to={`/reviews/${r.id}`}>
+    <div className="container py-4">
+      <div className="d-flex justify-content-between align-items-center mb-3">
+        <h2 className="mb-0">나의 리뷰</h2>
+        <Button
+          type="button"
+          title="리뷰 작성"
+          classtext="btn btn-primary"
+          onClick={() => navigate('/reviews/register')}
+        />
+      </div>
+
+      {reviews.length > 0 ? (
+        <ul className="list-group">
+          {reviews.map(r => (
+            <li key={r.id} className="list-group-item d-flex justify-content-between align-items-center">
+              <Link to={`/reviews/${r.id}`} className="text-decoration-none">
                 {r.petBusinessName} – 평점: {r.rating}
               </Link>
+              <span className="text-muted">{new Date(r.createdAt).toLocaleDateString()}</span>
             </li>
-          ))
-        ) : (
-          <p>등록된 리뷰가 없습니다.</p>
-        )}
-      </ul>
+          ))}
+        </ul>
+      ) : (
+        <div className="alert alert-info">등록된 리뷰가 없습니다.</div>
+      )}
     </div>
   );
 }
