@@ -96,17 +96,17 @@ function UserInfo(props){
             <dl className="row mb-0">
               <dt className="col-sm-3">아이디</dt>
               <dd className="col-sm-9">
-                <CustomP classtext="UserLoginId" title={user.userLoginId} />
+                <CustomP classtext="mb-0" title={user.userLoginId} />
               </dd>
 
               <dt className="col-sm-3">이름</dt>
               <dd className="col-sm-9">
-                <CustomP classtext="UserName" title={user.name} />
+                <CustomP classtext="mb-0" title={user.name} />
               </dd>
 
               <dt className="col-sm-3">권한</dt>
               <dd className="col-sm-9">
-                <CustomP classtext="UserRole" title={user.role} />
+                <CustomP classtext="mb-0" title={user.role} />
               </dd>
             </dl>
           )}

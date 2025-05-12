@@ -103,6 +103,7 @@ public class PetBusinessController {
       result.put("message","검색 쿼리: " + SearchRequest);
       result.put("search", petBusinessDTOS);
       result.put("totalPages",petBusinessDTOS.getTotalPages());
+      result.put("totalElements",petBusinessDTOS.getTotalElements());
     }
 
     return ResponseEntity.ok(result);

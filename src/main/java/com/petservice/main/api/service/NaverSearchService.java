@@ -29,6 +29,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
@@ -43,6 +44,14 @@ public class NaverSearchService implements NaverSearchServiceInterface {
   @Value("${naver.api.client-id}") private String clientId;
   @Value("${naver.api.client-secret}") private String clientSecret;
 
+  // 애완동물 관련 카테고리 그룹 코드
+  private static final List<String> PET_CATEGORY_CODES = Arrays.asList(
+      "CE7", // 애완 동물 소매
+      "HP8", // 동물병원 운영
+      "PD3", "OD5" // 펫 미용·목욕 서비스
+      // 필요 시 추가
+  );
+
   private final AddressMapper addressMapper;
   private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -50,7 +59,6 @@ public class NaverSearchService implements NaverSearchServiceInterface {
   public Page<PetBusinessDTO> searchNearPyBusinessDTO(
       String userLoginId, NaverSearchRequest request, Pageable pageable){
     try {
-
       AddressDTO address = addressService.getAddressByUserLoginId(userLoginId);
 
       String searchKeyword = null;
@@ -78,10 +86,12 @@ public class NaverSearchService implements NaverSearchServiceInterface {
           .queryParam("display", display)
           .queryParam("start",start)
           .queryParam("sort","random")
+          .queryParam("category_group_code", String.join(",", PET_CATEGORY_CODES))
           .encode(Charset.forName("UTF-8"));
-      if(request.isNear()){
+      if(request.isNear() && address!=null){
         uriBuilder.queryParam("x",address.getCorX()).queryParam("y",address.getCorY());
       }
+
       URI uri= uriBuilder.build().toUri();
       WebClient webClient= WebClient.builder()
           .defaultHeader("X-Naver-Client-Id", clientId)
@@ -125,13 +135,12 @@ public class NaverSearchService implements NaverSearchServiceInterface {
           }else{
             item.setCategoryGroupName("");
           }
-
-          String rawTitle = item.getTitle();
-          String title = stripHtmlTags(rawTitle).toLowerCase();
-          item.setTitle(title);
           return true;
 
       }).map(naverPlaceItem -> {
+        String rawTitle = naverPlaceItem.getTitle();
+        String title = stripHtmlTags(rawTitle).toLowerCase();
+        naverPlaceItem.setTitle(title);
         PetBusinessDTO dto = ConvertBusinessDTO(naverPlaceItem, address);
         PetBusinessTypeDTO typeDto = ConvertBusinessTypeDTO(naverPlaceItem.getCategoryGroupCode(),
             naverPlaceItem.getCategoryGroupName());
@@ -141,7 +150,7 @@ public class NaverSearchService implements NaverSearchServiceInterface {
 
       }).toList();
 
-      return new PageImpl<>(filtered, pageable, filtered.size());
+      return new PageImpl<>(filtered, pageable, apiResponse.getTotal());
     }catch (Exception e){
       log.error("Naver API 호출 중 오류", e);
       throw new RuntimeException("검색 중 오류가 발생했습니다.", e);

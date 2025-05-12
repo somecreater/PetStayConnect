@@ -20,12 +20,18 @@ public class AddressService implements AddressServiceInterface {
   @Override
   public AddressDTO getAddressByUserId(Long UserId) {
     Address address = addressRepository.findByUserId(UserId);
+    if(address==null){
+      return null;
+    }
     return addressMapper.toDTO(address);
   }
 
 
   public AddressDTO getAddressByUserLoginId(String UserLoginId){
     Address address = addressRepository.findByUserLoginId(UserLoginId);
+    if(address==null){
+      return null;
+    }
     return addressMapper.toDTO(address);
   }
 }

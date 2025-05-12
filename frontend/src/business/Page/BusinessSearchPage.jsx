@@ -9,9 +9,10 @@ function BusinessSearchPage(props){
 
   const navigate = useNavigate();
   const { user }= useUser();
+
   const [petList, setPetList] = useState([]);
   const [businesses,setBusinesses] = useState([]);
-  const [size] = useState(5);
+  const [size, setSize] = useState(5);
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   
@@ -23,7 +24,7 @@ function BusinessSearchPage(props){
     is_around: false,
     is_external: false,
   });
-  
+
   const handleChange = e => {
     const { name, type, value, checked } = e.target;
     setSearch(prev => ({
@@ -32,22 +33,40 @@ function BusinessSearchPage(props){
     }));
   };
 
-  const getBusinessList = async () => {
+  const handleSearchInput = e => {
+    const { value } = e.target;
+    setSearch(prev => {
+      const next = { ...prev };
+      if (searchType === 'business') {
+        next.businessName = value;
+      } else if (searchType === 'type') {
+        next.typeCode = value;
+      } else{
+        next.businessName = value;
+        next.typeCode = value;
+      }
+      return next;
+    });
+  };
+
+  const getBusinessList = useCallback(async () => {
     try{
-      const response = await ApiService.business.list(search,page,size);
-      const data= response.data;
-      if(data.result){
-        alert(data.message);
+      const api = search.is_external
+        ? ApiService.business.outerlist
+        : ApiService.business.list;
+      const resp = await api(search, page, size);
+      const data = resp.data;
+      if (data.result) {
         setBusinesses(data.search.content);
         setTotalPages(data.totalPages);
-      }else{
+      } else {
         alert(data.message);
       }
-    }catch(err){
+    } catch (err) {
       console.error(err);
       alert('목록을 불러오는 중 오류가 발생했습니다.');
     }
-  };
+  }, [search, page, size]);
 
   const fetchPets = useCallback(async () => {
 
@@ -63,11 +82,24 @@ function BusinessSearchPage(props){
 
   useEffect(() => {
     fetchPets();
-  },[]);
+  },[fetchPets]);
 
   useEffect(() => {
     getBusinessList();
   }, [page]);
+
+  const handleSearchClick = () => {
+    setPage(0);
+    setBusinesses([]);
+    getBusinessList();
+  };
+
+  const goPrevious = () => {
+    setPage(prev => Math.max(0, prev - 1));
+  };
+  const goNext = () => {
+    setPage(prev => Math.min(totalPages - 1, prev + 1));
+  };
 
   return (
     <div className="container py-4">
@@ -80,9 +112,11 @@ function BusinessSearchPage(props){
             value={searchType}
             onChange={e => setSearchType(e.target.value)}
           >
+            {!search.is_external &&
             <option value="business">이름</option>
-            <option value="type">타입</option>
+            }
             <option value="bu_ty">이름+타입</option>
+            <option value="type">타입</option>
           </select>
         </div>
 
@@ -120,8 +154,14 @@ function BusinessSearchPage(props){
             type="search"
             className="form-control"
             name="businessName"
-            value={search.businessName}
-            onChange={handleChange}
+            value={
+              searchType === 'business'
+                ? search.businessName
+                : searchType === 'type'
+                ? search.typeCode
+                : search.businessName 
+            }
+            onChange={handleSearchInput}
             placeholder="검색어를 입력하세요"
           />
         </div>
@@ -132,7 +172,7 @@ function BusinessSearchPage(props){
             classtext="btn btn-primary"
             type="button"
             title="검색"
-            onClick={() => { setPage(0); getBusinessList(); }}
+            onClick={handleSearchClick}
           />
         </div>
       </form>
@@ -143,13 +183,12 @@ function BusinessSearchPage(props){
         <div className="alert alert-info">검색 결과가 없습니다.</div>
       )}
 
-      {totalPages > 1 && (
         <nav className="d-flex justify-content-center mt-4">
           <ul className="pagination">
-            <li className={`page-item ${page === 0 && 'disabled'}`}>
+            <li className="page-item">
               <button
                 className="page-link"
-                onClick={() => setPage(prev => prev - 1)}
+                onClick={goPrevious}
               >
                 Previous
               </button>
@@ -159,17 +198,17 @@ function BusinessSearchPage(props){
                 {page + 1} / {totalPages}
               </span>
             </li>
-            <li className={`page-item ${page + 1 === totalPages && 'disabled'}`}>
+            <li className="page-item">
               <button
                 className="page-link"
-                onClick={() => setPage(prev => prev + 1)}
+                onClick={goNext}
               >
                 Next
               </button>
             </li>
           </ul>
         </nav>
-      )}
+      
     </div>
   );
 }
