@@ -18,9 +18,15 @@ export const API_ENDPOINTS = {
   businesstype:`${API_BASE_URL}/api/type`,
   business:{
     list: `${API_BASE_URL}/api/provider/list`,
-    outerlist: `${API_BASE_URL}/api/provider/list/naver`
+    outerlist: `${API_BASE_URL}/api/provider/list/naver`,
+    reservation: `${API_BASE_URL}/api/providers/reservation`,
+    bnsReservation: `${API_BASE_URL}/api/provider/provider/reservation`,
+    conReservation: `${API_BASE_URL}/api/provider/consumer/reservation`,
   },
-  businessvalidation: `${API_BASE_URL}/api/validation`
+  businessroom: `${API_BASE_URL}/api/room`,
+  businessvalidation: `${API_BASE_URL}/api/validation`,
+  reviews: `${API_BASE_URL}/api/reviews`,
+  payments: `${API_BASE_URL}/api/payments`
 }
 
 export const createHeaders = () => ({

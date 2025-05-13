@@ -162,6 +162,75 @@ const ApiService = {
       params:{ ...dto, page, size},
       headers: createHeaders(),
       withCredentials: true
+    }),
+    reservation: (dto, provider_id) => RefreshApi.post(`${API_ENDPOINTS.business}/${provider_id}/reservation`,
+    dto,
+    {
+      headers: createHeaders(),
+      withCredentials: true,
+    }),
+    bnsReservation: (page,size) => RefreshApi.get(API_ENDPOINTS.business.bnsReservation,
+    {
+      params:{page, size},
+      headers: createHeaders(),
+      withCredentials: true,
+    }),
+    conReservation: (page,size) => RefreshApi.get(API_ENDPOINTS.business.conReservation,
+    {
+      params:{page, size},
+      headers: createHeaders(),
+      withCredentials: true,
+    }),
+    detailReservation: (reservation_id) => RefreshApi.get(`${API_ENDPOINTS.business.reservation}/${reservation_id}`,
+    {
+      headers: createHeaders(),
+      withCredentials: true,
+    }),
+    deleteReservation: (reservation_id) => RefreshApi.delete(`${API_ENDPOINTS.business.reservation}/${reservation_id}`,
+    {
+      headers: createHeaders(),
+      withCredentials: true,
+    }),
+    updateReservation: (dto, reservation_id)=> RefreshApi.put(`${API_ENDPOINTS.business.reservation}/${reservation_id}`,
+    dto,
+    {
+      headers: createHeaders(),
+      withCredentials: true,
+    }),
+  },
+
+  businessroom:{
+    list: (business_id)=> RefreshApi.get(`${API_ENDPOINTS.businessroom}/${business_id}`,
+    {
+      headers: createHeaders(),
+      withCredentials: true,
+    }),
+    List: (register_number)=> RefreshApi.get(`${API_ENDPOINTS.businessroom}/${register_number}`,
+    {
+      headers: createHeaders(),
+      withCredentials: true,
+    }),
+    detail: (business_id, room_id)=> RefreshApi.get(`${API_ENDPOINTS.businessroom}/${business_id}/${room_id}`,
+    {
+      headers: createHeaders(),
+      withCredentials: true,
+    }),
+    update: (business_id, room_id, dto)=> RefreshApi.put(`${API_ENDPOINTS.businessroom}/${business_id}/${room_id}`,
+    dto,
+    {
+      headers: createHeaders(),
+      withCredentials: true,
+    }),
+    register: (business_id,dto)=> RefreshApi.post(`${API_ENDPOINTS.businessroom}/${business_id}`,
+    dto,
+    {
+      headers: createHeaders(),
+      withCredentials: true,
+    }),
+    delete: (business_id, room_id)=> RefreshApi.delete(`${API_ENDPOINTS.businessroom}/${business_id}/${room_id}`,
+    {
+      headers: createHeaders(),
+      withCredentials: true,
     })
   },
   businessvalidation: {
@@ -170,10 +239,50 @@ const ApiService = {
       withCredentials: true,
     })
   },
-  businessService:{
-
+  reviews:{
+     list: () => RefreshApi.get(API_ENDPOINTS.reviews, {
+      headers: createHeaders(),
+      withCredentials: true,
+    }),
+    detail: reviewId => RefreshApi.get(`${API_ENDPOINTS.reviews}/${reviewId}`, {
+      headers: createHeaders(),
+      withCredentials: true,
+    }),
+    register: dto => RefreshApi.post(API_ENDPOINTS.reviews, dto, {
+      headers: createHeaders(),
+      withCredentials: true,
+    }),
+    update: (reviewId, dto) => RefreshApi.put(`${API_ENDPOINTS.reviews}/${reviewId}`, dto, {
+      headers: createHeaders(),
+      withCredentials: true,
+    }),
+    delete: reviewId => RefreshApi.delete(`${API_ENDPOINTS.reviews}/${reviewId}`, {
+      headers: createHeaders(),
+      withCredentials: true,
+    }),
   },
-
+  payments:{
+    list: ()=> RefreshApi.get(API_ENDPOINTS.payments,{
+      headers: createHeaders(),
+      withCredentials: true,
+    }),
+    detail: (payment_id)=> RefreshApi.get(`${API_ENDPOINTS.payments}/${payment_id}`,{
+      headers: createHeaders(),
+      withCredentials: true,
+    }),
+    ready: (dto)=> RefreshApi.post(API_ENDPOINTS.payments, dto,{
+      headers: createHeaders(),
+      withCredentials: true,
+    }),
+    register: (payment_id, dto)=>RefreshApi.post(`${API_ENDPOINTS.payments}/${payment_id}`,dto,{
+      headers: createHeaders(),
+      withCredentials: true,
+    }),
+    delete: (payment_id)=>RefreshApi.delete(`${ApiService.payments}/${payment_id}`,{
+      headers: createHeaders(),
+      withCredentials: true,
+    })
+  }
 }
 
 export default ApiService;

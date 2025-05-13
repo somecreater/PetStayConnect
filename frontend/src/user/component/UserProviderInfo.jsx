@@ -40,22 +40,22 @@ function UserProviderInfo({petBusinessDTO}){
         <dl className="row g-2 mb-4">
           <dt className="col-sm-3">사업체 이름</dt>
           <dd className="col-sm-9">
-            <CusomP classtext="ProviderInfo" title={businessName} />
+            <CusomP classtext="mb-0" title={businessName} />
           </dd>
 
           <dt className="col-sm-3">현재 상태</dt>
           <dd className="col-sm-9">
-            <CusomP classtext="ProviderInfo" title={status} />
+            <CusomP classtext="mb-0" title={status} />
           </dd>
 
           <dt className="col-sm-3">최소 가격</dt>
           <dd className="col-sm-9">
-            <CusomP classtext="ProviderInfo" title={minPrice} />
+            <CusomP classtext="mb-0" title={minPrice} />
           </dd>
 
           <dt className="col-sm-3">최대 가격</dt>
           <dd className="col-sm-9">
-            <CusomP classtext="ProviderInfo" title={maxPrice} />
+            <CusomP classtext="mb-0" title={maxPrice} />
           </dd>
         </dl>
 
@@ -82,28 +82,28 @@ function UserProviderInfo({petBusinessDTO}){
         <dl className="row g-2 mb-4">
           <dt className="col-sm-3">평점</dt>
           <dd className="col-sm-9">
-            <CusomP classtext="ProviderInfo" title={avgRate} />
+            <CusomP classtext="mb-0" title={avgRate} />
           </dd>
 
           <dt className="col-sm-3">사업자 번호</dt>
           <dd className="col-sm-9">
-            <CusomP classtext="ProviderInfo" title={registrationNumber} />
+            <CusomP classtext="mb-0" title={registrationNumber} />
           </dd>
 
           <dt className="col-sm-3">계좌번호</dt>
           <dd className="col-sm-9">
-            <CusomP classtext="ProviderInfo" title={bankAccount || '미등록'} />
+            <CusomP classtext="mb-0" title={bankAccount || '미등록'} />
           </dd>
 
           <dt className="col-sm-3">인증 현황</dt>
           <dd className="col-sm-9">
-            <CusomP classtext="ProviderInfo" title={varification} />
+            <CusomP classtext="mb-0" title={varification} />
           </dd>
 
           <dt className="col-sm-3">주소</dt>
           <dd className="col-sm-9">
             <CusomP
-              classtext="ProviderInfo"
+              classtext="mb-0"
               title={`${province || ''} ${city || ''} ${town || ''}`.trim()}
             />
           </dd>
