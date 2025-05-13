@@ -25,6 +25,8 @@ import ReviewListPage from './review/Page/ReviewListPage';
 import ReviewDetailPage from './review/Page/ReviewDetailPage';
 import ReviewRegisterPage from './review/Page/ReviewRegisterPage';
 
+import BusinessManagePage from './business/Page/BusinessManagePage';
+
 function App() {
 
   return (
@@ -38,11 +40,12 @@ function App() {
         <Route path="/user/update" element={<UpdatePage/>}/>
         <Route path="/user/delete" element={<DeletePage/>}/>
         <Route path="/user/petmanage" element={<PetManagePage/>} />
-        
+
         <Route path="/type/list" element={<BusinessTypePage/>} />
         <Route path="/type/manage" element={<BusinessTypeManagePage/>} />
         
         <Route path="/business/list" element={<BusinessSearchPage/>}/>
+        <Route path="/business/manage" element={<BusinessManagePage/>}/>
 
         <Route path="/qnas" element={<QnaListPage/>}/>
         <Route path="/qnas/register" element={<PostRegisterPage/>}/>

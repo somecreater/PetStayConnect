@@ -9,7 +9,10 @@ function ReservationList({List, isDelete, onDelete, isUpdate, onUpdate, isBusine
   return (
     <div className="row gy-4">
       {List.map(reservation => (
-        <div key={reservation.id} className="col-12">
+        <div 
+          key={reservation.id} 
+          className="col-12" 
+        >
           <Reservation reservationDTO={reservation} />
 
           {/* 액션 버튼 영역 */}

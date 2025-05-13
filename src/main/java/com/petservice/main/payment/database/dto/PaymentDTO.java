@@ -6,7 +6,11 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-
+/*
+ID, 예약 ID, 금액, 수수료율, 서비스 수수료,
+결제 상태, 결제 방법, 거래 ID, 거래 시간,
+환불 상태, 환불 금액
+*/
 @Data
 public class PaymentDTO {
 

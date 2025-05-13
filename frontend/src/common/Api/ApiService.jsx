@@ -256,6 +256,28 @@ const ApiService = {
       withCredentials: true,
     }),
   },
+  payments:{
+    list: ()=> RefreshApi.get(API_ENDPOINTS.payments,{
+      headers: createHeaders(),
+      withCredentials: true,
+    }),
+    detail: (payment_id)=> RefreshApi.get(`${API_ENDPOINTS.payments}/${payment_id}`,{
+      headers: createHeaders(),
+      withCredentials: true,
+    }),
+    ready: (dto)=> RefreshApi.post(API_ENDPOINTS.payments, dto,{
+      headers: createHeaders(),
+      withCredentials: true,
+    }),
+    register: (payment_id, dto)=>RefreshApi.post(`${API_ENDPOINTS.payments}/${payment_id}`,dto,{
+      headers: createHeaders(),
+      withCredentials: true,
+    }),
+    delete: (payment_id)=>RefreshApi.delete(`${ApiService.payments}/${payment_id}`,{
+      headers: createHeaders(),
+      withCredentials: true,
+    })
+  }
 }
 
 export default ApiService;

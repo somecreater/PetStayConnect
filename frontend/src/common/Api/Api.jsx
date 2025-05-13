@@ -25,8 +25,8 @@ export const API_ENDPOINTS = {
   },
   businessroom: `${API_BASE_URL}/api/room`,
   businessvalidation: `${API_BASE_URL}/api/validation`,
-  reviews: `${API_BASE_URL}/api/reviews`
-
+  reviews: `${API_BASE_URL}/api/reviews`,
+  payments: `${API_BASE_URL}/api/payments`
 }
 
 export const createHeaders = () => ({

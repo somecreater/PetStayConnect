@@ -1,6 +1,10 @@
 import React from "react";
 import dayjs from 'dayjs';
 
+function formatDate(value, format = 'YYYY-MM-DD') {
+  return value && dayjs(value).isValid() ? dayjs(value).format(format) : '—';
+}
+
 function Reservation({ reservationDTO }){
   const {
     id,
@@ -26,16 +30,16 @@ function Reservation({ reservationDTO }){
     ['회원 아이디', UserLoginId],
     ['업체 이름', PetBusinessName],
     ['등록 번호', petBusinessRegisterNumber],
-    ['체크인', dayjs(checkIn).format('YYYY-MM-DD')],
-    ['체크아웃', dayjs(checkOut).format('YYYY-MM-DD')],
-    ['숙박 기간', `${period}박`],
+    ['체크인', formatDate(checkIn)],
+    ['체크아웃', formatDate(checkOut)],
+    ['숙박 기간', period ? `${period}박` : '—'],
     ['예약 상태', status],
     ['특별 요청', specialRequests || '—'],
     ['사업자 요청', businessRequestInfo || '—'],
     ['결제 정보', paymentDTO ? `${paymentDTO.amount}원 (${paymentDTO.method})` : '—'],
     ['리뷰', reviewDTO ? reviewDTO.content : '작성 전'],
-    ['생성일', dayjs(createdAt).format('YYYY-MM-DD HH:mm')],
-    ['수정일', dayjs(updatedAt).format('YYYY-MM-DD HH:mm')],
+    ['생성일', formatDate(createdAt, 'YYYY-MM-DD HH:mm')],
+    ['수정일', formatDate(updatedAt, 'YYYY-MM-DD HH:mm')],
   ];
 
   return (
