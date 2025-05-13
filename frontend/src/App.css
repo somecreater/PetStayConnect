@@ -1,7 +1,8 @@
 #root {
+  /* 전체 폭 차지
   max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 2rem;*/
   text-align: center;
 }
 
@@ -40,3 +41,62 @@
 .read-the-docs {
   color: #888;
 }
+/* Hero 배경 + 오버레이 */
+.main-background {
+  background-image: url('/images/main.jpg');
+  background-size: cover;
+  background-position: center;
+  height: 600px;              /* 원하는 높이로 조절 */
+  color: white;               /* 텍스트 흰색 */
+  text-shadow: 0 0 8px rgba(0,0,0,0.5);
+}
+.main-background::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: url('/assets/images/paw-pattern.png') repeat;
+  opacity: 0.1;
+  pointer-events: none;
+}
+.main-content {
+  position: relative;
+  z-index: 2;
+  color: #333;
+}
+
+
+.services-section {
+  padding: 4rem 0;
+  background-color: #f8f9fa;
+}
+
+
+.service-card {
+  border: none;
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: transform .2s, box-shadow .2s;
+}
+.service-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+.service-card img {
+  height: 200px;
+  width: 100%;
+  object-fit: cover;
+}
+.service-card-body {
+  padding: 1.5rem;
+}
+.service-card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: .75rem;
+}
+.service-card-text {
+  font-size: .95rem;
+  color: #6c757d;
+}
+
