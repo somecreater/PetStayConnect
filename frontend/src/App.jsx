@@ -1,5 +1,10 @@
 import { Routes, Route } from 'react-router-dom';
 import { UserProvider } from './common/Context/UserContext';
+import HomePage from './common/Page/HomePage.jsx';
+
+import Header from './common/Ui/Header'; //헤더추가
+import Footer from './common/Ui/Footer';//푸터추가
+
 import './common/Api/Api'
 import './common/Api/RefreshApi';
 import './common/Api/ApiService'
@@ -21,7 +26,7 @@ import QnaListPage from './qna/Page/QnaListPage';
 import PostRegisterPage from './qna/Page/PostRegisterPage';
 import QnaDetailPage from './qna/Page/QnaDetailPage';
 
-import ReviewListPage from './review/Page/ReviewListPage'; 
+import ReviewListPage from './review/Page/ReviewListPage';
 import ReviewDetailPage from './review/Page/ReviewDetailPage';
 import ReviewRegisterPage from './review/Page/ReviewRegisterPage';
 
@@ -31,9 +36,12 @@ function App() {
 
   return (
     <>
+
     <UserProvider>
+      <Header />
       <Routes>
 
+        <Route path="/" element={<HomePage />} />
         <Route path="/user/login" element={<LoginPage />} />
         <Route path="/user/register" element={<RegisterPage />} />
         <Route path="/user/info" element={<UserInfoPage/>}/>
@@ -43,14 +51,14 @@ function App() {
 
         <Route path="/type/list" element={<BusinessTypePage/>} />
         <Route path="/type/manage" element={<BusinessTypeManagePage/>} />
-        
+
         <Route path="/business/list" element={<BusinessSearchPage/>}/>
         <Route path="/business/manage" element={<BusinessManagePage/>}/>
 
         <Route path="/qnas" element={<QnaListPage/>}/>
         <Route path="/qnas/register" element={<PostRegisterPage/>}/>
         <Route path="/qnas/:id" element={<QnaDetailPage/>}/>
-        
+
         <Route path="/reviews" element={<ReviewListPage/>}/>
         <Route path="/reviews/:id" element={<ReviewDetailPage/>}/>
         <Route path="/reviews/register" element={<ReviewRegisterPage/>}/>
@@ -58,8 +66,9 @@ function App() {
         <Route path="/error/:code" element={<CustomErrorPage />} />
         <Route path="*" element={<CustomErrorPage/>} />
       </Routes>
+     <Footer/>
     </UserProvider>
-    </>
+   </>
   )
 }
 
