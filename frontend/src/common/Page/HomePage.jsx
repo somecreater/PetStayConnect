@@ -6,7 +6,7 @@ import '../../App.css';
 export default function HomePage() {
  return (
    <>
-     <div className="container">
+     <div className="container homepage-container-bg">
        <div className="row d-flex align-items-center" style={{ minHeight: '400px' }}>
          <div className="col py-5">
           <div className="col-md-6 text-center text-md-start mb-4 mb-md-0">
