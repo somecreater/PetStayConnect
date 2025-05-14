@@ -5,6 +5,23 @@
   padding: 2rem;*/
   text-align: center;
 }
+.brand-logo {
+  font-family: 'Pacifico', cursive;
+  font-size: 2rem;
+  color: #ff5722;
+  letter-spacing: 2px;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.10);
+  transition: transform 0.2s, text-shadow 0.2s;
+}
+.brand-logo:visited {
+  color: #ff5722; /* 방문 후에도 기본 색상 유지! */
+}
+.brand-logo:hover,
+.brand-logo:active {
+  color: #ff9800;
+  transform: scale(1.05) rotate(-2deg);
+  text-shadow: 0 4px 16px rgba(255,152,0,0.25);
+}
 
 .logo {
   height: 6em;
