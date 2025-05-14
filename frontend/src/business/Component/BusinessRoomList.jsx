@@ -2,7 +2,7 @@ import React from 'react';
 import BusinessRoom from './BusinessRoom';
 
 function BusinessRoomList(props){
-  const { roomList, onRoomSelect } = props;
+  const { roomList, onRoomSelect, isDelete, onDelete } = props;
 
   return(
     <div className="container py-4">
@@ -22,6 +22,15 @@ function BusinessRoomList(props){
               roomType={room.roomType}
               description={room.description}
             />
+            {isDelete && 
+              <button 
+                className="btn btn-warning btn-sm"
+                type="button"
+                onClick={() => onDelete(room.id)}
+              >
+                방 삭제
+              </button>
+            }
           </div>
         ))}
       </div>

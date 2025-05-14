@@ -1,17 +1,20 @@
 import React from "react";
 import Reservation from "./Reservation";
 
-function ReservationList({List, isDelete, onDelete, isUpdate, onUpdate, isBusiness}){
+function ReservationList({List, isDelete, onDelete, isUpdate, onUpdate, onSelect, isBusiness}){
   if (!List || List.length === 0) {
     return <div className="text-center text-muted">예약 내역이 없습니다.</div>;
   }
-  
+  const handleClick= (reservation)=>{
+    onSelect(reservation);
+  }
   return (
     <div className="row gy-4">
       {List.map(reservation => (
         <div 
           key={reservation.id} 
           className="col-12" 
+          onClick={()=>handleClick(reservation)}
         >
           <Reservation reservationDTO={reservation} />
 
@@ -22,10 +25,10 @@ function ReservationList({List, isDelete, onDelete, isUpdate, onUpdate, isBusine
                 classtext="btn btn-outline-primary btn-sm"
                 type="button"
                 title="수정"
-                onClick={() => onUpdate(reservation.id)}
+                onClick={() => onUpdate(reservation, reservation.id)}
               />
             )}
-            {isDelete && typeof onDelete === 'function' && (
+            {!isBusiness && isDelete && typeof onDelete === 'function' && (
               <Button
                 classtext="btn btn-outline-danger btn-sm"
                 type="button"
@@ -33,19 +36,13 @@ function ReservationList({List, isDelete, onDelete, isUpdate, onUpdate, isBusine
                 onClick={() => onDelete(reservation.id)}
               />
             )}
-            {isBusiness && reservation.status === 'PENDING' && (
+            {isBusiness && (
               <>
-                <Button
-                  classtext="btn btn-success btn-sm"
-                  type="button"
-                  title="승인"
-                  onClick={() => onUpdate && onUpdate(reservation.id, 'APPROVE')}
-                />
                 <Button
                   classtext="btn btn-warning btn-sm"
                   type="button"
                   title="거절"
-                  onClick={() => onUpdate && onUpdate(reservation.id, 'REJECT')}
+                  onClick={() => onDelete(reservation.id)}
                 />
               </>
             )}

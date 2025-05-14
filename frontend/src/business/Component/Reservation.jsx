@@ -53,8 +53,8 @@ function Reservation({ reservationDTO }){
             key={label}
             className="list-group-item d-flex justify-content-between"
           >
-            <CustomP className="mb-0"><strong>{label}</strong></CustomP>
-            <CustomP className="mb-0">{value}</CustomP>
+            <p className="mb-0"><strong>{label}</strong></p>
+            <p className="mb-0">{value}</p>
           </li>
         ))}
       </ul>
