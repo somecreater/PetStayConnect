@@ -5,6 +5,9 @@
   padding: 2rem;*/
   text-align: center;
 }
+.navbar-custom-bg {
+  background-color: #fff3e0 !important;  /* 푸터와 동일한 색상 */
+}
 .brand-logo {
   font-family: 'Pacifico', cursive;
   font-size: 2rem;
