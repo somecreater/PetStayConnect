@@ -16,11 +16,11 @@ function RoomRegisterForm(props){
   });
 
   const handleChange = (e) => {
-    const {name, value} = e;
+    const {name, value} = e.target;
     setNewroom(prev => ({ ...prev, [name]: value }));
   }
 
-  const handleSubmit = async ()=> {
+  const handleSubmit = async (e)=> {
     e.preventDefault();
 
     try{

@@ -135,6 +135,13 @@ function ReservationForm(props){
           <div className="col-12">
             <div className="small text-secondary mb-1">방 선택</div>
             <BusinessRoomList roomList={roomList} onRoomSelect={handleRoomSelect} />
+
+            {/* ✨ 선택된 방 표시 ✨ */}
+            {selectedRoom && (
+              <div className="mt-2 p-2 border rounded bg-light">
+                <strong>선택된 방:</strong> {selectedRoom.roomType} – {selectedRoom.description}
+              </div>
+            )}
           </div>
         )}
 
