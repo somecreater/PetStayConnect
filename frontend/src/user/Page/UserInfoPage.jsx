@@ -3,6 +3,7 @@ import UserInfo from '../component/UserInfo';
 import LogoutButton from '../component/LogoutButton';
 import UpdateButton from '../component/UpdateButton';
 import DeleteButton from '../component/DeleteButton';
+import BookmarkList from '../../bookmark/BookmarkList';
 import '../../common/Css/common.css';
 
 function UserInfoPage(props){
@@ -19,8 +20,13 @@ function UserInfoPage(props){
         <UpdateButton />
         <DeleteButton />
       </div>
+ {/* 북마크 리스트 추가 */}
+      <div className="row">
+        <div className="col">
+          <BookmarkList />
+        </div>
+      </div>
     </div>
   );
 }
-
 export default UserInfoPage;

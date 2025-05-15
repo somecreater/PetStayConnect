@@ -1,6 +1,5 @@
 import { Routes, Route } from 'react-router-dom';
 import { UserProvider } from './common/Context/UserContext';
-import MyPage from './common/Page/MyPage.jsx';
 import HomePage from './common/Page/HomePage.jsx';
 
 import Header from './common/Ui/Header'; //헤더추가
@@ -41,8 +40,6 @@ function App() {
     <UserProvider>
       <Header />
       <Routes>
-
-        <Route path="/mypage" element={<MyPage />} />
 
         <Route path="/" element={<HomePage />} />
         <Route path="/user/login" element={<LoginPage />} />
