@@ -6,12 +6,12 @@ import { useUser } from '../../common/Context/UserContext';
 function PaymentForm(props){
 
   const {user} = useUser();
-  const {reservation, price} = props;
+  const {reservation, price, businessName} = props;
   const paymentRequest = {
     pg: 'html5_inicis',
     pay_method: 'card',
     merchant_uid: `order_${reservation.id}_${reservation.petBusinessId}_${reservation.userId}_${Date.now()}`,
-    name: `reservation_${reservation.PetBusinessName}`,
+    name: `reservation_${businessName}`,
     amount: price,
     reservation_id: reservation.id,
     buyer_name: user.name,
@@ -52,8 +52,8 @@ function PaymentForm(props){
   };
 
   const paymentInfo=[
-    ['회원님 아이디', reservation.UserLoginId],
-    ['서비스 업체 이름', reservation.PetBusinessName],
+    ['회원님 아이디', user.userLoginId],
+    ['서비스 업체 이름', businessName],
     ['서비스 업체 등록번호', reservation.petBusinessRegisterNumber],
     ['체크 인', reservation.checkIn],
     ['체크 아웃', reservation.checkOut],

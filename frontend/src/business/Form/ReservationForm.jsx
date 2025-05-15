@@ -2,12 +2,18 @@ import React, { useCallback, useContext, useEffect, useState } from 'react';
 import BusinessRoomList from '../Component/BusinessRoomList';
 import PetList from '../../pet/Component/PetList';
 import ApiService from '../../common/Api/ApiService';
+import PaymentForm from '../../pay/Form/PaymentForm';
 import Button from '../../common/Ui/Button';
+import Modal from '../../common/Ui/Modal';
 
 function ReservationForm(props){
 
   const { user_login_id, business_register_number, petList, business } = props;
   const [selectedRoom, setSelectedRoom] = useState(null);
+  const [businessName,setBusinessName]= useState('');
+  const [price, setPrice] = useState(0);
+  const [newReservation, setNewReservation]= useState(null);
+  const [paymentModal,setPaymentModal]= useState(false);
   const [selectedPet, setSelectedPet] =useState([]);
   const [roomList, setRoomList]= useState([]);
   const [reservationForm, setReservationForm]= useState({
@@ -61,7 +67,24 @@ function ReservationForm(props){
   };
 
   const handleSubmit = async ()=>{
+    try{
+      const response = await ApiService.business.reservation(reservationForm,business.id);
+      const data=response.data;
 
+      if(data.result){
+        alert(data.message);
+        console.log(data.reservation);
+        setPaymentModal(true);
+        setBusinessName(data.business_name);
+        setNewReservation(data.reservation);
+        setPrice(data.price);
+      }else{
+        alert(data.message);
+      }
+    }catch(err){
+      console.error(err);
+      alert("예약 등록중 오류발생!!");
+    }
   }
 
   const readonlyItems = [
@@ -172,6 +195,11 @@ function ReservationForm(props){
           />
         </div>
       </form>
+      {paymentModal && newReservation &&
+        <Modal isOpen={paymentModal} onClose={() => setPaymentModal(false)}>
+          <PaymentForm reservation={newReservation} price={price} businessName={businessName}/>
+        </Modal>
+      }
     </div>
   );
 }

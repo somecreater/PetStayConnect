@@ -163,7 +163,7 @@ const ApiService = {
       headers: createHeaders(),
       withCredentials: true
     }),
-    reservation: (dto, provider_id) => RefreshApi.post(`${API_ENDPOINTS.business}/${provider_id}/reservation`,
+    reservation: (dto, provider_id) => RefreshApi.post(`${API_ENDPOINTS.business.org}/${provider_id}/reservation`,
     dto,
     {
       headers: createHeaders(),
