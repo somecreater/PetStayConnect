@@ -15,7 +15,7 @@ function UserInfoPage(props){
           <UserInfo />
         </div>
       </div>
-      <div className="d-flex gap-2">
+      <div className="d-flex gap-2 mb-4">
         <LogoutButton />
         <UpdateButton />
         <DeleteButton />
@@ -23,9 +23,11 @@ function UserInfoPage(props){
  {/* 북마크 리스트 추가 */}
       <div className="row">
         <div className="col">
+            <div className="card p-3 shadow-sm" style={{ background: '#fffbe7', borderRadius: '1rem' }}>
           <BookmarkList />
         </div>
       </div>
+    </div>
     </div>
   );
 }

@@ -15,10 +15,10 @@ export default function BookmarkList() {
   if (loading) return <div>불러오는 중...</div>;
   if (!bookmarks.length) return <div>관심목록에 등록된 항목이 없습니다.</div>;
 
-  return (
+return (
     <div>
-      <h3>내 북마크</h3>
-      <ul style={{ listStyle: 'none', padding: 0 }}>
+      <h3 style={{ marginBottom: '1.5rem', color: '#ff9800', fontWeight: 700 }}>내 관심목록</h3>
+      <ul style={{ listStyle: 'none', padding: 0, maxWidth: 420, margin: '0 auto' }}>
         {bookmarks.map(item => (
           <Bookmark key={item.id} item={item} />
         ))}
