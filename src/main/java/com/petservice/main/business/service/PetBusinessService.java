@@ -158,31 +158,6 @@ public class PetBusinessService implements PetBusinessServiceInterface {
   }
 
   @Override
-  public PetBusinessRoomDTO getRoom(Long room_id) {
-    return null;
-  }
-
-  @Override
-  public List<PetBusinessRoomDTO> getRoomList(Long business_id) {
-    return List.of();
-  }
-
-  @Override
-  public PetBusinessRoomDTO registerRoom(Long business_id, PetBusinessRoomDTO petBusinessRoomDTO) {
-    return null;
-  }
-
-  @Override
-  public PetBusinessRoomDTO updateRoom(Long business_id, PetBusinessRoomDTO petBusinessRoomDTO) {
-    return null;
-  }
-
-  @Override
-  public boolean deleteRoom(Long business_id, Long room_id) {
-    return false;
-  }
-
-  @Override
   public boolean BusinessValidation(PetBusinessDTO petBusinessDTO) {
     boolean result= true;
 

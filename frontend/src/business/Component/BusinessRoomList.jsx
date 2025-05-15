@@ -21,6 +21,7 @@ function BusinessRoomList(props){
               id={room.id}
               roomType={room.roomType}
               description={room.description}
+              roomCount={room.roomCount}
             />
             {isDelete && 
               <button 
