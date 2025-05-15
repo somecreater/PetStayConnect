@@ -90,3 +90,8 @@ business:
   api:
     base-url: ${BUSINESS_BASE_URL:""}
     secret-key: ${BUSINESS_SECRETKEY:""}
+
+iamport:
+  api:
+    key: ${IAMPORT_API_KEY:""}
+    secret: ${IAMPORT_API_SECRET:""}

@@ -7,6 +7,7 @@ import PayList from "../../pay/Component/PayList";
 import Modal from "../../common/Ui/Modal";
 import RoomRegisterForm from "../Form/RoomRegisterForm";
 import RoomUpdateForm from "../Form/RoomUpdateForm";
+import { useNavigate } from "react-router-dom";
 
 
 /*
@@ -19,6 +20,7 @@ import RoomUpdateForm from "../Form/RoomUpdateForm";
 */
 function BusinessManagePage(props){
   const { user } = useUser();
+  const navigate= useNavigate();
   const businessId = user.petBusinessDTO?.id;
 
   const [activeTab, setActiveTab] = useState("reservations"); // "reservations" | "rooms" | "payments"
@@ -39,7 +41,7 @@ function BusinessManagePage(props){
 
     if(data.result){
       console.log("예약 목록을 가져왔습니다.");
-      setReservations(data.reservationList);
+      setReservations(data.reservations);
     }else{
       console.log("예약 목록이 없거나 가져오지 못했습니다.");
       setReservations([]);
@@ -75,8 +77,8 @@ function BusinessManagePage(props){
 //추후 컨트롤러 구현시 주석 해제
   useEffect(() => {
   if (!businessId) return;
-  //if (activeTab === "reservations") reservationList();
-  //else if (activeTab === "rooms") roomList();
+  if (activeTab === "reservations") reservationList();
+  else if (activeTab === "rooms") roomList();
   //else if (activeTab === "payments") payList();
   },[activeTab, businessId]);
 
@@ -139,6 +141,8 @@ function BusinessManagePage(props){
   return (
     <div className="container py-4">
       <h2 className="mb-4">사업자 관리 페이지</h2>
+
+      <button className="btn btn-primary" onClick={()=>navigate('/user/info')}>마이페이지로 돌아가기</button>
       <ul className="nav nav-tabs mb-3">
         <li className="nav-item">
           <button
@@ -207,6 +211,7 @@ function BusinessManagePage(props){
             <BusinessRoomList
               roomList={rooms}
               onRoomSelect={SelectedRoom}
+              isDelete={true}
               onDelete={RoomDelete}
             />
           </div>

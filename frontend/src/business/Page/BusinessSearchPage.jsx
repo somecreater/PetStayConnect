@@ -74,7 +74,7 @@ function BusinessSearchPage(props){
     if (res.data.result) {
       setPetList(res.data.pets || []);
     } else {
-      alert('펫 목록을 불러오지 못했습니다: ' + res.data.message);
+      console.log('펫 목록을 불러오지 못했습니다: ' + res.data.message);
       setPetList([]);
     }
 
@@ -178,7 +178,7 @@ function BusinessSearchPage(props){
       </form>
 
       {businesses.length > 0 ? (
-        <BusinessList List={businesses} petList={petList} isReservation />
+        <BusinessList List={businesses} petList={petList} isReservation={true} />
       ) : (
         <div className="alert alert-info">검색 결과가 없습니다.</div>
       )}
