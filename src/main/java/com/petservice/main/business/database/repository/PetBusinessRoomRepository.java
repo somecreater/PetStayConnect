@@ -17,4 +17,7 @@ public interface PetBusinessRoomRepository extends JpaRepository<PetBusinessRoom
   List<PetBusinessRoom> findByPetBusiness_RegistrationNumber(String registrationNumber);
 
   List<PetBusinessRoom> findByPetBusiness_Id(Long id);
+
+  boolean existsByRoomTypeAndPetBusiness_Id(String roomType, Long id);
+
 }

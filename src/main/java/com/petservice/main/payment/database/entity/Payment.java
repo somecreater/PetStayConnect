@@ -26,7 +26,7 @@ public class Payment {
     private BigDecimal amount;
 
     @Column(name = "fee_rate", precision = 4, scale = 2)
-    private BigDecimal feeRate;
+    private BigDecimal feeRate= BigDecimal.valueOf(0.05);
 
     @Column(name = "service_fee", precision = 10, scale = 2)
     private BigDecimal serviceFee;

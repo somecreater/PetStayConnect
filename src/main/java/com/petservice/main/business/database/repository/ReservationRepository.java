@@ -28,4 +28,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
       Long petId);
 
   List<Reservation> findByPetBusiness_Id(Long id);
+
+  boolean existsByPetBusinessRoom_IdAndPetBusiness_Id(Long id, Long id1);
 }
