@@ -17,6 +17,7 @@ export const API_ENDPOINTS = {
   qna: `${API_BASE_URL}/api/qnas`,
   businesstype:`${API_BASE_URL}/api/type`,
   business:{
+    org: `${API_BASE_URL}/api/provider`,
     list: `${API_BASE_URL}/api/provider/list`,
     outerlist: `${API_BASE_URL}/api/provider/list/naver`,
     reservation: `${API_BASE_URL}/api/providers/reservation`,

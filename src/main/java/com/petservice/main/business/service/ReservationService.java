@@ -120,9 +120,9 @@ public class ReservationService implements ReservationServiceInterface {
       log.error("부적절한 값입니다!!!");
       throw new IllegalArgumentException("부적절한 값입니다!!!");
     }
-    if(reservationRequest.getCheckIn().isAfter(today)
-        || reservationRequest.getCheckOut().isAfter(today)
-        || reservationRequest.getCheckOut().isAfter(reservationRequest.getCheckIn())){
+    if(!reservationRequest.getCheckIn().isAfter(today)
+        || !reservationRequest.getCheckOut().isAfter(today)
+        || !reservationRequest.getCheckOut().isAfter(reservationRequest.getCheckIn())){
       log.error("부적절한 기간 선택입니다!!!");
       throw new IllegalArgumentException("부적절한 기간 선택입니다!!!");
     }

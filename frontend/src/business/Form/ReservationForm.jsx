@@ -61,7 +61,18 @@ function ReservationForm(props){
   };
 
   const handleSubmit = async ()=>{
+    try{
+      const response = await ApiService.business.reservation(reservationForm,business.id);
+      const data=response.data;
 
+      if(data.result){
+        alert(data.message);
+        console.log(data.reservation);
+      }
+    }catch(err){
+      console.error(err);
+      alert("예약 등록중 오류발생!!");
+    }
   }
 
   const readonlyItems = [
