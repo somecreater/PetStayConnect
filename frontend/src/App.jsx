@@ -35,10 +35,11 @@ import BusinessManagePage from './business/Page/BusinessManagePage';
 function App() {
 
   return (
-    <>
+    <div className="app-wrapper">
 
     <UserProvider>
       <Header />
+        <main className="main-content">
       <Routes>
 
         <Route path="/" element={<HomePage />} />
@@ -66,10 +67,11 @@ function App() {
         <Route path="/error/:code" element={<CustomErrorPage />} />
         <Route path="*" element={<CustomErrorPage/>} />
       </Routes>
-     <Footer/>
+      </main>
+      <Footer/>
     </UserProvider>
-   </>
-  )
+   </div>
+  );
 }
 
 export default App
