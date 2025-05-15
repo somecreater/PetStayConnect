@@ -1,3 +1,9 @@
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 #root {
   /* 전체 폭 차지
   max-width: 1280px;
@@ -53,6 +59,11 @@
     animation: logo-spin infinite 20s linear;
   }
 }
+.app-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
 .homepage-container-bg {
   background-color: #FFD593;
   border-radius: 1.5rem;
@@ -89,6 +100,7 @@
   position: relative;
   z-index: 2;
   color: #333;
+  flex: 1 0 auto;
 }
 
 
@@ -130,7 +142,6 @@
 .footer-custom {
   background: #fff3e0; /* 밝은 오렌지 계열 */
   border-top: 1px solid #ffe0b2;
-  left: 0; right: 0; bottom: 0;
   width: 100%;
   z-index: 100;
 }
