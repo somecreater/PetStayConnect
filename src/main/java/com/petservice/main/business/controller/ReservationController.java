@@ -33,11 +33,20 @@ public class ReservationController {
       @RequestBody ReservationRequest request){
     Map<String,Object> result = new HashMap<>();
 
+    PetBusinessDTO petBusinessDTO = businessService.getBusinessDto(provider_id);
+    if(!Objects.equals(petBusinessDTO.getId(), provider_id)){
+      result.put("result",false);
+      result.put("message","잘못된 데이터 입니다!");
+      return ResponseEntity.ok(result);
+    }
     ReservationDTO reservationDTO=service.registerReservation(request);
 
     result.put("result",true);
     result.put("message","정상적으로 예약이 등록되었습니다.");
     result.put("reservation",reservationDTO);
+    result.put("business_name",petBusinessDTO.getBusinessName());
+    result.put("price", petBusinessDTO.getMaxPrice()
+        * reservationDTO.getPetReservationDTOList().size());
 
     return ResponseEntity.ok(result);
   }

@@ -154,7 +154,7 @@ public class ReservationService implements ReservationServiceInterface {
       reservation.setStatus(ReservationStatus.PENDING);
 
       Reservation newReservation = reservationRepository.save(reservation);
-      ReservationDTO newReservationDto = reservationMapper.toDTO(reservation);
+      ReservationDTO newReservationDto = reservationMapper.toDTO(newReservation);
       List<PetReservationDTO> petReservations = new ArrayList<>();
       for (PetDTO petDTO : reservationRequest.getPetDTOList()) {
         petReservations.add(
