@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Pay from "./Pay";
+import Pay from "../Component/Pay";
 
 function PayList({List ,isDelete, onDelete, isBusiness, onSelected}){
 

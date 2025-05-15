@@ -205,11 +205,6 @@ const ApiService = {
       headers: createHeaders(),
       withCredentials: true,
     }),
-    List: (register_number)=> RefreshApi.get(`${API_ENDPOINTS.businessroom}/${register_number}`,
-    {
-      headers: createHeaders(),
-      withCredentials: true,
-    }),
     detail: (business_id, room_id)=> RefreshApi.get(`${API_ENDPOINTS.businessroom}/${business_id}/${room_id}`,
     {
       headers: createHeaders(),

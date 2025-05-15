@@ -47,6 +47,9 @@ public class ReservationService implements ReservationServiceInterface {
   @Transactional(readOnly = true)
   public List<ReservationDTO> getReservationList(String user_login_id) {
     List<Reservation> reservationList= reservationRepository.findByUser_UserLoginId(user_login_id);
+    if(reservationList.isEmpty()){
+      return null;
+    }
     return reservationList.stream().map(reservationMapper::toDTO).toList();
   }
 
@@ -54,6 +57,9 @@ public class ReservationService implements ReservationServiceInterface {
   @Transactional(readOnly = true)
   public List<ReservationDTO> getReservationListByBusiness(Long Business_id){
     List<Reservation> reservationList= reservationRepository.findByPetBusiness_Id(Business_id);
+    if(reservationList.isEmpty()){
+      return null;
+    }
     return reservationList.stream().map(reservationMapper::toDTO).toList();
   }
 

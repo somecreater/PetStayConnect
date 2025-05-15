@@ -27,11 +27,11 @@ public class PetBusiness extends TimeEntity {
   @Column(name = "status")
   private BusinessStatus status;
 
-  @Column(name = "min_price")
-  private Integer minPrice;
+  @Column(name = "min_price", nullable = false)
+  private Integer minPrice = 50000;
 
-  @Column(name = "max_price")
-  private Integer maxPrice;
+  @Column(name = "max_price", nullable = false)
+  private Integer maxPrice = 100000;
 
   @Column(columnDefinition = "TEXT")
   private String facilities;

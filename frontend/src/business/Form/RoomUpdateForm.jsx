@@ -28,6 +28,7 @@ function RoomUpdateForm(props){
       const data=response.data;
       if(data.result){
         alert(data.message);
+        console.log(data.updateRoom);
       }else{
         alert(data.message);
       }

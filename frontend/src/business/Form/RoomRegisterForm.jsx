@@ -4,7 +4,7 @@ import ApiService from "../../common/Api/ApiService";
 
 function RoomRegisterForm(props){
 
-  const {user} =useUser();
+  const {user, updateUser} =useUser();
   const [newroom, setNewroom]=useState({
     id: null,
     petBusinessId: user.petBusinessDTO.id,
@@ -29,6 +29,7 @@ function RoomRegisterForm(props){
 
       if(data.result){
         const room=data.room;
+        console.log(data.message);
         alert("새로운 방이 추가되었습니다.\n" 
           + "새로운 방 타입: " + room.roomType 
           + "새로운 방 설명: " + room.description
@@ -86,6 +87,12 @@ function RoomRegisterForm(props){
             />
           </div>
         </div>
+        <button 
+          className="btn btn-primary"
+          type="submit"
+        >
+          추가하기
+        </button>
       </form>
     </div>
   );

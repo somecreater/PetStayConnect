@@ -23,7 +23,7 @@ function ReservationForm(props){
 
   //추후 백엔드 단에서 구현
   const fetchRooms= useCallback(async () => {
-    const res= await ApiService.businessroom.List(business_register_number);
+    const res= await ApiService.businessroom.list(business.id);
     const data=res.data;
     if(data.result){
       setRoomList(data.rooms);

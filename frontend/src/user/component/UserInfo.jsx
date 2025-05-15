@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import ApiService from '../../common/Api/ApiService';
 import '../../common/Css/common.css';
 import { useUser } from '../../common/Context/UserContext';
@@ -81,11 +81,19 @@ function UserInfo(props){
           onClick={() => navigate('/user/petmanage')}
         />
         <Button
-          classtext=""
+          classtext="me-2"
           type="button"
           title={buttonTitle}
           onClick={handleInfoClick}
         />
+        {user.role === "SERVICE_PROVIDER" &&
+        <Button
+          classtext="me-2"
+          type="button"
+          title="사업자 관리"
+          onClick={()=>navigate("/business/manage")}        
+        />
+        }
       </div>
 
       <div className="card">

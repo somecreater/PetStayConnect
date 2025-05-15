@@ -22,12 +22,6 @@ public interface PetBusinessServiceInterface {
   public PetBusinessDTO updateBusiness(PetBusinessDTO petBusinessDTO);
   public boolean deleteBusiness(Long business_id);
 
-  public List<PetBusinessRoomDTO> getRoomList(Long business_id);
-  public PetBusinessRoomDTO getRoom(Long room_id);
-  public PetBusinessRoomDTO registerRoom(Long business_id, PetBusinessRoomDTO petBusinessRoomDTO);
-  public PetBusinessRoomDTO updateRoom(Long business_id, PetBusinessRoomDTO petBusinessRoomDTO);
-  public boolean deleteRoom(Long business_id, Long room_id);
-
   //실제로 존재하는 사업자인지 확인
   public boolean BusinessValidation(PetBusinessDTO petBusinessDTO);
   public boolean existBusiness(PetBusinessDTO petBusinessDTO);
