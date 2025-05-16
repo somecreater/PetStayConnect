@@ -17,7 +17,7 @@ function UpdateForm(props){
   
   const navigate=useNavigate();
   const { user,mapUserDto,updateUser }= useUser();
-
+  const [types, setTypes] =useState([]);
   const [nomalUser, SetNomalUser]=useState({
     id:           user.id ?? '',
     userLoginId:  user.userLoginId ?? '',
@@ -60,6 +60,20 @@ function UpdateForm(props){
     }
   };
 
+  const getBusinessType= async () => {
+    try{
+      const response= await ApiService.businessTypeService.list();
+      const data= response.data;
+      if(data.result){
+        setTypes(data.typeList);
+      }else{
+        alert("서버상 오류로 사업자 타입을 가져오지 못했습니다. 다시 시도해주세요.");
+      }
+    }catch(err){
+        console.log(err);
+    }
+  }
+
   const getUser = async () => {
     try{
       const response = await ApiService.userService.detail(user.userLoginId);
@@ -94,6 +108,8 @@ function UpdateForm(props){
           town: dto.petBusinessDTO?.town ?? '',
           facilities: dto.petBusinessDTO?.facilities ?? '',
           description: dto.petBusinessDTO?.description ?? '',
+          petBusinessTypeId: dto.petBusinessDTO?.petBusinessTypeId ?? '',
+          petBusinessTypeName: dto.petBusinessDTO?.petBusinessTypeName ?? ''
         });
 
       }else{
@@ -105,7 +121,8 @@ function UpdateForm(props){
   };
 
   useEffect(() => {
-        getUser();
+    getUser();
+    getBusinessType();
   }, []);
 
   const handleUpdate= async(e) => {
@@ -132,6 +149,7 @@ function UpdateForm(props){
                     town:         bizUser.town,
                     facilities:   bizUser.facilities,
                     description:  bizUser.description,
+                    petBusinessTypeId: bizUser.petBusinessTypeId,
                     userId:       nomalUser.id,
                   }
                   : null,
@@ -222,6 +240,26 @@ function UpdateForm(props){
         {isBiz && (
           <fieldset className="border rounded p-3 mb-4">
             <legend className="float-none w-auto px-2">사업자 정보</legend>
+            
+            <div className="mb-3">
+              <CustomLabel title="업종" for="petBusinessTypeId" />
+                <div className="mb-3">
+                  <CusomP classtext="form-control-plaintext" title={`#${bizUser.petBusinessTypeId} ${bizUser.petBusinessTypeName}`} />
+                </div>
+                <select
+                  title="변경 시 미인증 상태로 바뀝니다" 
+                  id="petBusinessTypeId"
+                  name="petBusinessTypeId"
+                  className="form-select"
+                  value={bizUser.petBusinessTypeId}
+                  onChange={e => handleChange(e, true)}
+                >
+                  <option value="">선택하세요</option>
+                  {types && types.map(type => (
+                    <option key={type.id} value={type.id}>{type.typeCode}</option>
+                  ))}
+                </select>
+            </div>
 
             <div className="mb-3">
               <CustomLabel title="업체명" for="businessName" />

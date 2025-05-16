@@ -10,6 +10,8 @@ import BusinessValidationForm from '../Form/BusinessValidationForm';
 function UserProviderInfo({petBusinessDTO}){
   const {
     businessName,
+    petBusinessTypeId,
+    petBusinessTypeName,
     status,
     minPrice,
     maxPrice,
@@ -42,7 +44,12 @@ function UserProviderInfo({petBusinessDTO}){
           <dd className="col-sm-9">
             <CusomP classtext="mb-0" title={businessName} />
           </dd>
-
+          
+          <dt className="col-sm-3">업종</dt>
+          <dd className="col-sm-9">
+            <CusomP classtext="mb-0" title={`#${petBusinessTypeId} ${petBusinessTypeName}`} />
+          </dd>
+          
           <dt className="col-sm-3">현재 상태</dt>
           <dd className="col-sm-9">
             <CusomP classtext="mb-0" title={status} />

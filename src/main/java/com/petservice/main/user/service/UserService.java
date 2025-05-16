@@ -2,7 +2,10 @@ package com.petservice.main.user.service;
 
 import com.petservice.main.business.database.dto.PetBusinessDTO;
 import com.petservice.main.business.database.entity.PetBusiness;
+import com.petservice.main.business.database.entity.PetBusinessType;
+import com.petservice.main.business.database.entity.Varification;
 import com.petservice.main.business.database.mapper.PetBusinessMapper;
+import com.petservice.main.business.database.repository.PetBusinessTypeRepository;
 import com.petservice.main.business.service.Interface.PetBusinessServiceInterface;
 import com.petservice.main.user.database.dto.CustomUserDetails;
 import com.petservice.main.user.database.dto.UserDTO;
@@ -24,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -32,6 +36,7 @@ import java.util.Optional;
 public class UserService implements CustomUserServiceInterface, UserDetailsService {
 
   private final UserRepository userRepository;
+  private final PetBusinessTypeRepository typeRepository;
   private final PasswordEncoder passwordEncoder;
 
   private final PetBusinessServiceInterface petBusinessServiceInterface;
@@ -218,9 +223,11 @@ public class UserService implements CustomUserServiceInterface, UserDetailsServi
     }
     existUser.setPhone(userDTO.getPhone());
     if(existUser.getRole() ==Role.SERVICE_PROVIDER){
+      
       PetBusinessDTO updatePetBusiness= userDTO.getPetBusinessDTO();
       PetBusiness existPetBusiness= existUser.getPetBusiness();
-
+      PetBusinessType petBusinessType = 
+          typeRepository.findById(updatePetBusiness.getPetBusinessTypeId()).orElse(null);
       existPetBusiness.setBusinessName(updatePetBusiness.getBusinessName());
       existPetBusiness.setStatus(updatePetBusiness.getStatus());
       existPetBusiness.setBankAccount(updatePetBusiness.getBankAccount());
@@ -232,12 +239,21 @@ public class UserService implements CustomUserServiceInterface, UserDetailsServi
       existPetBusiness.setProvince(updatePetBusiness.getProvince());
       existPetBusiness.setCity(updatePetBusiness.getCity());
       existPetBusiness.setTown(updatePetBusiness.getTown());
-
+      if(existPetBusiness.getPetBusinessType() == null && petBusinessType !=null){
+        existPetBusiness.setPetBusinessType(petBusinessType);
+        existPetBusiness.setVarification(Varification.NONE);
+      }
+      if(existPetBusiness.getPetBusinessType() != null && petBusinessType !=null &&
+          !Objects.equals(existPetBusiness.getPetBusinessType().getId(),
+          petBusinessType.getId())) {
+        //타입 변경시 인증 다시
+        existPetBusiness.setPetBusinessType(petBusinessType);
+        existPetBusiness.setVarification(Varification.NONE);
+      }
       existUser.setPetBusiness(existPetBusiness);
     }
     existUser.setUpdatedAt(LocalDateTime.now());
     User user=userRepository.save(existUser);
-
     return userMapper.toBasicDTO(user);
   }
 

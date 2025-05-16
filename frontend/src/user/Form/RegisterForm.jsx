@@ -1,6 +1,7 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import CustomP from '../../common/Ui/CusomP';
 import { API_ENDPOINTS } from '../../common/Api/Api';
 import ApiService from '../../common/Api/ApiService';
 import TextInput from '../../common/Ui/TextInput';
@@ -41,6 +42,8 @@ function RegisterForm(props){
     userId: '',
     petBusinessTypeId: ''
   });
+  
+  const isProvider = registerform.role === 'SERVICE_PROVIDER';
 
   const handleChange = (e, isProvider = false) => {
     const { name, value } = e.target;
@@ -79,8 +82,6 @@ function RegisterForm(props){
     }
 
   };
-  
-  const isProvider = registerform.role === 'SERVICE_PROVIDER';
 
   return (
     <div className="container py-4">
@@ -229,14 +230,7 @@ function RegisterForm(props){
               </div>
               <div className="col-md-4">
                 <label className="form-label">업종 ID</label>
-                <TextInput
-                  classtext="form-control"
-                  name="petBusinessTypeId"
-                  value={biz.petBusinessTypeId}
-                  placeholderText="업종 ID"
-                  onChange={e => handleChange(e, true)}
-                  type="number"
-                />
+                <CustomP classtext="mb-0" title={'회원정보 수정시 선택'} />
               </div>
             </div>
 

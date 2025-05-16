@@ -3,6 +3,7 @@ package com.petservice.main.business.controller;
 import com.petservice.main.business.database.dto.PetBusinessTypeDTO;
 import com.petservice.main.business.service.Interface.PetBusinessTypeServiceInterface;
 import com.petservice.main.user.database.dto.CustomUserDetails;
+import jakarta.annotation.security.PermitAll;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +32,7 @@ public class PetBusinessTypeController {
 
   private final PetBusinessTypeServiceInterface petBusinessTypeService;
 
+  @PermitAll
   @GetMapping
   public ResponseEntity<?> getTypeList(){
 
@@ -46,6 +48,7 @@ public class PetBusinessTypeController {
     return ResponseEntity.ok(result);
   }
 
+  @PermitAll
   @GetMapping("/{type_id}")
   public ResponseEntity<?> getTypeDetail(
     @PathVariable("type_id") Long type_id){
