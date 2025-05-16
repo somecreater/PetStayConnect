@@ -2,11 +2,14 @@ package com.petservice.main.business.service;
 
 import com.petservice.main.business.database.dto.PetBusinessDTO;
 import com.petservice.main.business.database.dto.PetBusinessRoomDTO;
+import com.petservice.main.business.database.dto.PetBusinessTypeDTO;
 import com.petservice.main.business.database.entity.BusinessStatus;
 import com.petservice.main.business.database.entity.PetBusiness;
+import com.petservice.main.business.database.entity.PetBusinessType;
 import com.petservice.main.business.database.entity.Varification;
 import com.petservice.main.business.database.mapper.PetBusinessMapper;
 import com.petservice.main.business.database.repository.PetBusinessRepository;
+import com.petservice.main.business.database.repository.PetBusinessTypeRepository;
 import com.petservice.main.business.service.Interface.PetBusinessServiceInterface;
 import com.petservice.main.business.service.Interface.PetBusinessTypeServiceInterface;
 import com.petservice.main.user.database.dto.AddressDTO;
@@ -29,7 +32,7 @@ public class PetBusinessService implements PetBusinessServiceInterface {
 
   private final PetBusinessTypeServiceInterface petBusinessTypeService;
   private final PetBusinessRepository petBusinessRepository;
-
+  private final PetBusinessTypeRepository typeRepository;
   private final AddressServiceInterface addressService;
   private final PetBusinessMapper petBusinessMapper;
 
@@ -124,6 +127,7 @@ public class PetBusinessService implements PetBusinessServiceInterface {
   @Transactional
   public PetBusinessDTO updateBusiness(PetBusinessDTO petBusinessDTO) {
     PetBusiness exPetBusiness=petBusinessRepository.findById(petBusinessDTO.getId()).orElse(null);
+    PetBusinessType businessType=typeRepository.findById(petBusinessDTO.getPetBusinessTypeId()).orElse(null);
     if(exPetBusiness == null || updateValidation(petBusinessDTO)){
       return null;
     }
@@ -137,6 +141,9 @@ public class PetBusinessService implements PetBusinessServiceInterface {
     exPetBusiness.setProvince(petBusinessDTO.getProvince());
     exPetBusiness.setCity(petBusinessDTO.getCity());
     exPetBusiness.setTown(petBusinessDTO.getTown());
+    if(exPetBusiness.getPetBusinessType()==null && businessType != null){
+     exPetBusiness.setPetBusinessType(businessType);
+    }
     exPetBusiness.setUpdatedAt(LocalDateTime.now());
 
     PetBusiness updatePetBusiness=petBusinessRepository.save(exPetBusiness);

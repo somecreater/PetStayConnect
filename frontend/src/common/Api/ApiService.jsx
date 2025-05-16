@@ -277,6 +277,27 @@ const ApiService = {
       headers: createHeaders(),
       withCredentials: true,
     })
+  },
+  bookmark:{
+    register: (bookmarkType, targetId)=> RefreshApi.post(ApiService.bookmark,{
+      params:{bookmarkType,targetId},
+      headers: createHeaders(),
+      withCredentials: true,
+    }),
+    delete: (bookmarkType, targetId)=> RefreshApi.delete(ApiService.bookmark,{
+      params:{bookmarkType,targetId},
+      headers: createHeaders(),
+      withCredentials: true,
+    }),
+    list: ()=> RefreshApi.get(ApiService.bookmark,{
+      headers: createHeaders(),
+      withCredentials: true,
+    }),
+    check: (bookmarkType, targetId)=> RefreshApi.get(`${ApiService.bookmark}/check`,{
+      params:{bookmarkType,targetId},
+      headers: createHeaders(),
+      withCredentials: true,
+    })
   }
 }
 
