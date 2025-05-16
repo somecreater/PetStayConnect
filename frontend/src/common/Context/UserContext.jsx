@@ -1,4 +1,5 @@
 import React, { createContext, useEffect, useContext, useReducer  } from 'react';
+import axios from 'axios';
 
 const initialUser = {
   id: null,
@@ -85,6 +86,7 @@ const UserContext = createContext({
   user: initialUser,
   updateUser: () => {},
   resetUser: () => {},
+  toggleBookmark: () => {},
 });
 
 const userReducer = (state, action) => {
@@ -114,6 +116,45 @@ export const UserProvider = ({ children }) => {
     dispatch({ type: 'RESET_USER' });
     sessionStorage.removeItem('user');
   };
+    // ✅ 북마크 토글 함수 추가 (QnA, 호텔 등에서 하트 클릭 시 사용)
+    const toggleBookmark = async (type, targetId) => {
+      try {
+        // 이미 북마크 되어있는지 확인
+        const isBookmarked = user.bookmarkDTOList.some(
+          b => b.type === type && b.targetId === targetId
+        );
+
+        if (isBookmarked) {
+          // 북마크 해제 (DELETE)
+          // 퀴리로 받는다면 await axios.delete(`/api/bookmarks?bookmarkType=${type}&targetId=${targetId}`);
+          await axios.delete('/api/bookmarks', {
+            data: { bookmarkType: type, targetId }
+          });
+          // 상태에서 해당 북마크 제거
+          const updatedList = user.bookmarkDTOList.filter(
+            b => !(b.type === type && b.targetId === targetId)
+          );
+          dispatch({
+            type: 'SET_USER',
+            payload: { ...user, bookmarkDTOList: updatedList }
+          });
+          sessionStorage.setItem('user', JSON.stringify({ ...user, bookmarkDTOList: updatedList }));
+        } else {
+          // 북마크 추가 (POST)
+          await axios.post('/api/bookmarks', { bookmarkType: type, targetId });
+          // 상태에 북마크 추가
+          const updatedList = [...user.bookmarkDTOList, { type, targetId }];
+          dispatch({
+            type: 'SET_USER',
+            payload: { ...user, bookmarkDTOList: updatedList }
+          });
+          sessionStorage.setItem('user', JSON.stringify({ ...user, bookmarkDTOList: updatedList }));
+        }
+      } catch (error) {
+        console.error('북마크 토글 실패:', error);
+      }
+    };
+
 
   useEffect(() => {
     const storedUser = sessionStorage.getItem('user');
@@ -124,7 +165,7 @@ export const UserProvider = ({ children }) => {
 
   
   return (
-    <UserContext.Provider value={{ user, mapUserDto, updateUser, resetUser }}>
+    <UserContext.Provider value={{ user, mapUserDto, updateUser, resetUser, toggleBookmark }}>
       {children}
     </UserContext.Provider>
   );

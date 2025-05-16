@@ -7,6 +7,7 @@ import PostDeleteButton from '../component/PostDeleteButton';
 import PostUpdateForm from '../form/PostUpdateForm';
 import AnswerList from '../component/AnswerList';
 import AnswerRegisterForm from '../form/AnswerRegisterForm';
+import BookmarkButton from '../../user/component/BookmarkButton';
 
 export default function QnaDetailPage() {
   const { id } = useParams();
@@ -75,7 +76,9 @@ export default function QnaDetailPage() {
       ) : (
         <div className="card mb-4">
           <div className="card-body">
-            <h2>#{post.id} {post.title}</h2>
+            <h2>#{post.id} {post.title}
+                {/* ✅ 질문 제목 옆에 북마크 하트 아이콘 추가 */}
+                  <BookmarkButton type="qna" targetId={post.id} size={24} /></h2>
             <p className="text-muted">{new Date(post.createdAt).toLocaleString()}</p>
             <p>{post.content}</p>
             {canEditPost && (
