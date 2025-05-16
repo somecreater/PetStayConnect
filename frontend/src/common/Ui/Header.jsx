@@ -44,8 +44,29 @@ export default function Header() {
             <li className="nav-item">
               <NavLink className="nav-link text-dark" to="/">Home</NavLink>
             </li>
-            {/* ...기타 메뉴... */}
+             <li className="nav-item">
+               <NavLink className="nav-link text-dark" to="/reservation">reservation</NavLink>
+             </li>
+             <li className="nav-item dropdown">
+               <a
+                 className="nav-link dropdown-toggle text-dark"
+                 href="#!"
+                 id="servicesMenu"
+                 role="button"
+                 data-bs-toggle="dropdown"
+                 aria-expanded="false"
+               >
+                 Services
+               </a>
+               <ul className="dropdown-menu" aria-labelledby="servicesMenu">
+                 <li><Link className="dropdown-item" to="/about">About</Link></li>
+                 <li><Link className="dropdown-item" to="/contact">Contact</Link></li>
+               </ul>
+             </li>
             <li className="nav-item">
+                 <NavLink className="nav-link text-dark disabled" to="#!">Coming Soon</NavLink>
+                  </li>
+                  <li className="nav-item">
               <form className="d-flex ms-lg-3 align-items-center">
                 <input
                   className="form-control form-control-sm"
