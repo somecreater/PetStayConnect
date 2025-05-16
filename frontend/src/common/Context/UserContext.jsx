@@ -1,5 +1,6 @@
 import React, { createContext, useEffect, useContext, useReducer  } from 'react';
 import axios from 'axios';
+import ApiService from '../Api/ApiService';
 
 const initialUser = {
   id: null,
@@ -127,9 +128,11 @@ export const UserProvider = ({ children }) => {
         if (isBookmarked) {
           // 북마크 해제 (DELETE)
           // 퀴리로 받는다면 await axios.delete(`/api/bookmarks?bookmarkType=${type}&targetId=${targetId}`);
-          await axios.delete('/api/bookmarks', {
-            data: { bookmarkType: type, targetId }
-          });
+          const response=await ApiService.bookmark.delete( type, targetId );
+          const data= response.data;
+          if(data.result){
+            alert(data.message);
+          }
           // 상태에서 해당 북마크 제거
           const updatedList = user.bookmarkDTOList.filter(
             b => !(b.type === type && b.targetId === targetId)
@@ -141,7 +144,13 @@ export const UserProvider = ({ children }) => {
           sessionStorage.setItem('user', JSON.stringify({ ...user, bookmarkDTOList: updatedList }));
         } else {
           // 북마크 추가 (POST)
-          await axios.post('/api/bookmarks', { bookmarkType: type, targetId });
+
+          const response= await ApiService.bookmark.register(type, targetId);
+          const data= response.data;
+          if(data.result){
+            alert(data.message);
+          }
+
           // 상태에 북마크 추가
           const updatedList = [...user.bookmarkDTOList, { type, targetId }];
           dispatch({

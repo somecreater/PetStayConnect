@@ -273,28 +273,30 @@ const ApiService = {
       headers: createHeaders(),
       withCredentials: true,
     }),
-    delete: (payment_id)=>RefreshApi.delete(`${ApiService.payments}/${payment_id}`,{
+    delete: (payment_id)=>RefreshApi.delete(`${API_ENDPOINTS.payments}/${payment_id}`,{
       headers: createHeaders(),
       withCredentials: true,
     })
   },
   bookmark:{
-    register: (bookmarkType, targetId)=> RefreshApi.post(ApiService.bookmark,{
-      params:{bookmarkType,targetId},
+    register: (bookmarkType, targetId)=> RefreshApi.post(API_ENDPOINTS.bookmarks,
+      null,
+      {
+        params: { bookmarkType, targetId },
+        headers: createHeaders(),
+        withCredentials: true,
+      }),
+    delete: (bookmarkType, targetId)=> RefreshApi.delete(API_ENDPOINTS.bookmarks,{
+      params: { bookmarkType, targetId },
       headers: createHeaders(),
       withCredentials: true,
     }),
-    delete: (bookmarkType, targetId)=> RefreshApi.delete(ApiService.bookmark,{
-      params:{bookmarkType,targetId},
+    list: ()=> RefreshApi.get(API_ENDPOINTS.bookmarks,{
       headers: createHeaders(),
       withCredentials: true,
     }),
-    list: ()=> RefreshApi.get(ApiService.bookmark,{
-      headers: createHeaders(),
-      withCredentials: true,
-    }),
-    check: (bookmarkType, targetId)=> RefreshApi.get(`${ApiService.bookmark}/check`,{
-      params:{bookmarkType,targetId},
+    check: (bookmarkType, targetId)=> RefreshApi.get(`${API_ENDPOINTS.bookmarks}/check`, {
+      params: { bookmarkType, targetId },
       headers: createHeaders(),
       withCredentials: true,
     })

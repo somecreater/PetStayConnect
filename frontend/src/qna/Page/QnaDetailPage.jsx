@@ -78,7 +78,7 @@ export default function QnaDetailPage() {
           <div className="card-body">
             <h2>#{post.id} {post.title}
                 {/* ✅ 질문 제목 옆에 북마크 하트 아이콘 추가 */}
-                  <BookmarkButton type="qna" targetId={post.id} size={24} /></h2>
+                  <BookmarkButton type="QNA" targetId={post.id} size={24} /></h2>
             <p className="text-muted">{new Date(post.createdAt).toLocaleString()}</p>
             <p>{post.content}</p>
             {canEditPost && (

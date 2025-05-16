@@ -8,7 +8,7 @@ function PaymentForm(props){
   const {user} = useUser();
   const {reservation, price, businessName} = props;
   const paymentRequest = {
-    pg: 'html5_inicis',
+    pg: 'tosspay',
     pay_method: 'card',
     merchant_uid: `order_${reservation.id}_${reservation.petBusinessId}_${reservation.userId}_${Date.now()}`,
     name: `reservation_${businessName}`,
@@ -28,7 +28,7 @@ function PaymentForm(props){
       setError('결제 스크립트 로드 실패');
       return;
     }
-    IMP.init(import.meta.env.REACT_APP_IMP_KEY);
+    IMP.init(import.meta.env.VITE_IMP_KEY);
 
     IMP.request_pay(
       paymentRequest,
