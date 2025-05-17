@@ -20,7 +20,7 @@ export const API_ENDPOINTS = {
     org: `${API_BASE_URL}/api/provider`,
     list: `${API_BASE_URL}/api/provider/list`,
     outerlist: `${API_BASE_URL}/api/provider/list/naver`,
-    reservation: `${API_BASE_URL}/api/providers/reservation`,
+    reservation: `${API_BASE_URL}/api/provider/reservation`,
     bnsReservation: `${API_BASE_URL}/api/provider/provider/reservation`,
     conReservation: `${API_BASE_URL}/api/provider/consumer/reservation`,
   },

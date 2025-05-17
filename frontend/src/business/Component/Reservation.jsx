@@ -8,8 +8,8 @@ function formatDate(value, format = 'YYYY-MM-DD') {
 function Reservation({ reservationDTO }){
   const {
     id,
-    UserLoginId,
-    PetBusinessName,
+    userLoginId,
+    petBusinessName,
     petBusinessRegisterNumber,
     checkIn,
     checkOut,
@@ -27,8 +27,8 @@ function Reservation({ reservationDTO }){
   
   const items = [
     ['예약 번호', id],
-    ['회원 아이디', UserLoginId],
-    ['업체 이름', PetBusinessName],
+    ['회원 아이디', userLoginId],
+    ['업체 이름', petBusinessName],
     ['등록 번호', petBusinessRegisterNumber],
     ['체크인', formatDate(checkIn)],
     ['체크아웃', formatDate(checkOut)],
