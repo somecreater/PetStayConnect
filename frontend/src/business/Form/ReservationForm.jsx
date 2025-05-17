@@ -8,7 +8,20 @@ import Modal from '../../common/Ui/Modal';
 
 function ReservationForm(props){
 
-  const { user_login_id, business_register_number, petList, business } = props;
+  const { reservationId,user_login_id, business_register_number, petList, business,
+        checkIn: initCheckIn = '',
+        checkOut: initCheckOut = '',
+        roomType: initRoomType = '',
+        specialRequests: initSpecialRequests = '',
+        businessRequestInfo: initBusinessRequestInfo = '',
+        petDTOList: initPetDTOList = [],
+        submitText = '확인',
+        onSubmit
+        } = props;
+
+  const isUpdate = Boolean(reservationId);
+
+
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [businessName,setBusinessName]= useState('');
   const [price, setPrice] = useState(0);
@@ -17,15 +30,33 @@ function ReservationForm(props){
   const [selectedPet, setSelectedPet] =useState([]);
   const [roomList, setRoomList]= useState([]);
   const [reservationForm, setReservationForm]= useState({
-    user_login_id: user_login_id || '',
-    business_register_number: business_register_number || '',
-    roomType: '',
-    checkIn:'',
-    checkOut: '',
-    specialRequests:'',
-    businessRequestInfo: '',
-    petDTOList: []
-  });  
+       id: reservationId ? Number(reservationId) : undefined,
+       user_login_id: user_login_id || '',
+       business_register_number: business_register_number || '',
+       roomType: '',
+       checkIn:'',
+       checkOut: '',
+       specialRequests:'',
+       businessRequestInfo: '',
+       petDTOList: []
+     });
+
+    useEffect(() => {
+      if (!isUpdate) return;
+
+      setReservationForm({
+        id: Number(reservationId),
+        user_login_id,
+        business_register_number,
+        roomType: initRoomType,
+        checkIn: initCheckIn,
+        checkOut: initCheckOut,
+        specialRequests: initSpecialRequests,
+        businessRequestInfo: initBusinessRequestInfo,
+        petDTOList: initPetDTOList,
+      });
+      setSelectedPet(initPetDTOList);
+    }, []);
 
   //추후 백엔드 단에서 구현
   const fetchRooms= useCallback(async () => {
@@ -64,9 +95,14 @@ function ReservationForm(props){
     console.log('선택된 방:', room);
     setSelectedRoom(room);
     setReservationForm(prev => ({ ...prev, roomType: room.roomType }));
+
   };
 
   const handleSubmit = async ()=>{
+      if (onSubmit) {
+        // 수정모드: 부모에서 넘긴 onSubmit(formData) 호출
+        return onSubmit(reservationForm);
+     }
     try{
       const response = await ApiService.business.reservation(reservationForm,business.id);
       const data=response.data;
@@ -191,7 +227,7 @@ function ReservationForm(props){
           <Button
             classtext="btn btn-success btn-sm"
             type="submit"
-            title="예약하기"
+            title={submitText}
           />
         </div>
       </form>
