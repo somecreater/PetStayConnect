@@ -91,6 +91,19 @@ public class ReservationService implements ReservationServiceInterface {
     }
     return reservationDTO;
   }
+
+  @Override
+  @Transactional(readOnly = true)
+  public ReservationDTO getReservationById(Long ReservationId){
+    Reservation reservation=reservationRepository.findById(ReservationId).orElse(null);
+    ReservationDTO reservationDTO=null;
+    if(reservation != null ){
+      reservationDTO=reservationMapper.toDTO(reservation);
+    }
+
+    return reservationDTO;
+  }
+
   /*
   예약 진행 (일단 결제는 진행안하고 예약만 서버 상에 등록(PENDING 상태로 설정))
   여러 확인 필요(중복(다른 예약, 본인 애완동물) 여부, 동 시간대 예약, 사업자 상태 확인 필요)

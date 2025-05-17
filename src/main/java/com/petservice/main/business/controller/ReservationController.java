@@ -95,6 +95,7 @@ public class ReservationController {
     return ResponseEntity.ok(result);
   }
 
+  //일반 회원 전용
   @GetMapping("/reservation/{reservation_id}")
   public ResponseEntity<?> reservationById(
       @AuthenticationPrincipal CustomUserDetails principal,
@@ -121,7 +122,7 @@ public class ReservationController {
       @PathVariable("reservation_id") Long reservation_id){
     Map<String,Object> result = new HashMap<>();
 
-    ReservationDTO exReservation= service.getReservation(principal.getUsername(),reservation_id);
+    ReservationDTO exReservation= service.getReservationById(reservation_id);
     if(exReservation ==null){
       result.put("result", false);
       result.put("message", "예약이 존재하지 않습니다.");
