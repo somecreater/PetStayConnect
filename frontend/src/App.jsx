@@ -31,6 +31,7 @@ import ReviewDetailPage from './review/Page/ReviewDetailPage';
 import ReviewRegisterPage from './review/Page/ReviewRegisterPage';
 
 import BusinessManagePage from './business/Page/BusinessManagePage';
+import UserReservationManagePage from './business/Page/UserReservationManagePage.jsx';
 
 function App() {
 
@@ -49,7 +50,7 @@ function App() {
         <Route path="/user/update" element={<UpdatePage/>}/>
         <Route path="/user/delete" element={<DeletePage/>}/>
         <Route path="/user/petmanage" element={<PetManagePage/>} />
-
+        <Route path="/user/reservations" element={<UserReservationManagePage/>} />
         <Route path="/type/list" element={<BusinessTypePage/>} />
         <Route path="/type/manage" element={<BusinessTypeManagePage/>} />
 
