@@ -9,6 +9,7 @@ import com.petservice.main.user.database.dto.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -126,6 +128,17 @@ public class ReservationController {
     if(exReservation ==null){
       result.put("result", false);
       result.put("message", "예약이 존재하지 않습니다.");
+      return ResponseEntity.ok(result);
+    }
+
+    PetBusinessDTO businessDTO =
+        businessService.getBusinessDtoByUserLoginId(principal.getUsername());
+    if(!Objects.equals(exReservation.getUserLoginId(), principal.getUsername())
+        && !Objects.equals(exReservation.getPetBusinessId(), businessDTO.getId())
+        && !principal.getAuthorities().stream().map(GrantedAuthority::getAuthority)
+        .collect(Collectors.joining()).equals("MANAGER")){
+      result.put("result", false);
+      result.put("message", "권한이 없습니다.");
       return ResponseEntity.ok(result);
     }
 
