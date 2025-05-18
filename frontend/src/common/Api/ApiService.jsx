@@ -60,6 +60,10 @@ const ApiService = {
     detail: (petId) => RefreshApi.get(`${API_ENDPOINTS.pets}/${petId}`,{
       headers: createHeaders(),
       withCredentials: true, 
+    }),
+    reservation: (reservation_id) => RefreshApi.get(`${API_ENDPOINTS.pets}/reservation/${reservation_id}`,{
+      headers: createHeaders(),
+      withCredentials: true, 
     })
   },
   qnas:{
@@ -206,6 +210,11 @@ const ApiService = {
       withCredentials: true,
     }),
     detail: (business_id, room_id)=> RefreshApi.get(`${API_ENDPOINTS.businessroom}/${business_id}/${room_id}`,
+    {
+      headers: createHeaders(),
+      withCredentials: true,
+    }),
+    typeDetail:(business_id, room_type) =>RefreshApi.get(`${API_ENDPOINTS.businessroom}/${business_id}/${room_type}`,
     {
       headers: createHeaders(),
       withCredentials: true,

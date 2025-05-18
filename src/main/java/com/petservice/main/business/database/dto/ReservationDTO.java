@@ -18,6 +18,8 @@ public class ReservationDTO {
     private Long petBusinessId;
     private Long petBusinessRoomId;
 
+    private String roomType;
+
     private LocalDate checkIn;
     private LocalDate checkOut;
 

@@ -41,6 +41,26 @@ public class PetBusinessRoomController {
     }
   }
 
+  @GetMapping("/{business_id}/{room_type}")
+  public ResponseEntity<?> getRoomByType(
+      @AuthenticationPrincipal CustomUserDetails principal,
+      @PathVariable("business_id") Long business_id,
+      @PathVariable("room_type") String room_type){
+    Map<String,Object> response=new HashMap<>();
+
+    PetBusinessRoomDTO businessRoomDTO = serviceInterface.getRoomByType(business_id,room_type);
+
+    if(businessRoomDTO!=null){
+      response.put("result",true);
+      response.put("room", businessRoomDTO);
+      return ResponseEntity.ok(response);
+    }else{
+      response.put("result",false);
+      response.put("message","방이 존재하지 않습니다.");
+      return ResponseEntity.ok(response);
+    }
+  }
+
   @PutMapping("/{business_id}/{room_id}")
   public ResponseEntity<?> updateRoom(
       @AuthenticationPrincipal CustomUserDetails principal,

@@ -10,6 +10,7 @@ import com.petservice.main.business.database.repository.ReservationRepository;
 import com.petservice.main.business.service.Interface.PetReservationServiceInterface;
 import com.petservice.main.user.database.dto.PetDTO;
 import com.petservice.main.user.database.entity.Pet;
+import com.petservice.main.user.database.mapper.PetMapper;
 import com.petservice.main.user.database.repository.PetRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,10 +25,24 @@ import java.util.List;
 public class PetReservationService implements PetReservationServiceInterface {
 
   private final PetReservationMapper petReservationMapper;
+  private final PetMapper petMapper;
   private final PetReservationRepository PetReservationRepository;
 
   private final PetRepository petRepository;
   private final ReservationRepository reservationRepository;
+
+  @Override
+  @Transactional(readOnly = true)
+  public List<PetDTO> getPetListByReservation(Long reservation_id) {
+    List<PetReservation> petReservations =
+        PetReservationRepository.findByReservation_Id(reservation_id);
+    if(petReservations == null){
+      return null;
+    }
+
+    List<Pet> pets = petReservations.stream().map(PetReservation::getPet).toList();
+    return pets.stream().map(petMapper::toBasicDTO).toList();
+  }
 
   @Override
   @Transactional(readOnly = true)

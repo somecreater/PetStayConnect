@@ -77,6 +77,12 @@ function UserInfo(props){
         <Button
           classtext="me-2"
           type="button"
+          title="예약 관리"
+          onClick={() => navigate('/user/reservations')}
+        />
+        <Button
+          classtext="me-2"
+          type="button"
           title="펫 정보 보기"
           onClick={() => navigate('/user/petmanage')}
         />

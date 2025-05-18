@@ -196,7 +196,7 @@ public class ReservationService implements ReservationServiceInterface {
     PetBusinessRoom room= petBusinessRoomRepository.findByIdAndPetBusiness_Id(
         reservationDTO.getPetBusinessRoomId(),reservationDTO.getPetBusinessId());
 
-    if(updateReservation == null || UpdateValidation(reservationDTO)){
+    if(updateReservation == null || !UpdateValidation(reservationDTO)){
       return null;
     }
 
@@ -272,7 +272,7 @@ public class ReservationService implements ReservationServiceInterface {
     PetBusinessRoom room = existreservation.getPetBusinessRoom();
       if(room !=null) {
         if (room.getId().equals(reservationDTO.getPetBusinessRoomId())
-            && existreservation.getBusinessRequestInfo().equals(reservationDTO.getSpecialRequests())
+            && existreservation.getBusinessRequestInfo().equals(reservationDTO.getBusinessRequestInfo())
             && existreservation.getSpecialRequests().equals(reservationDTO.getSpecialRequests())
             && existreservation.getCheckIn().isEqual(reservationDTO.getCheckIn())
             && existreservation.getCheckOut().isEqual(reservationDTO.getCheckOut())) {
@@ -280,7 +280,7 @@ public class ReservationService implements ReservationServiceInterface {
         }
       }
       else{
-        if (existreservation.getBusinessRequestInfo().equals(reservationDTO.getSpecialRequests())
+        if (existreservation.getBusinessRequestInfo().equals(reservationDTO.getBusinessRequestInfo())
             && existreservation.getSpecialRequests().equals(reservationDTO.getSpecialRequests())
             && existreservation.getCheckIn().isEqual(reservationDTO.getCheckIn())
             && existreservation.getCheckOut().isEqual(reservationDTO.getCheckOut())) {

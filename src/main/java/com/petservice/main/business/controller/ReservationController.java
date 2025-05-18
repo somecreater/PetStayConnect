@@ -146,7 +146,6 @@ public class ReservationController {
     if(deleteReservation !=null){
       result.put("result",true);
       result.put("message","예약이 취소(삭제) 되었습니다.");
-      result.put("reservation",deleteReservation);
     }else{
       result.put("result",false);
       result.put("message","예약이 취소되지 않았습니다(이미 지난 예약 일수도 있습니다!)");
