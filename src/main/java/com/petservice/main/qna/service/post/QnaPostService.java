@@ -4,6 +4,7 @@ import com.petservice.main.qna.database.dto.QnaPostDTO;
 import com.petservice.main.qna.database.entity.QnaPost;
 import com.petservice.main.qna.database.mapper.QnaPostMapper;
 import com.petservice.main.qna.database.repository.QnaPostRepository;
+import com.petservice.main.user.database.dto.CustomUserDetails;
 import com.petservice.main.user.database.entity.User;
 import com.petservice.main.user.database.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,14 +30,12 @@ public class QnaPostService implements QnaPostServiceInterface {
 
     @Override
     @Transactional
-    public QnaPostDTO createPost(QnaPostDTO dto, String userLoginId) {
-        User user = userRepository.findByUserLoginId(userLoginId)
+    public QnaPostDTO createPost(QnaPostDTO dto, CustomUserDetails principal) {
+        User user = userRepository.findByUserLoginId(principal.getUsername())
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
 
         QnaPost post = qnaPostMapper.toEntity(dto);
         post.setUser(user);
-        post.setCreatedAt(LocalDateTime.now());
-        post.setUpdatedAt(LocalDateTime.now());
 
         QnaPost saved = qnaPostRepository.save(post);
         return qnaPostMapper.toDTO(saved);
@@ -50,7 +49,7 @@ public class QnaPostService implements QnaPostServiceInterface {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
         return qnaPostRepository
                 .findAllByOrderByCreatedAtDesc(pageable)
-                .map(qnaPostMapper::toBasicDTO);
+                .map(qnaPostMapper::toDTO);
     }
 
 

@@ -43,10 +43,7 @@ public class QnaPostController {
                     .badRequest()
                     .body("내용은 필수입니다.");
         }
-        QnaPostDTO created = qnaPostService.createPost(
-                dto,
-                principal.getUsername()
-        );
+        QnaPostDTO created = qnaPostService.createPost(dto, principal);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)

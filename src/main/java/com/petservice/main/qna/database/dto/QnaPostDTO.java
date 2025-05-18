@@ -11,6 +11,7 @@ import java.util.List;
 public class QnaPostDTO {
   private Long id;
   private Long userId;
+  private String userLoginId;
   private String title;
   private String content;
   private QnaCategory category;

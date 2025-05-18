@@ -1,6 +1,7 @@
 package com.petservice.main.qna.service.post;
 
 import com.petservice.main.qna.database.dto.QnaPostDTO;
+import com.petservice.main.user.database.dto.CustomUserDetails;
 import org.springframework.data.domain.Page;
 
 
@@ -8,7 +9,7 @@ import java.util.List;
 
 public interface QnaPostServiceInterface {
 
-    QnaPostDTO createPost(QnaPostDTO dto, String userLoginId);
+    QnaPostDTO createPost(QnaPostDTO dto, CustomUserDetails principal);
 
     List<QnaPostDTO> getPostsByUserLoginId(String userLoginId);
 

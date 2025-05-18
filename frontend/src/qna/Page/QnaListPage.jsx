@@ -13,6 +13,7 @@ export default function QnaListPage() {
   const loadPosts = async (pageIndex) => {
     try {
       const res = await ApiService.qnas.post.list(pageIndex, size)
+      console.log('받은 데이터:', res.data) // 👈 이거 꼭 찍어봐
       setPosts(res.data.content)
       setTotalPages(res.data.totalPages)
     } catch (err) {
@@ -26,55 +27,64 @@ export default function QnaListPage() {
 
   return (
     <div className="container py-4">
-      <div className="d-flex justify-content-between align-items-center mb-3">
-        <h1>질문 목록</h1>
-        <Button
-          type="button"
-          title="질문 등록"
-          classtext="btn btn-primary"
-          onClick={() => navigate('/qnas/register')}
-        />
-      </div>
+      <h2 className="mb-4">질문 목록</h2>
 
-      <ul className="list-group mb-4">
-        {posts.map((post) => (
-          <li key={post.id} className="list-group-item">
-            <div className="d-flex justify-content-between">
-              <Link to={`/qnas/${post.id}`} className="h5 mb-1 text-decoration-none">
-                #{post.id} {post.title}
-              </Link>
-              <small className="text-muted">
-                조회수 {post.viewCount}
-              </small>
-            </div>
-            <small className="text-muted">
-              작성일 {new Date(post.createdAt).toLocaleString()}
-            </small>
-          </li>
-        ))}
-      </ul>
+        <table className="table table-hover table-bordered text-center align-middle">
+          <thead className="table-light">
+            <tr>
+              <th style={{ width: '5%' }}>No</th>
+              <th className="text-start">제목</th>
+              <th style={{ width: '15%' }}>작성자</th>
+              <th style={{ width: '15%' }}>작성일</th>
+            </tr>
+          </thead>
+          <tbody>
+            {posts.map((post, index) => (
+              <tr key={post.id}>
+                <td>{posts.length - index + page * size}</td>
+                <td className="text-start">
+                  <Link
+                    to={`/qnas/${post.id}`}
+                    className="text-decoration-none text-dark fw-semibold"
+                  >
+                    {post.title}
+                  </Link>
+                </td>
+                <td>{post.userLoginId}</td>
+                <td>{new Date(post.createdAt).toLocaleDateString()}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
 
-      <nav>
-        <ul className="pagination justify-content-center">
-          <li className={`page-item ${page === 0 ? 'disabled' : ''}`}>
-            <button className="page-link" onClick={() => setPage(p => Math.max(p - 1, 0))}>
-              Previous
-            </button>
-          </li>
-          {[...Array(totalPages)].map((_, idx) => (
-            <li key={idx} className={`page-item ${idx === page ? 'active' : ''}`}>
-              <button className="page-link" onClick={() => setPage(idx)}>
-                {idx + 1}
+        {/* Pagination */}
+        <nav>
+          <ul className="pagination justify-content-center">
+            <li className={`page-item ${page === 0 ? 'disabled' : ''}`}>
+              <button className="page-link" onClick={() => setPage(p => Math.max(p - 1, 0))}>
+                Previous
               </button>
             </li>
-          ))}
-          <li className={`page-item ${page + 1 >= totalPages ? 'disabled' : ''}`}>
-            <button className="page-link" onClick={() => setPage(p => Math.min(p + 1, totalPages - 1))}>
-              Next
-            </button>
-          </li>
-        </ul>
-      </nav>
-    </div>
-  );
-}
+            {[...Array(totalPages)].map((_, idx) => (
+              <li key={idx} className={`page-item ${idx === page ? 'active' : ''}`}>
+                <button className="page-link" onClick={() => setPage(idx)}>
+                  {idx + 1}
+                </button>
+              </li>
+            ))}
+            <li className={`page-item ${page + 1 >= totalPages ? 'disabled' : ''}`}>
+              <button className="page-link" onClick={() => setPage(p => Math.min(p + 1, totalPages - 1))}>
+                Next
+              </button>
+            </li>
+          </ul>
+        </nav>
+
+        <div className="d-flex justify-content-end mt-3">
+          <button className="btn btn-dark" onClick={() => navigate('/qnas/register')}>
+            글쓰기
+          </button>
+        </div>
+       </div>
+      );
+    }
