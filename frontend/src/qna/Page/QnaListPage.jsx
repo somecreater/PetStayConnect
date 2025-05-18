@@ -13,6 +13,7 @@ export default function QnaListPage() {
   const loadPosts = async (pageIndex) => {
     try {
       const res = await ApiService.qnas.post.list(pageIndex, size)
+      console.log('받은 데이터:', res.data) // 👈 이거 꼭 찍어봐
       setPosts(res.data.content)
       setTotalPages(res.data.totalPages)
     } catch (err) {
@@ -40,16 +41,22 @@ export default function QnaListPage() {
         {posts.map((post) => (
           <li key={post.id} className="list-group-item">
             <div className="d-flex justify-content-between">
-              <Link to={`/qnas/${post.id}`} className="h5 mb-1 text-decoration-none">
-                #{post.id} {post.title}
-              </Link>
-              <small className="text-muted">
-                조회수 {post.viewCount}
-              </small>
+             <div>
+              <div className="mb-1 d-flex align-items-center">
+                <span className="text-muted small me-2">#{post.id}</span>
+                <Link to={`/qnas/${post.id}`} className="fw-bold text-decoration-none text-dark">
+                  {post.title}
+                </Link>
+              </div>
+              <div className="text-muted small">
+                작성자: <span className="fw-semibold">{post.userLoginId}</span> &nbsp;|&nbsp;
+                작성일: {new Date(post.createdAt).toLocaleString()}
+              </div>
             </div>
             <small className="text-muted">
-              작성일 {new Date(post.createdAt).toLocaleString()}
+               조회수 {post.viewCount}
             </small>
+           </div>
           </li>
         ))}
       </ul>
