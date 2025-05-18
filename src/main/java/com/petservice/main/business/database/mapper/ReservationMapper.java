@@ -82,6 +82,7 @@ public class ReservationMapper {
     }
     if(reservation.getPetBusinessRoom()!=null){
       reservationDTO.setPetBusinessRoomId(reservation.getPetBusinessRoom().getId());
+      reservationDTO.setRoomType(reservation.getPetBusinessRoom().getRoomType());
     }
     if(reservation.getPayment()!=null){
       reservationDTO.setPaymentDTO(paymentMapper.toDTO(reservation.getPayment()));

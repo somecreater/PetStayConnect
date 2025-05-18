@@ -51,6 +51,15 @@ public class PetBusinessRoomService implements PetBusinessRoomServiceInterface {
     return petBusinessRoomMapper.toBasicDTO(room);
   }
 
+  public PetBusinessRoomDTO getRoomByType(Long business_id, String room_type){
+    PetBusinessRoom room= petBusinessRoomRepository.findByPetBusiness_IdAndRoomType(business_id, room_type);
+
+    if(room == null){
+      return null;
+    }
+    return petBusinessRoomMapper.toBasicDTO(room);
+  }
+
   @Override
   @Transactional
   public PetBusinessRoomDTO createRoom(Long business_id, PetBusinessRoomDTO petBusinessRoomDTO) {
