@@ -22,6 +22,12 @@ public class Payment {
     @JoinColumn(name = "reservation_id", nullable = false)
     private Reservation reservation;
 
+    @Column(name = "imp_uid", nullable = false, unique = true)
+    private String impUid;
+
+    @Column(name = "merchant_uid", nullable = false, unique = true)
+    private String merchantUid;
+
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal amount;
 

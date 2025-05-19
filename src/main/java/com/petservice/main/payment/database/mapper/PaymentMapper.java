@@ -19,6 +19,8 @@ public class PaymentMapper {
 
         Payment entity = new Payment();
         entity.setId(dto.getId());
+        entity.setImpUid(dto.getImpUid());
+        entity.setMerchantUid(dto.getMerchantUid());
         entity.setAmount(dto.getAmount());
         entity.setFeeRate(dto.getFeeRate());
         entity.setServiceFee(dto.getServiceFee());
@@ -38,6 +40,8 @@ public class PaymentMapper {
 
         PaymentDTO paymentDTO = new PaymentDTO();
         paymentDTO.setId(payment.getId());
+        paymentDTO.setImpUid(payment.getImpUid());
+        paymentDTO.setMerchantUid(payment.getMerchantUid());
         paymentDTO.setAmount(payment.getAmount());
         paymentDTO.setFeeRate(payment.getFeeRate());
         paymentDTO.setServiceFee(payment.getServiceFee());

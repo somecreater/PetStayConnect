@@ -10,6 +10,10 @@ import com.petservice.main.business.database.repository.PetBusinessRoomRepositor
 import com.petservice.main.business.database.repository.ReservationRepository;
 import com.petservice.main.business.service.Interface.PetReservationServiceInterface;
 import com.petservice.main.business.service.Interface.ReservationServiceInterface;
+import com.petservice.main.payment.database.dto.PaymentCancelRequestDTO;
+import com.petservice.main.payment.database.dto.PaymentDTO;
+import com.petservice.main.payment.database.entity.Payment;
+import com.petservice.main.payment.service.PaymentServiceInterface;
 import com.petservice.main.pet.service.PetServiceInterface;
 import com.petservice.main.user.database.dto.PetDTO;
 import com.petservice.main.user.database.entity.User;
@@ -42,6 +46,7 @@ public class ReservationService implements ReservationServiceInterface {
 
   private final PetServiceInterface petService;
   private final PetReservationServiceInterface PetReservationService;
+  private final PaymentServiceInterface paymentService;
 
   @Override
   @Transactional(readOnly = true)
@@ -249,8 +254,25 @@ public class ReservationService implements ReservationServiceInterface {
       }
 
     }
-    //결제 된 후의 예약(추후 수정)
+    /*
+    결제 된 후의 예약(CONFIRMED)
+    결제 취소 -> 펫 예약 리스트 삭제 -> 예약 삭제
+    */
     else{
+      Payment payment= deleteReservation.getPayment();
+      PaymentCancelRequestDTO cancelRequestDTO=new PaymentCancelRequestDTO();
+      cancelRequestDTO.setImpUid(payment.getImpUid());
+      cancelRequestDTO.setMerchantUid(payment.getMerchantUid());
+      cancelRequestDTO.setAmount(payment.getAmount());
+      cancelRequestDTO.setReason("예약 취소");
+      PaymentDTO paymentDTO=paymentService.CancelPayment(cancelRequestDTO);
+      if( paymentDTO == null &&
+        !PetReservationService.deletePetReservation(reservationDTO.getId())){
+        throw new IllegalArgumentException("예약 삭제가 되지 않았습니다. 다시 시도해보세요!!");
+      }else{
+        deleteReservation.setStatus(ReservationStatus.CANCELLED);
+        reservationRepository.save(deleteReservation);
+      }
 
     }
 
