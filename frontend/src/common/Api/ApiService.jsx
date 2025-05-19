@@ -266,7 +266,13 @@ const ApiService = {
     }),
   },
   payments:{
-    list: ()=> RefreshApi.get(API_ENDPOINTS.payments,{
+    userlist: (page, size)=> RefreshApi.get(`${API_ENDPOINTS.payments}/user`,{
+      params:{page, size},
+      headers: createHeaders(),
+      withCredentials: true,
+    }),
+    bnslist: (business_id, page, size) => RefreshApi.get(`${API_ENDPOINTS.payments}/business`,{
+      params: {business_id, page, size},
       headers: createHeaders(),
       withCredentials: true,
     }),
@@ -274,17 +280,14 @@ const ApiService = {
       headers: createHeaders(),
       withCredentials: true,
     }),
-    ready: (dto)=> RefreshApi.post(API_ENDPOINTS.payments, dto,{
+    register: (dto)=>RefreshApi.post(API_ENDPOINTS.payments, dto, {
       headers: createHeaders(),
       withCredentials: true,
     }),
-    register: (payment_id, dto)=>RefreshApi.post(`${API_ENDPOINTS.payments}/${payment_id}`,dto,{
+    delete: (dto, payment_id)=>RefreshApi.delete(`${API_ENDPOINTS.payments}/${payment_id}`,{
       headers: createHeaders(),
       withCredentials: true,
-    }),
-    delete: (payment_id)=>RefreshApi.delete(`${API_ENDPOINTS.payments}/${payment_id}`,{
-      headers: createHeaders(),
-      withCredentials: true,
+      data: dto
     })
   },
   bookmark:{

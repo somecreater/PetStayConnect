@@ -7,19 +7,20 @@ function PaymentForm(props){
 
   const {user} = useUser();
   const {reservation, price, businessName} = props;
+  const [result, setResult] = useState(null);
+  const [error, setError] = useState(null);
+
   const paymentRequest = {
-    pg: 'tosspay',
+    pg: 'html5_inicis',
     pay_method: 'card',
     merchant_uid: `order_${reservation.id}_${reservation.petBusinessId}_${reservation.userId}_${Date.now()}`,
     name: `reservation_${businessName}`,
     amount: price,
     reservation_id: reservation.id,
+    buyer_eamil: user.email,
     buyer_name: user.name,
     buyer_tel: user.phone
   };
-
-  const [result, setResult] = useState(null);
-  const [error, setError] = useState(null);
 
   const onPayment = ()=>{
 
@@ -33,9 +34,10 @@ function PaymentForm(props){
     IMP.request_pay(
       paymentRequest,
       async (response) => {
+      console.log('IMP response:', response);
         if(response.success){
 
-          const payresponse= await ApiService.payments.ready(paymentRequest);
+          const payresponse= await ApiService.payments.register(paymentRequest);
           const data=payresponse.data;
 
           if(data.result){
@@ -92,7 +94,7 @@ function PaymentForm(props){
       {result && (
         <div className="alert alert-success mt-3">
           <h5>결제 요청 성공</h5>
-          <pre>{JSON.stringify(result, null, 2)}</pre>
+          <pre>{result}</pre>
         </div>
       )}
       {error && (
