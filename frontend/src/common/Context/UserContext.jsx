@@ -83,7 +83,7 @@ const mapUserDto= (dto) => {
   };
 }
 
-const UserContext = createContext({
+export const UserContext = createContext({
   user: initialUser,
   updateUser: () => {},
   resetUser: () => {},

@@ -5,6 +5,9 @@ import HomePage from './common/Page/HomePage.jsx';
 import Header from './common/Ui/Header'; //헤더추가
 import Footer from './common/Ui/Footer';//푸터추가
 
+import AboutPage from './common/Page/AboutPage';
+import ContactPage from './common/Page/ContactPage';
+
 import './common/Api/Api'
 import './common/Api/RefreshApi';
 import './common/Api/ApiService'
@@ -42,6 +45,9 @@ function App() {
       <Header />
         <main className="main-content">
       <Routes>
+
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/contact" element={<ContactPage />} />
 
         <Route path="/" element={<HomePage />} />
         <Route path="/user/login" element={<LoginPage />} />
