@@ -34,16 +34,17 @@ export default function AnswerRegisterForm({ postId, onSuccess }) {
     <form className="mb-3" onSubmit={handleSubmit}>
       {error && <div className="text-danger mb-2">{error}</div>}
       <div className="mb-3">
-        <TextInput
-          classtext="form-control"
-          name="content"
-          value={content}
-          onChange={handleChange}
-          placeholderText="답변을 입력하세요"
-        />
+        <textarea
+            className="form-control form-control-lg mb-3"
+            rows={7}
+            name="content"
+            value={content}
+            onChange={handleChange}
+            placeholder="답변을 입력하세요"
+          />
       </div>
       <div className="d-grid">
-        <Button type="submit" title="등록" classtext="btn btn-primary" />
+        <Button type="submit" title="등록" classtext="btn btn-dark w-100" />
       </div>
     </form>
   );

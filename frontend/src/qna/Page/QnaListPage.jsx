@@ -6,8 +6,9 @@ import Button from '../../common/Ui/Button'
 export default function QnaListPage() {
   const [posts, setPosts] = useState([])
   const [page, setPage] = useState(0)
-  const [size] = useState(5)
+  const [size] = useState(10)
   const [totalPages, setTotalPages] = useState(0)
+  const [totalElements, setTotalElements] = useState(1);
   const navigate = useNavigate()
 
   const loadPosts = async (pageIndex) => {
@@ -41,7 +42,7 @@ export default function QnaListPage() {
           <tbody>
             {posts.map((post, index) => (
               <tr key={post.id}>
-                <td>{posts.length - index + page * size}</td>
+                <td>{totalElements  - page * size + index}</td>
                 <td className="text-start">
                   <Link
                     to={`/qnas/${post.id}`}

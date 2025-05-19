@@ -16,6 +16,7 @@ export default function QnaDetailPage() {
 
   const [post, setPost] = useState(null);
   const [answers, setAnswers] = useState([]);
+  const [showAnswerForm, setShowAnswerForm] = useState(false);
   const [isEditingPost, setIsEditingPost] = useState(false);
   const [editingAnswerId, setEditingAnswerId] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -76,23 +77,37 @@ export default function QnaDetailPage() {
       ) : (
         <div className="card mb-4">
           <div className="card-body">
-            <h2>#{post.id} {post.title}
-                {/* ✅ 질문 제목 옆에 북마크 하트 아이콘 추가 */}
-                  <BookmarkButton type="QNA" targetId={post.id} size={24} /></h2>
-            <p className="text-muted">{new Date(post.createdAt).toLocaleString()}</p>
-            <p>{post.content}</p>
+            <h2 className="fw-bold">
+              #{post.id} {post.title}
+              <BookmarkButton type="QNA" targetId={post.id} size={24} className="ms-2" />
+            </h2>
+            <div className="border rounded p-3 mb-3"
+               style={{
+                    minHeight: '120px',
+                    lineHeight: '1.6',
+                    whiteSpace: 'pre-wrap',
+                    backgroundColor: '#fff'
+               }}>
+              {post.content}
+            </div>
+            <p className="text-muted small">
+              작성자: <span className="fw-semibold">{post.userLoginId}</span> |
+              작성일: {new Date(post.createdAt).toLocaleString()}
+            </p>
+
             {canEditPost && (
-              <div className="mt-3">
+              <div className="mt-2">
                 <Button
                   type="button"
                   title="수정"
-                  classtext="btn btn-secondary me-2"
+                  classtext="btn btn-outline-secondary btn-sm me-2"
                   onClick={() => setIsEditingPost(true)}
                 />
                 <PostDeleteButton
                   postId={post.id}
                   onDeleted={() => navigate('/qnas')}
-                />
+                  className="btn btn-outline-danger btn-sm"
+                 />
               </div>
             )}
           </div>
@@ -101,12 +116,42 @@ export default function QnaDetailPage() {
 
       <div className="card mb-4">
         <div className="card-body">
-          <h3 className="mb-3">답변</h3>
+          <h4 className="fw-bold mb-3 border-bottom pb-2">답변</h4>
+
           {isBiz && editingAnswerId == null && (
-            <AnswerRegisterForm postId={id} onSuccess={loadData} />
+            <>
+                {!showAnswerForm ? (
+                  <Button
+                    type="button"
+                    title="답변 등록"
+                    classtext="btn btn-primary mb-3"
+                    onClick={() => setShowAnswerForm(true)}
+                  />
+                ) : (
+                  <>
+                    <AnswerRegisterForm
+                      postId={id}
+                      onSuccess={() => {
+                        loadData();
+                        setShowAnswerForm(false);
+                      }}
+                    />
+                    <button
+                      className="btn btn-outline-secondary btn-sm mt-2"
+                      onClick={() => setShowAnswerForm(false)}
+                    >
+                      닫기
+                    </button>
+                  </>
+                )}
+              </>
+            )}
+          {!isBiz && (
+            <p className="text-muted">※ 답변은 사업자만 작성할 수 있습니다.</p>
           )}
           <AnswerList
             postId={id}
+            postUserId={post.userId}
             answers={answers}
             editingAnswerId={editingAnswerId}
             setEditingAnswerId={setEditingAnswerId}
