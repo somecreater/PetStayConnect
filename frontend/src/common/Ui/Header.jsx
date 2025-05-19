@@ -1,8 +1,20 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link, NavLink } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'
+import { UserContext } from '../Context/UserContext'; // 로그인, 로그아웃 버튼 추가. 경로 체크
 import { FaUser } from 'react-icons/fa';
 
 export default function Header() {
+    // 1. useContext, useNavigate 선언
+    const { user, resetUser } = useContext(UserContext);
+    const navigate = useNavigate();
+
+    // 2. 여기! 로그아웃 버튼 클릭 시 실행할 함수 선언
+    const handleLogout = () => {
+        resetUser();
+        navigate('/');
+  };
+
   return (
     <nav className="navbar navbar-expand-lg navbar-light navbar-custom-bg p-4 border-top">
       <div className="container-fluid">
@@ -36,7 +48,23 @@ export default function Header() {
           >
             <FaUser size={22} />
           </Link>
-        </div>
+          {/* 모바일에서 로그인/로그아웃 버튼 추가*/}
+          {user && user.id ? (
+              <button
+                className="btn btn-outline-dark ms-2"
+                onClick={handleLogout}
+              >
+                로그아웃
+              </button>
+            ) : (
+              <Link
+                to="/user/login"
+                className="btn btn-outline-dark ms-2"
+              >
+                로그인
+              </Link>
+            )}
+          </div>
 
         {/* 메뉴(햄버거로 접히는 부분) */}
         <div className="collapse navbar-collapse" id="navMenu">
@@ -90,7 +118,23 @@ export default function Header() {
                 >
                   <FaUser size={22} />
                 </Link>
-              </form>
+                {/* PC에서만 보이는 로그인/로그아웃 버튼 추가*/}
+                  {user && user.id ? (
+                    <button
+                      className="btn btn-outline-dark ms-2 d-none d-lg-block"
+                      onClick={handleLogout}
+                    >
+                      로그아웃
+                    </button>
+                  ) : (
+                    <Link
+                      to="/user/login"
+                      className="btn btn-outline-dark ms-2 d-none d-lg-block"
+                    >
+                      로그인
+                    </Link>
+                  )}
+                </form>
             </li>
           </ul>
         </div>
