@@ -9,6 +9,7 @@ function PaymentForm(props){
   const {reservation, price, businessName} = props;
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const paymentRequest = {
     pg: 'html5_inicis',
@@ -36,16 +37,32 @@ function PaymentForm(props){
       async (response) => {
       console.log('IMP response:', response);
         if(response.success){
+          try{
+            setLoading(true);
+            const requestDTO = {
+              impUid: response.imp_uid,
+              merchantUid: response.merchant_uid,
+              reservationId: reservation.id,
+              amount: response.paid_amount || price,
+              payMethod: response.pay_method,
+              status: response.status,
+              paidAt: response.paid_at
+            };
 
-          const payresponse= await ApiService.payments.register(paymentRequest);
-          const data=payresponse.data;
+            const payresponse= await ApiService.payments.register(requestDTO);
+            const data=payresponse.data;
 
-          if(data.result){
-            setResult(data.paymentResult);
-          }else{
-            setError("결제 검증에 실패했습니다.");
+            if(data.result){
+              setResult(data.paymentResult);
+            }else{
+              setError("결제 검증에 실패했습니다.");
+            }
+          }catch(e){
+            console.error(e);
+            setError('서버 통신 중 오류가 발생했습니다.');
+          }finally{
+            setLoading(false);
           }
-
         }else{
           setError(response.message);
         }
@@ -87,8 +104,12 @@ function PaymentForm(props){
         </div>
       </div>
 
-      <button onClick={onPayment} className="btn btn-primary w-100">
-        결제 요청하기
+      <button 
+        onClick={onPayment} 
+        className="btn btn-primary w-100"
+        disabled={loading}
+      >
+        {loading ? '처리 중...' : '결제 요청하기'}
       </button>
 
       {result && (

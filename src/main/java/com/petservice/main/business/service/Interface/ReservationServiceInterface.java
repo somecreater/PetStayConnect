@@ -2,13 +2,15 @@ package com.petservice.main.business.service.Interface;
 
 import com.petservice.main.business.database.dto.ReservationDTO;
 import com.petservice.main.business.database.dto.ReservationRequest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
 public interface ReservationServiceInterface {
 
-  public List<ReservationDTO> getReservationList(String user_login_id);
-  public List<ReservationDTO> getReservationListByBusiness(Long Business_id);
+  public Page<ReservationDTO> getReservationList(String user_login_id, Pageable pageable);
+  public Page<ReservationDTO> getReservationListByBusiness(Long Business_id, Pageable pageable);
   public ReservationDTO getReservation(String user_login_id, Long ReservationId);
   public ReservationDTO getReservationByBusiness(String RegisterNumber, Long ReservationId);
   public ReservationDTO getReservationById(Long ReservationId);

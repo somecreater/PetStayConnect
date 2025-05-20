@@ -8,13 +8,15 @@ import com.petservice.main.business.service.Interface.ReservationServiceInterfac
 import com.petservice.main.user.database.dto.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -59,14 +61,16 @@ public class ReservationController {
       @RequestParam(defaultValue = "0") int page,
       @RequestParam(defaultValue = "5") int size ){
     Map<String,Object> result = new HashMap<>();
+    Pageable pageable = PageRequest.of(page, size);
 
-
-    List<ReservationDTO> reservationDTOS=service.getReservationList(principal.getUsername());
+    Page<ReservationDTO> reservationDTOS=service.getReservationList(principal.getUsername(), pageable);
 
     if(reservationDTOS != null){
       result.put("result",true);
-      result.put("message","총 "+reservationDTOS.size()+" 건의 결과를 가지고 왔습니다.");
-      result.put("reservations",reservationDTOS);
+      result.put("message","총 "+reservationDTOS.getTotalElements()+" 건의 결과를 가지고 왔습니다.");
+      result.put("reservations",reservationDTOS.getContent());
+      result.put("totalPages",     reservationDTOS.getTotalPages());
+      result.put("totalElements",  reservationDTOS.getTotalElements());
     }else{
       result.put("result",false);
       result.put("message","결과가 존재하지 않거나 가져오는 것을 실패했습니다.");
@@ -83,13 +87,17 @@ public class ReservationController {
     Map<String,Object> result = new HashMap<>();
     PetBusinessDTO petBusinessDTO=businessService.getBusinessDtoByUserLoginId(
         principal.getUsername());
-    List<ReservationDTO> reservationDTOS=service
-        .getReservationListByBusiness(petBusinessDTO.getId());
+    Pageable pageable = PageRequest.of(page, size);
+
+    Page<ReservationDTO> reservationDTOS=service
+        .getReservationListByBusiness(petBusinessDTO.getId(),pageable);
 
     if(reservationDTOS != null){
       result.put("result",true);
-      result.put("message","총 "+reservationDTOS.size()+" 건의 결과를 가지고 왔습니다.");
-      result.put("reservations",reservationDTOS);
+      result.put("message","총 "+reservationDTOS.getTotalElements()+" 건의 결과를 가지고 왔습니다.");
+      result.put("reservations",reservationDTOS.getContent());
+      result.put("totalPages",     reservationDTOS.getTotalPages());
+      result.put("totalElements",  reservationDTOS.getTotalElements());
     }else{
       result.put("result",false);
       result.put("message","결과가 존재하지 않거나 가져오는 것을 실패했습니다.");

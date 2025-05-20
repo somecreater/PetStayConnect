@@ -16,12 +16,6 @@ function UserInfo(props){
   const navigate=useNavigate();
   const [buttonTitle, setButtonTitle] = useState('자세한 정보 보기');
 
-  useEffect(() => {
-    if (!user || user.userLoginId === '') {
-      getuserInfo();
-    }
-  }, []);
-
   const handleInfoClick= async () =>{
     if(!isDetail){
       setIsDetail(true);

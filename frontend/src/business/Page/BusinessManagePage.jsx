@@ -30,18 +30,22 @@ function BusinessManagePage(props){
   const [reservations,setReservations]= useState([]);
   const [rooms, setRooms]= useState([]);
   const [pays, setPays]= useState([]);
+  const [page, setPage] = useState(0);
+  const [size] = useState(10);
+  const [TotalPages, setTotalPages] = useState(1);
 
   const [reservation, setReservation] = useState(null);
   const [room, setRoom] = useState(null);
   const [pay, setPay] = useState(null);
 
   const reservationList=async () =>{ 
-    const response= await ApiService.business.bnsReservation();
+    const response= await ApiService.business.bnsReservation(page, size);
     const data= response.data;
 
     if(data.result){
       console.log("예약 목록을 가져왔습니다.");
       setReservations(data.reservations);
+      setPage(page);
     }else{
       console.log("예약 목록이 없거나 가져오지 못했습니다.");
       setReservations([]);
@@ -62,12 +66,14 @@ function BusinessManagePage(props){
   };
 
   const payList= async ()=>{
-    const response= await ApiService.payments.list();
+    const response= await ApiService.payments.bnslist(businessId,page,size);
     const data= response.data;
 
     if(data.result){
       console.log("결제 목록을 가져왔습니다.");
-      setPays(data.pays);
+      setPays(data.list);
+      setTotalPages(data.totalPages);
+      setPage(page);
     }else{
       console.log("결제 목록이 없거나 가져오지 못했습니다.");
       setPays([]);
@@ -76,11 +82,30 @@ function BusinessManagePage(props){
 
 //추후 컨트롤러 구현시 주석 해제
   useEffect(() => {
-  if (!businessId) return;
-  if (activeTab === "reservations") reservationList();
-  else if (activeTab === "rooms") roomList();
-  //else if (activeTab === "payments") payList();
-  },[activeTab, businessId]);
+  if (!businessId) {
+    return;
+  }
+  if (activeTab === "reservations") {
+    reservationList();
+  }
+  else if (activeTab === "rooms") {
+    roomList();
+  }
+  else if (activeTab === "payments") {
+    payList();
+  }
+  },[activeTab, businessId, page]);
+
+  const goPrevPage = () => {
+    if (page > 1){ 
+      setPage(page-1);
+    }
+  };
+  const goNextPage = () => {
+    if (page < TotalPages){ 
+      setPage(page+1);
+    }
+  };
 
   const ReservationDelete= async (id) => {
     const response= await ApiService.business.deleteReservation(id);
@@ -131,11 +156,11 @@ function BusinessManagePage(props){
     }
   }
   const SelectPay = (selPay) =>{
-    if(pay === null){
-      setPay(selPay);
-    }else{
-      setPay(null);
-    }
+  if (pay?.id === selPay.id) {
+    setPay(null);
+  } else {
+    setPay(selPay);
+  }
   };
 
   return (
@@ -191,6 +216,27 @@ function BusinessManagePage(props){
               {reservation.checkIn} ~ {reservation.checkOut}
             </div>
           )}
+          
+          
+          <div className="d-flex justify-content-center align-items-center my-3">
+            <button
+              className="btn btn-outline-secondary btn-sm mx-2"
+              onClick={goPrevPage}
+              disabled={page+1 === 1}
+            >
+              이전
+            </button>
+            <span>
+              {page+1} / {TotalPages}
+            </span>
+            <button
+              className="btn btn-outline-secondary btn-sm mx-2"
+              onClick={goNextPage}
+              disabled={page+1 === TotalPages}
+            >
+              다음
+            </button>
+          </div>
         </div>
       )}
       {activeTab === "rooms" &&(
@@ -246,6 +292,25 @@ function BusinessManagePage(props){
             onSelected={SelectPay}
           />
 
+          <div className="d-flex justify-content-center align-items-center my-3">
+            <button
+              className="btn btn-outline-secondary btn-sm mx-2"
+              onClick={goPrevPage}
+              disabled={page+1 === 1}
+            >
+              이전
+            </button>
+            <span>
+              {page+1} / {TotalPages}
+            </span>
+            <button
+              className="btn btn-outline-secondary btn-sm mx-2"
+              onClick={goNextPage}
+              disabled={page+1 === TotalPages}
+            >
+              다음
+            </button>
+          </div>
         </div>
       )}
     </div>

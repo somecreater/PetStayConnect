@@ -87,7 +87,8 @@ public class PayController {
     if(paymentDTOS != null){
       response.put("result", true);
       response.put("message","결제 내역입니다(사업자)");
-      response.put("list", paymentDTOS);
+      response.put("list", paymentDTOS.getContent());
+      response.put("totalPages", paymentDTOS.getTotalPages());
     }else{
       response.put("result", false);
       response.put("message","결제 내역을 가져오는 것에 실패하였습니다(사업자)");
@@ -107,7 +108,8 @@ public class PayController {
     if(paymentDTOS != null){
       response.put("result", true);
       response.put("message","결제 내역입니다(사용자)");
-      response.put("list", paymentDTOS);
+      response.put("list", paymentDTOS.getContent());
+      response.put("totalPages", paymentDTOS.getTotalPages());
     }else{
       response.put("result", false);
       response.put("message","결제 내역을 가져오는 것에 실패하였습니다(사용자)");
