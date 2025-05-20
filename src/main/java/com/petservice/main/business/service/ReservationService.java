@@ -21,6 +21,8 @@ import com.petservice.main.user.database.repository.PetRepository;
 import com.petservice.main.user.database.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,22 +52,22 @@ public class ReservationService implements ReservationServiceInterface {
 
   @Override
   @Transactional(readOnly = true)
-  public List<ReservationDTO> getReservationList(String user_login_id) {
-    List<Reservation> reservationList= reservationRepository.findByUser_UserLoginId(user_login_id);
+  public Page<ReservationDTO> getReservationList(String user_login_id, Pageable pageable) {
+    Page<Reservation> reservationList= reservationRepository.findByUser_UserLoginId(user_login_id, pageable);
     if(reservationList.isEmpty()){
       return null;
     }
-    return reservationList.stream().map(reservationMapper::toDTO).toList();
+    return reservationList.map(reservationMapper::toDTO);
   }
 
   @Override
   @Transactional(readOnly = true)
-  public List<ReservationDTO> getReservationListByBusiness(Long Business_id){
-    List<Reservation> reservationList= reservationRepository.findByPetBusiness_Id(Business_id);
+  public Page<ReservationDTO> getReservationListByBusiness(Long Business_id, Pageable pageable){
+    Page<Reservation> reservationList= reservationRepository.findByPetBusiness_Id(Business_id, pageable);
     if(reservationList.isEmpty()){
       return null;
     }
-    return reservationList.stream().map(reservationMapper::toDTO).toList();
+    return reservationList.map(reservationMapper::toDTO);
   }
 
   @Override
