@@ -268,7 +268,7 @@ public class ReservationService implements ReservationServiceInterface {
       cancelRequestDTO.setAmount(payment.getAmount());
       cancelRequestDTO.setReason("예약 취소");
       PaymentDTO paymentDTO=paymentService.CancelPayment(cancelRequestDTO);
-      if( paymentDTO == null &&
+      if( paymentDTO == null ||
         !PetReservationService.deletePetReservation(reservationDTO.getId())){
         throw new IllegalArgumentException("예약 삭제가 되지 않았습니다. 다시 시도해보세요!!");
       }else{

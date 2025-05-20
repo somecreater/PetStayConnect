@@ -1,22 +1,43 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ApiService from '../../common/Api/ApiService';
 import { useUser } from '../../common/Context/UserContext';
 
 //여기서는 결제 정보만 전송
-function PaymentForm(props){
+function PaymentForm({ reservation, price = 0, businessName }){
 
   const {user} = useUser();
-  const {reservation, price, businessName} = props;
+  const [computedPrice, setComputedPrice] = useState(price);
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-
+  const [initialLoading, setInitialLoading] = useState(false);
+  useEffect(()=>{
+    if(price === 0){
+      const fetchBusinessDetail = async () => {
+      try {
+        const response= await ApiService.business.detail(reservation.petBusinessId);
+        const data=response.data;
+        if(data.result){
+          setComputedPrice(data.business.maxPrice);
+        }else{
+          setError('서비스 가격 정보를 불러오지 못했습니다.');
+        }
+      } catch (e) {
+        console.error(e);
+        setError('서버 통신 중 오류가 발생했습니다.');
+      } finally {
+        setInitialLoading(false);
+      }
+    }
+    fetchBusinessDetail();
+    }
+  },[]);
   const paymentRequest = {
     pg: 'html5_inicis',
     pay_method: 'card',
     merchant_uid: `order_${reservation.id}_${reservation.petBusinessId}_${reservation.userId}_${Date.now()}`,
     name: `reservation_${businessName}`,
-    amount: price,
+    amount: computedPrice,
     reservation_id: reservation.id,
     buyer_eamil: user.email,
     buyer_name: user.name,
@@ -43,7 +64,7 @@ function PaymentForm(props){
               impUid: response.imp_uid,
               merchantUid: response.merchant_uid,
               reservationId: reservation.id,
-              amount: response.paid_amount || price,
+              amount: response.paid_amount || computedPrice,
               payMethod: response.pay_method,
               status: response.status,
               paidAt: response.paid_at
@@ -104,10 +125,10 @@ function PaymentForm(props){
         </div>
       </div>
 
-      <button 
-        onClick={onPayment} 
+      <button
+        onClick={onPayment}
         className="btn btn-primary w-100"
-        disabled={loading}
+        disabled={loading || initialLoading || !computedPrice}
       >
         {loading ? '처리 중...' : '결제 요청하기'}
       </button>

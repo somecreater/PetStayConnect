@@ -118,8 +118,15 @@ function BusinessManagePage(props){
         "시스템 문제로 실패하였습니다.");
     }
   };
-  const PayDelete= async (id) => {
-    const response= await ApiService.payments.delete(id);
+  const PayDelete= async (dto) => {
+    const id= dto.id;
+    const request= {
+      impUid: dto.impUid,
+      merchantUid: dto.merchantUid,
+      amount: dto.amount,
+      reason: '환불처리'
+    };
+    const response= await ApiService.payments.delete(request, id);
     const data=response.data;
     if(data.result){
       alert("해당 결제를 취소 시켰으며, 해당되는 예약도 삭제되었습니다.\n"+

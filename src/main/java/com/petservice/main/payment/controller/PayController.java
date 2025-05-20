@@ -37,8 +37,8 @@ public class PayController {
       response.put("message", "결제가 완료되었습니다. 만약 가상 계좌 수단일 경우," +
           "나중에 결제 됩니다.");
       response.put("paymentResult","결제 방법: " + paymentDTO.getPaymentMethod()
-          + "결제 상태: " + paymentDTO.getPaymentStatus()
-          + "결제 UID: " + paymentDTO.getImpUid());
+          + " 결제 상태: " + paymentDTO.getPaymentStatus()
+          + " 결제 UID: " + paymentDTO.getImpUid());
       response.put("payment", paymentDTO);
     }else{
       response.put("result", false);

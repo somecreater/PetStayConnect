@@ -20,13 +20,13 @@ function PayList({List ,isDelete, onDelete, isBusiness, onSelected}){
       {List.map(pay => (
         <div key={pay.id} className="col-12" onClick={() =>handleClick(pay)}>
           <Pay PayDTO={pay}/>
-          {isDelete && (
+          {isDelete && pay.paymentStatus!=='CANCELED' && (
             <button
                 classtext="btn btn-outline-danger btn-sm"
                 type="button"
                 onClick={() =>{
                   e.stopPropagation();
-                  onDelete(pay.id);
+                  onDelete(pay);
                 }}
             >
               환불 처리
