@@ -5,13 +5,16 @@ import ReservationList from '../Component/ReservationList';
 import Modal from '../../common/Ui/Modal';
 import { useNavigate } from 'react-router-dom';
 import ReservationUpdateForm from '../Form/ReservationUpdateForm';
+import PaymentForm from '../../pay/Form/PaymentForm';
 
 function UserReservationManagePage(props){
   
   const navigate = useNavigate();
+  const [price, setPrice]=useState(0);
   const [reservation, setReservation]=useState(null);
   const [reservations, setReservations]=useState([]);
   const [updateModal,setUpdateModal]=useState(false);
+  const [paymentModal, setPaymentModal]=useState(false);
   const [page, setPage]=useState(0);
   const [size, setSize]=useState(5);
   const {user}=useUser();
@@ -85,6 +88,14 @@ function UserReservationManagePage(props){
       </button>
 
       <div>
+        
+          {reservation && (
+          <div className="mt-3 p-3 border rounded bg-light">
+            <strong>선택된 예약:</strong> #{reservation.id} &nbsp;
+            {reservation.checkIn} &ndash; {reservation.checkOut}
+          </div>
+          )}
+          
           <ReservationList 
             List={reservations}
             isDelete={true}
@@ -93,16 +104,24 @@ function UserReservationManagePage(props){
             onUpdate={() => setUpdateModal(true)}
             onSelect={selectReservation}
             isBusiness={false}
+            onPayment={()=> setPaymentModal(true)}
           />
 
-          {reservation && (
-          <div className="mt-3 p-3 border rounded bg-light">
-            <strong>선택된 예약:</strong> #{reservation.id} &nbsp;
-            {reservation.checkIn} &ndash; {reservation.checkOut}
-          </div>
-          )}
-
-        {updateModal && reservation && (
+        {paymentModal && reservation &&
+        reservation.status === 'PENDING' &&
+        (
+          <Modal isOpen={paymentModal} onClose={() => setPaymentModal(false)}>
+            <PaymentForm 
+              reservation={reservation}
+              businessName={reservation.petBusinessName}
+              price={0}
+            />
+          </Modal>
+        )}
+        {updateModal && reservation && 
+        reservation.status !== 'CANCELLED' &&
+        reservation.status !== 'COMPLETED' && 
+        (
           <Modal isOpen={updateModal} onClose={() => setUpdateModal(false)}>
             <ReservationUpdateForm 
               reservation={reservation} 

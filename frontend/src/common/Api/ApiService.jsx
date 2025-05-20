@@ -155,6 +155,10 @@ const ApiService = {
     })
   },
   business:{
+    detail: (business_id) => RefreshApi.get(`${API_ENDPOINTS.business.org}/${business_id}`,{
+      headers: createHeaders(),
+      withCredentials: true
+    }),
     list: (dto,page,size) => RefreshApi.get(API_ENDPOINTS.business.list, 
     {
       params:{ ...dto, page, size},

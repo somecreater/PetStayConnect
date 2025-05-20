@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -61,7 +62,8 @@ public class ReservationController {
       @RequestParam(defaultValue = "0") int page,
       @RequestParam(defaultValue = "5") int size ){
     Map<String,Object> result = new HashMap<>();
-    Pageable pageable = PageRequest.of(page, size);
+    Pageable pageable = PageRequest.of(page, size,
+        Sort.by(Sort.Order.desc("id")));
 
     Page<ReservationDTO> reservationDTOS=service.getReservationList(principal.getUsername(), pageable);
 
@@ -87,7 +89,8 @@ public class ReservationController {
     Map<String,Object> result = new HashMap<>();
     PetBusinessDTO petBusinessDTO=businessService.getBusinessDtoByUserLoginId(
         principal.getUsername());
-    Pageable pageable = PageRequest.of(page, size);
+    Pageable pageable = PageRequest.of(page, size,
+        Sort.by(Sort.Order.desc("id")));
 
     Page<ReservationDTO> reservationDTOS=service
         .getReservationListByBusiness(petBusinessDTO.getId(),pageable);

@@ -28,6 +28,24 @@ public class PetBusinessController {
   private final NaverSearchServiceInterface naverSearchService;
   private final PetBusinessServiceInterface petBusinessService;
 
+  @GetMapping("/{business_id}")
+  public ResponseEntity<?> getPetBusinessDetail(
+      @AuthenticationPrincipal CustomUserDetails principal,
+      @PathVariable("business_id") Long business_id){
+    Map<String,Object> result = new HashMap<>();
+
+    PetBusinessDTO dto= petBusinessService.getBusinessDto(business_id);
+
+    if(dto == null){
+      result.put("result",false);
+      result.put("message","사업자가 존재하지 않습니다.");
+    }else{
+      result.put("result",true);
+      result.put("message","사업자를 가져옵니다");
+      result.put("business",dto);
+    }
+    return ResponseEntity.ok(result);
+  }
   @GetMapping("/list")
   public ResponseEntity<?> getPetBusinessList(
     @AuthenticationPrincipal CustomUserDetails principal,

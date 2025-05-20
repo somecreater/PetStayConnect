@@ -1,14 +1,17 @@
 import React from "react";
 import Reservation from "./Reservation";
 import Button from '../../common/Ui/Button';
+import Modal from "../../common/Ui/Modal";
 
-function ReservationList({List, isDelete, onDelete, isUpdate, onUpdate, onSelect, isBusiness}){
+function ReservationList({List, isDelete, onDelete, isUpdate, onUpdate, onSelect, isBusiness, onPayment}){
   if (!List || List.length === 0) {
     return <div className="text-center text-muted">예약 내역이 없습니다.</div>;
   }
   const handleClick= (reservation)=>{
     onSelect(reservation);
   }
+
+
   return (
     <div className="row gy-4">
       {List.map(reservation => (
@@ -21,7 +24,20 @@ function ReservationList({List, isDelete, onDelete, isUpdate, onUpdate, onSelect
 
           {/* 액션 버튼 영역 */}
           <div className="d-flex justify-content-end gap-2">
-            {isUpdate && typeof onUpdate === 'function' && (
+            {!isBusiness &&
+            reservation.status === 'PENDING' &&(
+              <Button
+                classtext="btn btn-outline-primary btn-sm"
+                type="button"
+                title="결제 진행"
+                onClick={() => onPayment(reservation, reservation.petBusinessId, reservation.PetBusinessName)}
+              />
+            )}
+
+            {isUpdate &&
+            reservation.status !== 'CANCELLED' &&
+            reservation.status !== 'COMPLETED' && 
+            typeof onUpdate === 'function' && (
               <Button
                 classtext="btn btn-outline-primary btn-sm"
                 type="button"
@@ -29,7 +45,12 @@ function ReservationList({List, isDelete, onDelete, isUpdate, onUpdate, onSelect
                 onClick={() => onUpdate(reservation, reservation.id)}
               />
             )}
-            {!isBusiness && isDelete && typeof onDelete === 'function' && (
+
+            {!isBusiness &&
+            reservation.status !== 'CANCELLED' &&
+            reservation.status !== 'COMPLETED' && 
+            isDelete && 
+            typeof onDelete === 'function' && (
               <Button
                 classtext="btn btn-outline-danger btn-sm"
                 type="button"
@@ -37,6 +58,7 @@ function ReservationList({List, isDelete, onDelete, isUpdate, onUpdate, onSelect
                 onClick={() => onDelete(reservation.id)}
               />
             )}
+            
             {isBusiness && (
               <>
                 <Button
