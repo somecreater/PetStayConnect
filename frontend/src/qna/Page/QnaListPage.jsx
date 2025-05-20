@@ -14,7 +14,6 @@ export default function QnaListPage() {
   const loadPosts = async (pageIndex) => {
     try {
       const res = await ApiService.qnas.post.list(pageIndex, size)
-      console.log('받은 데이터:', res.data) // 👈 이거 꼭 찍어봐
       setPosts(res.data.content)
       setTotalPages(res.data.totalPages)
     } catch (err) {
@@ -42,7 +41,7 @@ export default function QnaListPage() {
           <tbody>
             {posts.map((post, index) => (
               <tr key={post.id}>
-                <td>{totalElements  - page * size + index}</td>
+                <td>{post.id}</td>
                 <td className="text-start">
                   <Link
                     to={`/qnas/${post.id}`}

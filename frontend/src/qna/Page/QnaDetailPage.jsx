@@ -28,6 +28,7 @@ export default function QnaDetailPage() {
       const { data: ansData } = await ApiService.qnas.answer.list(id);
       const normalizedAnswers = ansData.map(ans => ({
         ...ans,
+        accepted: ans.isAdopted,
         content: ans.content ?? ans.answer
       }));
       setPost(postData);
@@ -77,8 +78,9 @@ export default function QnaDetailPage() {
       ) : (
         <div className="card mb-4">
           <div className="card-body">
-            <h2 className="fw-bold">
-              #{post.id} {post.title}
+            <h2 className="fw-bold d-flex align-items-center gap-2">
+              <span className="text-secondary">#{post.id}</span>
+              <span className="flex-grow-1">{post.title}</span>
               <BookmarkButton type="QNA" targetId={post.id} size={24} className="ms-2" />
             </h2>
             <div className="border rounded p-3 mb-3"
@@ -120,14 +122,14 @@ export default function QnaDetailPage() {
 
           {isBiz && editingAnswerId == null && (
             <>
-                {!showAnswerForm ? (
-                  <Button
-                    type="button"
-                    title="답변 등록"
-                    classtext="btn btn-primary mb-3"
-                    onClick={() => setShowAnswerForm(true)}
-                  />
-                ) : (
+             {!showAnswerForm ? (
+              <Button
+                type="button"
+                title="답변 등록"
+                classtext="btn btn-primary mb-3"
+                onClick={() => setShowAnswerForm(true)}
+              />
+            ) : (
                   <>
                     <AnswerRegisterForm
                       postId={id}
@@ -146,20 +148,22 @@ export default function QnaDetailPage() {
                 )}
               </>
             )}
-          {!isBiz && (
-            <p className="text-muted">※ 답변은 사업자만 작성할 수 있습니다.</p>
-          )}
-          <AnswerList
-            postId={id}
-            postUserId={post.userId}
-            answers={answers}
-            editingAnswerId={editingAnswerId}
-            setEditingAnswerId={setEditingAnswerId}
-            onAccept={handleAccept}
-            onDeleted={loadData}
-            user={user}
-            isBiz={isBiz}
-          />
+
+            {!isBiz && (
+              <p className="text-muted">※ 답변은 사업자만 작성할 수 있습니다.</p>
+            )}
+
+            <AnswerList
+                postId={id}
+                postUserId={post.userId}
+                answers={answers}
+                editingAnswerId={editingAnswerId}
+                setEditingAnswerId={setEditingAnswerId}
+                onAccept={handleAccept}
+                onDeleted={loadData}
+                user={user}
+                isBiz={isBiz}
+            />
         </div>
       </div>
 
