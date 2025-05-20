@@ -1,8 +1,10 @@
 import React, { useContext } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom'
+import { useLocation } from 'react-router-dom';
 import { UserContext } from '../Context/UserContext'; // 로그인, 로그아웃 버튼 추가. 경로 체크
 import { FaUser } from 'react-icons/fa';
+import { FaSearch } from 'react-icons/fa';
 
 import ApiService from '../Api/ApiService';
 
@@ -10,6 +12,9 @@ export default function Header() {
     // 1. useContext, useNavigate 선언
     const { user, resetUser } = useContext(UserContext);
     const navigate = useNavigate();
+    const location = useLocation();
+    const isServiceActive = location.pathname === "/about" || location.pathname === "/contact";
+
 
     // 2. 로그아웃 버튼 클릭 시 실행할 함수 선언
  const handleLogout = async () => {  // async 추가
@@ -93,21 +98,50 @@ export default function Header() {
         <div className="collapse navbar-collapse" id="navMenu">
           <ul className="navbar-nav ms-auto">
             <li className="nav-item">
-              <NavLink className="nav-link text-dark" to="/">Home</NavLink>
+              <NavLink
+                to="/"
+                end
+                className={({ isActive }) =>
+                  "nav-link" + (isActive ? " active-nav" : "")
+                }
+              >
+                Home
+              </NavLink>
             </li>
              <li className="nav-item">
-               <NavLink className="nav-link text-dark" to="/user/reservations">Reservation</NavLink>
+               <NavLink
+                 to="/user/reservations"
+                 className={({ isActive }) =>
+                   "nav-link" + (isActive ? " active-nav" : "")
+                 }
+               >
+                 Reservation
+               </NavLink>
              </li>
 
             <li className="nav-item">
-                 <NavLink className="nav-link text-dark" to="/business/list">Search</NavLink>
+                 <NavLink
+                   to="/business/list"
+                   className={({ isActive }) =>
+                     "nav-link" + (isActive ? " active-nav" : "")
+                   }
+                 >
+                   Search
+                 </NavLink>
                   </li>
                   <li className="nav-item">
-                    <NavLink className="nav-link text-dark" to="/type/list">Type</NavLink>
+                   <NavLink
+                     to="/type/list"
+                     className={({ isActive }) =>
+                       "nav-link" + (isActive ? " active-nav" : "")
+                     }
+                   >
+                     Type
+                   </NavLink>
                   </li>
                   <li className="nav-item dropdown">
                                  <a
-                                   className="nav-link dropdown-toggle text-dark"
+                                   className={`nav-link dropdown-toggle ${isServiceActive ? " active-nav" : ""}`}
                                    href="#!"
                                    id="servicesMenu"
                                    role="button"
@@ -117,18 +151,46 @@ export default function Header() {
                                    Services
                                  </a>
                                  <ul className="dropdown-menu" aria-labelledby="servicesMenu">
-                                   <li><Link className="dropdown-item" to="/about">About</Link></li>
-                                   <li><Link className="dropdown-item" to="/contact">Contact</Link></li>
+                                   <li> <NavLink
+                                             to="/about"
+                                             className={({ isActive }) =>
+                                               "dropdown-item" + (isActive ? " active-nav" : "")
+                                             }
+                                           >
+                                             About
+                                           </NavLink></li>
+                                   <li> <NavLink
+                                             to="/contact"
+                                             className={({ isActive }) =>
+                                               "dropdown-item" + (isActive ? " active-nav" : "")
+                                             }
+                                           >
+                                             Contact
+                                           </NavLink></li>
                                  </ul>
                                </li>
                   <li className="nav-item">
               <form className="d-flex ms-lg-3 align-items-center flex-nowrap">
-                <input
-                  className="form-control form-control-sm"
-                  type="search"
-                  placeholder="Search"
-                  aria-label="Search"
-                />
+                <div style={{ position: 'relative', display: 'inline-block' }}>
+                  <input
+                    className="form-control form-control-sm search-input"
+                    type="search"
+                    placeholder="Search"
+                    aria-label="Search"
+                    style={{ paddingLeft: '2rem' }}
+                  />
+                  <FaSearch
+                    style={{
+                      position: 'absolute',
+                      left: '0.7rem',
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      color: '#FF914D88',
+                      fontSize: '1.2rem'
+                    }}
+                  />
+                </div>
+
                 <button className="btn btn-outline-dark btn-sm ms-2" type="submit">Go</button>
                 {/* PC(큰 화면)에서만 보이는 아이콘 */}
                 <Link

@@ -51,7 +51,7 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #000;
+  /*background-color: #000;*/
   cursor: pointer;
   transition: border-color 0.25s;
 }
@@ -62,7 +62,23 @@ button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
-
+button:active,
+button:focus,
+button:focus-visible {
+  background-color: #fff !important; /* 흰색 또는 원하는 색 */
+  color: #FF914D !important;         /* 오렌지색으로 강조하고 싶으면 */
+  outline: none;
+  box-shadow: none;
+}
+.btn-outline-dark:active,
+.btn-outline-dark:focus,
+.btn-outline-dark:focus-visible {
+  background-color: #FF914D !important; /* 오렌지색 */
+  color: #fff !important;
+  border-color: #FF914D;
+  outline: none;
+  box-shadow: 0 4px 16px rgba(255,145,77,0.12);
+}
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
@@ -72,6 +88,6 @@ button:focus-visible {
     color: #747bff;
   }
   button {
-    background-color: #f9f9f9;
+    background-color: #f9f9f9; !import;
   }
 }
