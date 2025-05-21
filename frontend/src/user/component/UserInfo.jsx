@@ -7,6 +7,8 @@ import UserInfoDetail from './UserInfoDetail';
 import CustomP from '../../common/Ui/CusomP';
 import Button from '../../common/Ui/Button';
 import CustomLabel from '../../common/Ui/CustomLabel';
+import Modal from '../../common/Ui/Modal';
+import Account from './Account';
 
 function UserInfo(props){
   
@@ -15,6 +17,8 @@ function UserInfo(props){
   const [ isDetail, setIsDetail]=useState(false);
   const navigate=useNavigate();
   const [buttonTitle, setButtonTitle] = useState('자세한 정보 보기');
+  const [account,setAccount] = useState(null);
+  const [accountModal, setAccountModal]= useState(false);
 
   const handleInfoClick= async () =>{
     if(!isDetail){
@@ -26,6 +30,42 @@ function UserInfo(props){
       setButtonTitle('자세한 정보 보기');
     }
   }
+
+  const handleAccount = () => {
+    getAccount();
+    setAccountModal(true);
+  }
+  const getAccount = async () => {
+
+    const role=user.role;
+
+    const api = (role === 'SERVICE_PROVIDER') ? 
+      ApiService.accounts.business : 
+      ApiService.accounts.user;
+
+    if(role === 'SERVICE_PROVIDER'){
+      const response = await api(user.petBusinessDTO.id);
+      const data = response.data;
+      
+      if(data.result){
+        alert(data.message);
+        setAccount(data.account);
+      }else{
+        alert(data.message);
+      }
+    }else{
+      const response = await api();
+      const data = response.data;
+      
+      if(data.result){
+        alert(data.message);
+        setAccount(data.account);
+      }else{
+        alert(data.message);
+      }
+    }
+
+  };
 
   const getuserDetailInfo = async (UserId) => {
     try{
@@ -93,6 +133,17 @@ function UserInfo(props){
           title="사업자 관리"
           onClick={()=>navigate("/business/manage")}        
         />
+        }
+        <Button
+          classtext="me-2"
+          type="button"
+          title="정산 계좌"
+          onClick={handleAccount}
+        />
+        {account && accountModal &&
+          <Modal isOpen={accountModal} onClose={()=>setAccountModal(false)}>
+            <Account account={account}/>
+          </Modal>
         }
       </div>
 
