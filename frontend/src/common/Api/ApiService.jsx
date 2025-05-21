@@ -294,6 +294,21 @@ const ApiService = {
       data: dto
     })
   },
+  accounts:{
+    list: (page, size)=>RefreshApi.get(`${API_ENDPOINTS.accounts}/list`,{
+      params:{page, size},
+      headers: createHeaders(),
+      withCredentials: true,
+    }),
+    user: ()=> RefreshApi.get(`${API_ENDPOINTS.accounts}/user`,{
+      headers: createHeaders(),
+      withCredentials: true,
+    }),
+    business: (business_id)=> RefreshApi.get(`${API_ENDPOINTS.accounts}/business/${business_id}`,{
+      headers: createHeaders(),
+      withCredentials: true,
+    })
+  },
   bookmark:{
     register: (bookmarkType, targetId)=> RefreshApi.post(API_ENDPOINTS.bookmarks,
       null,

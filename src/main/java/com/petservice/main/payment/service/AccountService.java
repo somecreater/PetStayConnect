@@ -40,41 +40,77 @@ public class AccountService implements AccountServiceInterface{
   @Override
   @Transactional(readOnly = true)
   public AccountDTO getAccountByUserId(Long user_id) {
-    Account account = accountRepository.findByUser_Id(user_id);
-    return accountMapper.toDTO(account);
+    try {
+      Account account = accountRepository.findByUser_Id(user_id);
+      if (account == null) {
+        return null;
+      }
+      return accountMapper.toDTO(account);
+    }catch (Exception e){
+      log.info(e.getMessage());
+      e.printStackTrace();
+      return null;
+    }
   }
 
   @Override
   @Transactional(readOnly = true)
   public AccountDTO getAccountByUserLoginId(String userLoginId) {
-    Account account = accountRepository.findByUser_UserLoginId(userLoginId);
-    return accountMapper.toDTO(account);
+    try {
+      Account account = accountRepository.findByUser_UserLoginId(userLoginId);
+      if (account == null) {
+        return null;
+      }
+      return accountMapper.toDTO(account);
+    }catch (Exception e){
+      log.info(e.getMessage());
+      e.printStackTrace();
+      return null;
+    }
   }
 
   @Override
   @Transactional(readOnly = true)
   public AccountDTO getAccountByBusinessId(Long business_id) {
-    PetBusiness petBusiness=petBusinessRepository.findById(business_id).orElse(null);
-    if(petBusiness ==null){
+    try {
+      PetBusiness petBusiness = petBusinessRepository.findById(business_id).orElse(null);
+      if (petBusiness == null) {
+        return null;
+      }
+      User user = petBusiness.getUser();
+      Account account = accountRepository.findByUser_Id(user.getId());
+
+      if(account == null){
+        return null;
+      }
+      return accountMapper.toDTO(account);
+    } catch (Exception e) {
+      log.info(e.getMessage());
+      e.printStackTrace();
       return null;
     }
-    User user=petBusiness.getUser();
-    Account account=accountRepository.findByUser_Id(user.getId());
-    return accountMapper.toDTO(account);
   }
 
   @Override
   @Transactional(readOnly = true)
   public AccountDTO getAccountByBusinessRegisterNumber(String register_number) {
-    PetBusiness petBusiness=petBusinessRepository.findByRegistrationNumber(
-        register_number
-    );
-    if(petBusiness ==null){
+    try {
+      PetBusiness petBusiness = petBusinessRepository.findByRegistrationNumber(register_number);
+      if (petBusiness == null) {
+        return null;
+      }
+      User user = petBusiness.getUser();
+      Account account = accountRepository.findByUser_Id(user.getId());
+
+      if(account == null){
+        return null;
+      }
+      return accountMapper.toDTO(account);
+    }catch (Exception e){
+      log.info(e.getMessage());
+      e.printStackTrace();
       return null;
     }
-    User user=petBusiness.getUser();
-    Account account=accountRepository.findByUser_Id(user.getId());
-    return accountMapper.toDTO(account);
   }
 
   @Override

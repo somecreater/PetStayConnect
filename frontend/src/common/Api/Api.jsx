@@ -28,6 +28,7 @@ export const API_ENDPOINTS = {
   businessvalidation: `${API_BASE_URL}/api/validation`,
   reviews: `${API_BASE_URL}/api/reviews`,
   payments: `${API_BASE_URL}/api/payments`,
+  accounts: `${API_BASE_URL}/api/account`,
   bookmarks: `${API_BASE_URL}/api/bookmarks`
 }
 
