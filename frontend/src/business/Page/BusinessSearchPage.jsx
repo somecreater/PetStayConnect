@@ -57,7 +57,10 @@ function BusinessSearchPage(props){
       const resp = await api(search, page, size);
       const data = resp.data;
       if (data.result) {
-        setBusinesses(data.search.content);
+        const items = Array.isArray(data.search)
+        ? data.search
+        : data.search.content;
+        setBusinesses(items);
         setTotalPages(data.totalPages);
       } else {
         alert(data.message);
@@ -86,7 +89,7 @@ function BusinessSearchPage(props){
 
   useEffect(() => {
     getBusinessList();
-  }, [page]);
+  }, [page, size]);
 
   const handleSearchClick = () => {
     setPage(0);
@@ -94,12 +97,11 @@ function BusinessSearchPage(props){
     getBusinessList();
   };
 
-  const goPrevious = () => {
-    setPage(prev => Math.max(0, prev - 1));
-  };
-  const goNext = () => {
-    setPage(prev => Math.min(totalPages - 1, prev + 1));
-  };
+  const goFirst = () => setPage(0);
+  const goPrev = () => setPage(prev => Math.max(0, prev - 1));
+  const goNext = () => setPage(prev => Math.min(totalPages - 1, prev + 1));
+  const goLast = () => setPage(totalPages - 1);
+
 
   return (
     <div className="container py-4">
@@ -183,31 +185,29 @@ function BusinessSearchPage(props){
         <div className="alert alert-info">검색 결과가 없습니다.</div>
       )}
 
-        <nav className="d-flex justify-content-center mt-4">
-          <ul className="pagination">
-            <li className="page-item">
-              <button
-                className="page-link"
-                onClick={goPrevious}
-              >
-                Previous
-              </button>
+      <nav className="d-flex justify-content-center mt-4">
+        <ul className="pagination">
+          <li className={`page-item ${page === 0 ? 'disabled' : ''}`}>
+            <button className="page-link" onClick={goFirst}>« First</button>
+          </li>
+          <li className={`page-item ${page === 0 ? 'disabled' : ''}`}>
+            <button className="page-link" onClick={goPrev}>‹ Prev</button>
+          </li>
+
+          {Array.from({ length: totalPages }, (_, i) => (
+            <li key={i} className={`page-item ${i === page ? 'active' : ''}`}>
+              <button className="page-link" onClick={() => setPage(i)}>{i + 1}</button>
             </li>
-            <li className="page-item disabled">
-              <span className="page-link">
-                {page + 1} / {totalPages}
-              </span>
-            </li>
-            <li className="page-item">
-              <button
-                className="page-link"
-                onClick={goNext}
-              >
-                Next
-              </button>
-            </li>
-          </ul>
-        </nav>
+          ))}
+
+          <li className={`page-item ${page === totalPages - 1 ? 'disabled' : ''}`}>
+            <button className="page-link" onClick={goNext}>Next ›</button>
+          </li>
+          <li className={`page-item ${page === totalPages - 1 ? 'disabled' : ''}`}>
+            <button className="page-link" onClick={goLast}>Last »</button>
+          </li>
+        </ul>
+      </nav>
       
     </div>
   );

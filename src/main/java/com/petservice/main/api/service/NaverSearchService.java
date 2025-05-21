@@ -77,7 +77,7 @@ public class NaverSearchService implements NaverSearchServiceInterface {
       String query = searchKeyword;
       int start = pageable.getPageNumber() * pageable.getPageSize() + 1;
       int display = pageable.getPageSize();
-
+      log.info("페이징 처리: {}   {}", start, display);
       NaverApiResponse apiResponse = null;
 
       UriComponentsBuilder uriBuilder= UriComponentsBuilder
@@ -86,13 +86,14 @@ public class NaverSearchService implements NaverSearchServiceInterface {
           .queryParam("display", display)
           .queryParam("start",start)
           .queryParam("sort","random")
-          .queryParam("category_group_code", String.join(",", PET_CATEGORY_CODES))
-          .encode(Charset.forName("UTF-8"));
+          .queryParam("category_group_code", String.join(",", PET_CATEGORY_CODES));
+
       if(request.isNear() && address!=null){
         uriBuilder.queryParam("x",address.getCorX()).queryParam("y",address.getCorY());
       }
 
-      URI uri= uriBuilder.build().toUri();
+      URI uri= uriBuilder.build(false).encode().toUri();
+      log.info("NAVER URI = {}", uri.toString());
       WebClient webClient= WebClient.builder()
           .defaultHeader("X-Naver-Client-Id", clientId)
           .defaultHeader("X-Naver-Client-Secret", clientSecret)

@@ -3,6 +3,7 @@ package com.petservice.main.payment.service;
 import com.petservice.main.business.database.entity.Reservation;
 import com.petservice.main.business.database.entity.ReservationStatus;
 import com.petservice.main.business.database.repository.ReservationRepository;
+import com.petservice.main.payment.database.dto.AccountDTO;
 import com.petservice.main.payment.database.dto.PaymentCancelRequestDTO;
 import com.petservice.main.payment.database.dto.PaymentDTO;
 import com.petservice.main.payment.database.dto.PaymentRequestDTO;
@@ -19,6 +20,7 @@ import com.siot.IamportRestClient.request.CancelData;
 import com.siot.IamportRestClient.response.IamportResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -43,7 +45,11 @@ public class PaymentService implements PaymentServiceInterface{
   private final UserRepository userRepository;
   private final PaymentMapper paymentMapper;
 
+  private final AccountServiceInterface accountService;
   private final IamportClient iamportClient;
+
+  @Value("${payment.service.fee-rate}")
+  private BigDecimal serviceFeeRate;
 
   @Override
   @Transactional(readOnly = true)
@@ -94,20 +100,33 @@ public class PaymentService implements PaymentServiceInterface{
       return null;
     }
     User user = reservation.getUser();
+    AccountDTO consumer_account = accountService.getAccountByUserId(user.getId());
+    AccountDTO business_account = accountService.getAccountByBusinessId(
+        reservation.getPetBusiness().getId());
+    AccountDTO manager_account = accountService.getMasterAccount();
 
-    reservation.setStatus(ReservationStatus.CONFIRMED);
+    BigDecimal amount = dto.getAmount();
+    BigDecimal fee = amount.multiply(serviceFeeRate);
+
     payment.setReservation(reservation);
     payment.setImpUid(dto.getImpUid());
     payment.setMerchantUid(dto.getMerchantUid());
-    payment.setAmount(dto.getAmount());
-    payment.setFeeRate(payment.getFeeRate());
-    payment.setServiceFee(dto.getAmount().multiply(payment.getFeeRate()));
+    payment.setAmount(amount);
+    payment.setFeeRate(serviceFeeRate);
+    payment.setServiceFee(fee);
     payment.setPaymentMethod(dto.getPayMethod());
+
     if(!Objects.equals(dto.getPayMethod(), "vbank")) {
       payment.setPaymentStatus(PaymentStatus.PAID);
-      int addPoint= dto.getAmount().multiply(payment.getFeeRate()).intValue();
-      user.setPoint(user.getPoint()+addPoint);
+      reservation.setStatus(ReservationStatus.CONFIRMED);
+      user.setPoint(user.getPoint() + fee.intValue());
+
+      accountService.updateAccount(consumer_account.getId(), amount.negate().intValue());
+      accountService.updateAccount(business_account.getId(), amount.subtract(fee).intValue());
+      accountService.updateAccount(manager_account.getId(), fee.intValue());
+
       reservationRepository.save(reservation);
+      userRepository.save(user);
     }else{
       payment.setPaymentStatus(
         "ready".equalsIgnoreCase(dto.getStatus()) ? PaymentStatus.READY : PaymentStatus.FAILED
@@ -119,7 +138,6 @@ public class PaymentService implements PaymentServiceInterface{
     payment.setRefundStatus(RefundStatus.NONE);
     payment.setRefundAmount(BigDecimal.ZERO);
 
-    userRepository.save(user);
     saved = paymentRepository.save(payment);
     return paymentMapper.toDTO(saved);
   }
@@ -133,21 +151,30 @@ public class PaymentService implements PaymentServiceInterface{
     }
     Payment saved;
     User user=payment.getReservation().getUser();
-
+    AccountDTO consumer_account = accountService.getAccountByUserId(user.getId());
+    AccountDTO business_account = accountService.getAccountByBusinessId(
+        payment.getReservation().getPetBusiness().getId());
+    AccountDTO master_account = accountService.getMasterAccount();
     Reservation reservation= payment.getReservation();
     if("paid".equalsIgnoreCase(status)) {
       payment.setPaymentStatus(PaymentStatus.PAID);
-      int addPoint= payment.getAmount().multiply(payment.getFeeRate()).intValue();
-      user.setPoint(user.getPoint()+addPoint);
       reservation.setStatus(ReservationStatus.CONFIRMED);
+      reservationRepository.save(reservation);
+
+      BigDecimal amount = payment.getAmount();
+      BigDecimal fee = payment.getServiceFee();
+      accountService.updateAccount(consumer_account.getId(), amount.negate().intValue());
+      accountService.updateAccount(business_account.getId(), amount.subtract(fee).intValue());
+      accountService.updateAccount(master_account.getId(), fee.intValue());
+
+      user.setPoint(user.getPoint() + fee.intValue());
+      userRepository.save(user);
 
     }else if ("failed".equalsIgnoreCase(status)
         || "cancelled".equalsIgnoreCase(status)) {
       // 입금 실패 혹은 기한 만료
       payment.setPaymentStatus(PaymentStatus.FAILED);
     }
-    reservationRepository.save(reservation);
-    userRepository.save(user);
     saved=paymentRepository.save(payment);
     return paymentMapper.toDTO(saved);
   }
@@ -170,10 +197,18 @@ public class PaymentService implements PaymentServiceInterface{
 
     Reservation reservation=reservationRepository.findById(exPayment.getReservation().getId())
         .orElse(null);
-    User user= Objects.requireNonNull(reservation).getUser();
-    int point =user.getPoint();
-    int serviceFee=exPayment.getServiceFee().intValue();
-    if(point < serviceFee){
+    if(reservation == null){
+      throw new RuntimeException("예약이 존재하지 않습니다.");
+    }
+
+    User user= reservation.getUser();
+    AccountDTO consumerAccount= accountService.getAccountByUserId(user.getId());
+    AccountDTO businessAccount= accountService.getAccountByBusinessId(
+        reservation.getPetBusiness().getId());
+    AccountDTO masterAccount= accountService.getMasterAccount();
+
+    BigDecimal fee = exPayment.getServiceFee();
+    if(user.getPoint() < fee.intValue()){
       exPayment.setRefundStatus(RefundStatus.REJECTED);
       paymentRepository.save(exPayment);
       throw new IllegalStateException("포인트 부족");
@@ -195,12 +230,16 @@ public class PaymentService implements PaymentServiceInterface{
 
     com.siot.IamportRestClient.response.Payment cancelled = iamportResponse.getResponse();
 
-    int rawCancel = cancelled.getCancelAmount().intValue();
-    BigDecimal cancelledAmount = BigDecimal.valueOf((long) rawCancel);
+    BigDecimal cancelledAmt = BigDecimal.valueOf(
+        cancelled.getCancelAmount().longValue());
     exPayment.setRefundStatus(RefundStatus.COMPLETED);
-    exPayment.setRefundAmount(cancelledAmount);
+    exPayment.setRefundAmount(cancelledAmt);
     exPayment.setPaymentStatus(PaymentStatus.CANCELED);
-    user.setPoint(user.getPoint() - serviceFee);
+
+    accountService.updateAccount(consumerAccount.getId(), cancelledAmt.intValue());
+    accountService.updateAccount(businessAccount.getId(), cancelledAmt.subtract(fee).negate().intValue());
+    accountService.updateAccount(masterAccount.getId(), fee.negate().intValue());
+    user.setPoint(user.getPoint() - fee.intValue());
 
     paymentRepository.save(exPayment);
     userRepository.save(user);

@@ -82,6 +82,7 @@ public class PetBusinessController {
       result.put("message","검색 쿼리: " + SearchRequest);
       result.put("search", petBusinessDTOS);
       result.put("totalPages",petBusinessDTOS.getTotalPages());
+      result.put("currentPage", petBusinessDTOS.getNumber());
     }
 
     return ResponseEntity.ok(result);
@@ -95,7 +96,7 @@ public class PetBusinessController {
       @ModelAttribute NaverSearchRequest request,
       @RequestParam(defaultValue = "0") int page,
       @RequestParam(defaultValue = "5") int size ){
-
+    log.info("page: {} size: {}", page,size);
     Map<String,Object> result = new HashMap<>();
     Pageable pageable= PageRequest.of(page, size);
 
@@ -122,6 +123,9 @@ public class PetBusinessController {
       result.put("search", petBusinessDTOS);
       result.put("totalPages",petBusinessDTOS.getTotalPages());
       result.put("totalElements",petBusinessDTOS.getTotalElements());
+      result.put("currentPage", petBusinessDTOS.getNumber());
+      log.info("{}    {}     {}     {}",
+          petBusinessDTOS.getTotalPages(),petBusinessDTOS.getTotalElements(),petBusinessDTOS.getNumber(),SearchRequest);
     }
 
     return ResponseEntity.ok(result);
