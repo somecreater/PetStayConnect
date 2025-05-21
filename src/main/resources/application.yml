@@ -97,3 +97,7 @@ iamport:
     secret: ${IAMPORT_API_SECRET:""}
   webhook:
     url: ${IAMPORT_API_WEBHOOK:""}
+
+payment:
+  service:
+    fee-rate: ${SERVICE_FEE_RATE:0.05}

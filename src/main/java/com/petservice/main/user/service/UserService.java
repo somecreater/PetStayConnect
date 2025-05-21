@@ -7,6 +7,9 @@ import com.petservice.main.business.database.entity.Varification;
 import com.petservice.main.business.database.mapper.PetBusinessMapper;
 import com.petservice.main.business.database.repository.PetBusinessTypeRepository;
 import com.petservice.main.business.service.Interface.PetBusinessServiceInterface;
+import com.petservice.main.payment.database.entity.Account;
+import com.petservice.main.payment.database.entity.AccountType;
+import com.petservice.main.payment.database.repository.AccountRepository;
 import com.petservice.main.user.database.dto.CustomUserDetails;
 import com.petservice.main.user.database.dto.UserDTO;
 import com.petservice.main.user.database.entity.Role;
@@ -26,6 +29,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
@@ -37,6 +41,7 @@ public class UserService implements CustomUserServiceInterface, UserDetailsServi
 
   private final UserRepository userRepository;
   private final PetBusinessTypeRepository typeRepository;
+  private final AccountRepository accountRepository;
   private final PasswordEncoder passwordEncoder;
 
   private final PetBusinessServiceInterface petBusinessServiceInterface;
@@ -60,7 +65,7 @@ public class UserService implements CustomUserServiceInterface, UserDetailsServi
   @Transactional
   public UserDTO registerUser(UserDTO userDTO){
     User user=null;
-
+    Account account=new Account();
     if(!UserValidation(userDTO)){
       throw new IllegalArgumentException("Data is not valid");
     }
@@ -87,9 +92,14 @@ public class UserService implements CustomUserServiceInterface, UserDetailsServi
         newuser.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         user = userRepository.save(newuser);
 
+        account.setAmount(BigDecimal.ZERO);
+        account.setUser(user);
+        account.setAccountType(AccountType.PROVIDER);
+        Account insert=accountRepository.save(account);
+
         petBusinessDTO.setUserId(user.getId());
         PetBusinessDTO InsertBusiness=petBusinessServiceInterface.registerBusiness(petBusinessDTO);
-        if (InsertBusiness == null) {
+        if (insert.getId() == null || InsertBusiness == null) {
           throw new IllegalArgumentException("Business Information Invalid!!");
         }
         user.setPetBusiness(petBusinessMapper.toEntity(InsertBusiness));
@@ -98,6 +108,14 @@ public class UserService implements CustomUserServiceInterface, UserDetailsServi
         User newuser = userMapper.toEntity(userDTO);
         newuser.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         user = userRepository.save(newuser);
+        account.setAmount(BigDecimal.ZERO);
+        account.setUser(user);
+        account.setAccountType(AccountType.CONSUMER);
+        Account insert=accountRepository.save(account);
+
+        if(insert.getId() == null){
+          throw new IllegalArgumentException("Account Information Invalid!!");
+        }
       }
     }catch (Exception e){
       log.info(e.getMessage());
@@ -107,12 +125,13 @@ public class UserService implements CustomUserServiceInterface, UserDetailsServi
     return userMapper.toBasicDTO(user);
   }
 
-  //관리자 회원 가입
+  //관리자 회원 가입(최초 1회만 실행 가능하도록 추후 설정)
   @Override
   @Transactional
   public UserDTO registerMasterUser(UserDTO userDTO){
 
     User user=null;
+    Account account=new Account();
     if(userDTO == null){
       throw new IllegalArgumentException("Data is not valid");
     }
@@ -137,6 +156,14 @@ public class UserService implements CustomUserServiceInterface, UserDetailsServi
     User newuser = userMapper.toEntity(userDTO);
     newuser.setPassword(passwordEncoder.encode(userDTO.getPassword()));
     user = userRepository.save(newuser);
+
+    account.setAmount(BigDecimal.ZERO);
+    account.setUser(user);
+    account.setAccountType(AccountType.SERVER);
+    Account insert=accountRepository.save(account);
+    if(insert.getId() == null){
+      throw new IllegalArgumentException("서버 정산계좌가 생성되지 않았습니다.");
+    }
     return userMapper.toBasicDTO(user);
   }
 
@@ -269,22 +296,22 @@ public class UserService implements CustomUserServiceInterface, UserDetailsServi
 
     if(userOptional.isPresent()){
       User delete=userOptional.get();
+      Account account=accountRepository.findByUser_Id(delete.getId());
       if(!passwordEncoder.matches(Password,delete.getPassword())) {
-
         return false;
-
       }else{
         //회원의 사업자 정보, 북마크, 펫 정보 삭제(자동)
         if(delete.getRole().equals(Role.SERVICE_PROVIDER)){
 
-          if(!petBusinessServiceInterface.deleteBusiness(delete.getId())||
-          userRepository.deleteByUserLoginId(delete.getUserLoginId())<=0){
+          if(!petBusinessServiceInterface.deleteBusiness(delete.getId())
+              || userRepository.deleteByUserLoginId(delete.getUserLoginId())<=0){
             throw new RuntimeException("회원 탈퇴가 비정상적으로 실행되었습니다." +
                 " 다시 시도하거나 관리자에게 문의하세요!!");
           }
-
+          accountRepository.delete(account);
         }else {
           userRepository.deleteByUserLoginId(delete.getUserLoginId());
+          accountRepository.delete(account);
         }
 
       }
