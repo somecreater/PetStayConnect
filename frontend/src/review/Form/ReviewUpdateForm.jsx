@@ -1,73 +1,68 @@
-// src/review/Form/ReviewUpdateForm.jsx
 import React, { useState } from 'react';
+import StarRating from '../Component/StarRating';
 import ApiService from '../../common/Api/ApiService';
-import TextInput from '../../common/Ui/TextInput';
 import Button from '../../common/Ui/Button';
 
 export default function ReviewUpdateForm({ review, onSuccess, onCancel }) {
-  const [form, setForm] = useState({
-    rating: review.rating,
-    content: review.content,
-  });
-  const [error, setError] = useState(null);
+  const [rating, setRating] = useState(review.rating);
+  const [content, setContent] = useState(review.content);
 
-  const handleChange = e => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(null);
     try {
       await ApiService.reviews.update(review.id, {
-        id: review.id,
-        rating: Number(form.rating),
-        content: form.content,
+        rating: rating,
+        content: content,
+        petBusinessName: review.petBusinessName,
+        petBusinessLocation: review.petBusinessLocation,
+        reservationId: review.reservationId,
+        reportCount: review.reportCount,
+        userId: review.userId,
       });
       onSuccess();
-    } catch (err) {
-      setError(err.response?.data?.message || '리뷰 수정 중 오류가 발생했습니다.');
+    } catch {
+      alert('수정에 실패했습니다.');
     }
   };
 
   return (
-    <div className="container py-4">
-      <form onSubmit={handleSubmit} className="card p-4">
-        <h5 className="card-title mb-3">리뷰 수정</h5>
+    <form onSubmit={handleSubmit} className="card p-4 bg-light">
+      <h5 className="mb-3 text-center">리뷰 수정</h5>
 
-        {error && <div className="alert alert-danger">{error}</div>}
-
-        <div className="mb-3">
-          <label htmlFor="rating" className="form-label">평점</label>
-          <input
-            type="number"
-            id="rating"
-            name="rating"
-            className="form-control"
-            value={form.rating}
-            onChange={handleChange}
-            min="1"
-            max="5"
+      <div className="mb-3">
+        <label className="form-label">평점</label>
+        <div>
+          <StarRating
+            rating={rating}
+            onChange={(newRating) => setRating(newRating)}
           />
         </div>
+      </div>
 
-        <div className="mb-3">
-          <label htmlFor="content" className="form-label">리뷰 내용</label>
-          <textarea
-            id="content"
-            name="content"
-            className="form-control"
-            value={form.content}
-            onChange={handleChange}
-            rows="4"
-          />
-        </div>
+      <div className="mb-3">
+        <label className="form-label">리뷰 내용</label>
+        <textarea
+          className="form-control"
+          rows={8}
+          style={{ minHeight: '200px' }}
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+        />
+      </div>
 
-        <div className="d-flex gap-2">
-          <Button type="submit" title="저장" classtext="btn btn-success" />
-          <Button type="button" title="취소" onClick={onCancel} classtext="btn btn-secondary" />
-        </div>
-      </form>
-    </div>
+      <div className="text-end">
+        <Button
+          type="submit"
+          classtext="btn btn-success me-2"
+          title="저장"
+        />
+        <Button
+          type="button"
+          classtext="btn btn-secondary"
+          title="취소"
+          onClick={onCancel}
+        />
+      </div>
+    </form>
   );
 }

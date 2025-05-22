@@ -73,7 +73,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Transactional(readOnly = true)
     public java.util.List<ReviewDTO> getMyReviews(String userLoginId) {
         return reviewRepository.findAllByUser_UserLoginId(userLoginId).stream()
-                .map(reviewMapper::toBasicDTO)
+                .map(reviewMapper::toDTO)
                 .toList();
     }
 
@@ -105,6 +105,14 @@ public class ReviewServiceImpl implements ReviewService {
         if (!review.getUser().getUserLoginId().equals(userLoginId)) {
             throw new AccessDeniedException("본인의 리뷰만 삭제할 수 있습니다.");
         }
+
+        // --- 연관관계 끊기(주인 아닌 쪽: Reservation.review) ---
+        Reservation reservation = review.getReservation();
+        if (reservation != null) {
+            reservation.setReview(null);
+            reservationRepository.save(reservation);
+        }
+
 
         reviewRepository.delete(review);
     }
