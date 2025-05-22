@@ -17,9 +17,10 @@ export default function Header() {
 
 
     // 2. 로그아웃 버튼 클릭 시 실행할 함수 선언
- const handleLogout = async () => {  // async 추가
+ const handleLogout = async (e) => {  // async 추가
         try {
             // 3. 서버에 로그아웃 요청
+            e.preventDefault();  
             const response = await ApiService.userService.logout();
 
             if (response.data.result) {
@@ -210,6 +211,7 @@ export default function Header() {
                 {/* PC에서만 보이는 로그인/로그아웃 버튼 추가*/}
                   {user?.id ? (
                     <button
+                      type="button"
                       className="btn btn-outline-dark ms-2 d-none d-lg-block"
                       onClick={handleLogout}
                     >
