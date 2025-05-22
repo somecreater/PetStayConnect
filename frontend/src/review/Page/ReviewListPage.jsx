@@ -1,55 +1,71 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import ApiService from '../../common/Api/ApiService';
 import Button from '../../common/Ui/Button';
+import ReviewItem from '../Component/ReviewItem';
 
 export default function ReviewListPage() {
-    console.log('ApiService ▶', ApiService);
-
-  const [reviews, setReviews] = useState([]);
   const navigate = useNavigate();
+  const location = useLocation();
+  const [reviews, setReviews] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState(null);
 
-  const loadReviews = async () => {
-    try {
-      const res = await ApiService.reviews.list();
-     console.log('▶ review API res.data:', res.data);
-
-      setReviews(res.data);
-    } catch (error) {
-      console.error('Failed to load reviews', error);
-    }
+  // 1) 목록을 가져오는 함수로 분리
+  const loadReviews = () => {
+    setLoading(true);
+    ApiService.reviews
+      .list({ page: 0, size: 50 })
+      .then(res => {
+        const list = Array.isArray(res.data) ? res.data : res.data.reviews;
+        setReviews(list || []);
+      })
+      .catch(() => setFetchError('리뷰 목록을 불러오는 데 실패했습니다.'))
+      .finally(() => setLoading(false));
   };
 
+  // 2) 빈 deps 배열로 컴포넌트 마운트 시, 그리고 다시 돌아왔을 때마다 호출
   useEffect(() => {
     loadReviews();
-  }, []);
+  }, [location]);
+
+
+  const deleteReview = id => {
+      if (!window.confirm('정말 이 리뷰를 삭제하시겠습니까?')) return;
+      ApiService.reviews
+        .delete(id)
+        .then(() => {
+          loadReviews();  // ← 여기서 목록을 다시 불러옵니다
+        })
+        .catch(err => {
+          console.error('삭제 실패', err);
+          alert('삭제 중 오류가 발생했습니다.');
+        });
+  };
+
+  if (loading) return <p className="container py-4">로딩 중…</p>;
+  if (fetchError) return <div className="container py-4"><div className="alert alert-danger">{fetchError}</div></div>;
 
   return (
-    <div className="container py-4">
-      <div className="d-flex justify-content-between align-items-center mb-3">
-        <h2 className="mb-0">나의 리뷰</h2>
+    <div className="container py-5">
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <h1 className="h3 mb-0">리뷰 목록</h1>
         <Button
-          type="button"
-          title="리뷰 작성"
-          classtext="btn btn-primary"
+          title="+ 새 리뷰 작성"
           onClick={() => navigate('/reviews/register')}
+          classtext="btn btn-primary"
         />
       </div>
 
       {reviews.length > 0 ? (
-        <ul className="list-group">
-          {reviews.map(r => (
-            <li key={r.id} className="list-group-item d-flex justify-content-between align-items-center">
-              <Link to={`/reviews/${r.id}`} className="text-decoration-none">
-                {r.petBusinessName} – 평점: {r.rating}
-              </Link>
-              <span className="text-muted">{new Date(r.createdAt).toLocaleDateString()}</span>
-            </li>
-          ))}
-        </ul>
+        reviews.map(r => (
+          <ReviewItem key={r.id} review={r} />
+        ))
       ) : (
         <div className="alert alert-info">등록된 리뷰가 없습니다.</div>
       )}
     </div>
   );
+
 }

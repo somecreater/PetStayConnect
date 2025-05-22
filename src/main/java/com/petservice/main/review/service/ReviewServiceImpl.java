@@ -73,7 +73,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Transactional(readOnly = true)
     public java.util.List<ReviewDTO> getMyReviews(String userLoginId) {
         return reviewRepository.findAllByUser_UserLoginId(userLoginId).stream()
-                .map(reviewMapper::toBasicDTO)
+                .map(reviewMapper::toDTO)
                 .toList();
     }
 
@@ -106,7 +106,7 @@ public class ReviewServiceImpl implements ReviewService {
             throw new AccessDeniedException("본인의 리뷰만 삭제할 수 있습니다.");
         }
 
-        reviewRepository.delete(review);
+        reviewRepository.deleteById(reviewId);
     }
 }
 

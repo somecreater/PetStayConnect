@@ -1,5 +1,7 @@
 package com.petservice.main.review.database.mapper;
 
+import com.petservice.main.business.database.entity.PetBusiness;
+import com.petservice.main.business.database.entity.Reservation;
 import com.petservice.main.business.database.repository.ReservationRepository;
 import com.petservice.main.review.database.dto.ReviewDTO;
 import com.petservice.main.review.database.entity.Review;
@@ -39,6 +41,7 @@ public class ReviewMapper {
     public ReviewDTO toDTO(Review entity) {
         ReviewDTO dto = new ReviewDTO();
         dto.setId(entity.getId());
+        dto.setUserLoginId(entity.getUser().getUserLoginId());
         dto.setRating(entity.getRating());
         dto.setContent(entity.getContent());
         dto.setReportCount(entity.getReportCount());
@@ -52,7 +55,16 @@ public class ReviewMapper {
         }
 //         FK: reservation
         if (entity.getReservation() != null) {
-            dto.setReservationId(entity.getReservation().getId());
+            Reservation res = entity.getReservation();
+            dto.setReservationId(res.getId());
+
+
+            PetBusiness pb = entity.getReservation().getPetBusiness();
+            if (pb != null) {
+              dto.setPetBusinessName(pb.getBusinessName());
+              dto.setPetBusinessLocation(pb.getCity() + " " + pb.getTown());
+
+           }
         }
         return dto;
     }

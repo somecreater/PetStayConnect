@@ -2,7 +2,7 @@ import React from 'react';
 import ApiService from '../../common/Api/ApiService';
 import Button from '../../common/Ui/Button';
 
-export default function ReviewDeleteButton({ reviewId, onDeleted }) {
+export default function ReviewDeleteButton({ reviewId, onClick, onDeleted }) {
   const handleDelete = async () => {
     try {
       await ApiService.reviews.delete(reviewId);

@@ -9,6 +9,7 @@ public class ReviewDTO {
     private Long id;
     private Long reservationId;
     private Long userId;
+    private String userLoginId;
     private Integer rating;
     private String content;
     private Integer reportCount;
