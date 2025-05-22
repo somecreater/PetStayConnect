@@ -4,6 +4,7 @@ import com.petservice.main.review.database.dto.ReviewDTO;
 import com.petservice.main.review.service.ReviewService;
 import com.petservice.main.user.database.dto.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -12,14 +13,14 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
+@Slf4j
 @RestController
 @RequestMapping("/api/reviews")
 @RequiredArgsConstructor
 public class ReviewController {
 
     private final ReviewService reviewService;
-    private static final Logger log = LoggerFactory.getLogger(ReviewController.class);
+
 
 
     @GetMapping
