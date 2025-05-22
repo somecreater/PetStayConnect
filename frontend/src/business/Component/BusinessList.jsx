@@ -31,14 +31,14 @@ function BusinessList({List, isReservation, petList }){
             <div className="card h-100">
               <div className="card-body d-flex flex-column">
                 <Business businesssDTO={business} />
-                {isReservation && (
+                {(isReservation && business.id) ? (
                   <button
                     className="btn btn-primary mt-auto"
                     onClick={() => openModal(business)}
                   >
                     예약하기
                   </button>
-                )}
+                ):<div className="alert alert-info">외부 데이터여서 예약이 불가능합니다.</div>}
               </div>
             </div>
           </div>
