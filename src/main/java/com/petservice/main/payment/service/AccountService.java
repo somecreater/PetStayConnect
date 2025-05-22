@@ -152,7 +152,8 @@ public class AccountService implements AccountServiceInterface{
     if (account == null) return null;
 
     BigDecimal newAmount = account.getAmount().add(BigDecimal.valueOf(amount));
-    if (newAmount.compareTo(BigDecimal.ZERO) < 0) {
+    if (newAmount.compareTo(BigDecimal.ZERO) < 0
+        && account.getAccountType() != AccountType.CONSUMER) {
       return null;
     }
     account.setAmount(newAmount);
