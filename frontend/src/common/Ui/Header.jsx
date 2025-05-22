@@ -109,67 +109,93 @@ export default function Header() {
                 Home
               </NavLink>
             </li>
-             <li className="nav-item">
-               <NavLink
-                 to="/user/reservations"
-                 className={({ isActive }) =>
-                   "nav-link" + (isActive ? " active-nav" : "")
-                 }
-               >
-                 Reservation
-               </NavLink>
-             </li>
+            <li className="nav-item">
+              <NavLink
+                to="/user/reservations"
+                className={({ isActive }) =>
+                  "nav-link" + (isActive ? " active-nav" : "")
+                }
+              >
+                Reservation
+              </NavLink>
+            </li>
 
             <li className="nav-item">
-                 <NavLink
-                   to="/business/list"
-                   className={({ isActive }) =>
-                     "nav-link" + (isActive ? " active-nav" : "")
-                   }
-                 >
-                   Search
-                 </NavLink>
-                  </li>
-                  <li className="nav-item">
-                   <NavLink
-                     to="/type/list"
-                     className={({ isActive }) =>
-                       "nav-link" + (isActive ? " active-nav" : "")
-                     }
-                   >
-                     Type
-                   </NavLink>
-                  </li>
-                  <li className="nav-item dropdown">
-                                 <a
-                                   className={`nav-link dropdown-toggle ${isServiceActive ? " active-nav" : ""}`}
-                                   href="#!"
-                                   id="servicesMenu"
-                                   role="button"
-                                   data-bs-toggle="dropdown"
-                                   aria-expanded="false"
-                                 >
-                                   Services
-                                 </a>
-                                 <ul className="dropdown-menu" aria-labelledby="servicesMenu">
-                                   <li> <NavLink
-                                             to="/about"
-                                             className={({ isActive }) =>
-                                               "dropdown-item" + (isActive ? " active-nav" : "")
-                                             }
-                                           >
-                                             About
-                                           </NavLink></li>
-                                   <li> <NavLink
-                                             to="/contact"
-                                             className={({ isActive }) =>
-                                               "dropdown-item" + (isActive ? " active-nav" : "")
-                                             }
-                                           >
-                                             Contact
-                                           </NavLink></li>
-                                 </ul>
-                               </li>
+              <NavLink
+                to="/reviews"
+                className={({ isActive }) =>
+                  "nav-link" + (isActive ? " active-nav" : "")
+                }
+              >
+                Review
+              </NavLink>
+            </li>
+            
+            <li className="nav-item">
+              <NavLink
+                to="/qnas"
+                className={({ isActive }) =>
+                  "nav-link" + (isActive ? " active-nav" : "")
+                }
+              >
+                Q&A
+              </NavLink>
+            </li>
+
+            <li className="nav-item">
+              <NavLink
+                to="/business/list"
+                className={({ isActive }) =>
+                "nav-link" + (isActive ? " active-nav" : "")
+                }
+              >
+                Search
+              </NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink
+                to="/type/list"
+                className={({ isActive }) =>
+                "nav-link" + (isActive ? " active-nav" : "")
+                }
+              >
+                Type
+              </NavLink>
+            </li>
+            <li className="nav-item dropdown">
+              <a
+                className={`nav-link dropdown-toggle ${isServiceActive ? " active-nav" : ""}`}
+                href="#!"
+                id="servicesMenu"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Services
+              </a>
+              <ul className="dropdown-menu" aria-labelledby="servicesMenu">
+                <li> 
+                  <NavLink
+                    to="/about"
+                    className={({ isActive }) =>
+                    "dropdown-item" + (isActive ? " active-nav" : "")
+                    }
+                  >
+                    About
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to="/contact"
+                    className={({ isActive }) =>
+                      "dropdown-item" + (isActive ? " active-nav" : "")
+                    }
+                  >
+                    Contact
+                  </NavLink>
+                </li>
+              </ul>
+            </li>
                   <li className="nav-item">
               <form className="d-flex ms-lg-3 align-items-center flex-nowrap">
                 <div style={{ position: 'relative', display: 'inline-block' }}>
