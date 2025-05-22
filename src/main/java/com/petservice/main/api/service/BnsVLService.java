@@ -1,6 +1,5 @@
 package com.petservice.main.api.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.petservice.main.api.database.dto.BnsVLRequest;
 import com.petservice.main.api.database.dto.BnsVLRequestList;
 import com.petservice.main.api.database.dto.BnsVLResponse;
@@ -13,17 +12,14 @@ import com.petservice.main.api.service.Interface.BnsVLServiceInterface;
 import com.petservice.main.business.database.entity.PetBusiness;
 import com.petservice.main.business.database.entity.Varification;
 import com.petservice.main.business.database.repository.PetBusinessRepository;
-import com.petservice.main.user.database.repository.UserRepository;
+import com.petservice.main.common.service.MailServiceInterface;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.net.URI;
@@ -39,9 +35,9 @@ public class BnsVLService implements BnsVLServiceInterface {
   @Value("${business.api.base-url}") private String baseUrl;
   @Value("${business.api.secret-key}") private String secretKey;
 
-  private final WebClient webClient;
+  private final MailServiceInterface mailService;
 
-  private final JavaMailSender mailSender;
+  private final WebClient webClient;
 
   private final BnsVLRequestRepository bnsVLRequestRepository;
   private final PetBusinessRepository petBusinessRepository;
@@ -55,9 +51,18 @@ public class BnsVLService implements BnsVLServiceInterface {
 
     //이미 요청이 존재할시 중복으로 저장하면 안된다.
     if(!bnsVLRequestRepository.findByBno(RegisterNumber).isEmpty()){
-      log.info("요청 핵심 정보: {}   {}   {}",bnsVLRequest.getBNo(),bnsVLRequest.getStartDt(), bnsVLRequest.getPNm());
+      log.info("요청 핵심 정보(이미 DB에 저장됨): {}   {}   {}"
+          ,bnsVLRequest.getBNo(),bnsVLRequest.getStartDt(), bnsVLRequest.getPNm());
       return null;
     }
+    //이미 해당 사업자 번호가 서비스 내부에서 인증된 번호면 더 인증하면 안된다.
+    if(petBusinessRepository.existByRegistrationNumberAndVarification(
+        RegisterNumber, Varification.ISVARIFICATED)){
+      log.info("요청 핵심 정보(이미 등록된 정보): {}   {}   {}"
+          ,bnsVLRequest.getBNo(),bnsVLRequest.getStartDt(), bnsVLRequest.getPNm());
+      return null;
+    }
+
     log.info("요청 핵심 정보: {}   {}   {}",bnsVLRequest.getBNo(),bnsVLRequest.getStartDt(), bnsVLRequest.getPNm());
     BnsVLRequestEntity requestEntity=bnsVLRequestMapper.toEntity(bnsVLRequest);
     requestEntity.setEmail(email);
@@ -117,7 +122,7 @@ public class BnsVLService implements BnsVLServiceInterface {
                 ", 개업 일자: " + bnsVLResult.getStartDt() +
                 ", 사업자 번호: " + bnsVLResult.getBNo() +
                 " 실제 사업자임이 확인되었습니다 ^^";
-            sendAlertMail(toMail, subject, content);
+            mailService.sendMail(toMail, subject, content);
           }catch (Exception e){
             e.printStackTrace();
             log.error("메일 발송 실패!! {}", e.getMessage());
@@ -143,7 +148,7 @@ public class BnsVLService implements BnsVLServiceInterface {
                 ", 사업자 번호: " + bnsVLResult.getBNo() +
                 " 등의 정보들을 다시 확인해주세요!!" +
                 " 자동으로 1회 더 사업자 인증을 시도 합니다";
-            sendAlertMail(toMail, subject, content);
+            mailService.sendMail(toMail, subject, content);
           } catch (Exception e) {
             e.printStackTrace();
             log.error("메일 발송 실패!! {}", e.getMessage());
@@ -199,7 +204,7 @@ public class BnsVLService implements BnsVLServiceInterface {
                 ", 개업 일자: " + bnsVLResult.getStartDt() +
                 ", 사업자 번호: " + bnsVLResult.getBNo() +
                 " 실제 사업자임이 확인되었습니다 ^^";
-            sendAlertMail(toMail, subject, content);
+            mailService.sendMail(toMail, subject, content);
           }catch (Exception e){
             e.printStackTrace();
             log.error("메일 발송 실패!! {}", e.getMessage());
@@ -226,7 +231,7 @@ public class BnsVLService implements BnsVLServiceInterface {
               + ", 사업자 번호: " + bnsVLResult.getBNo()
               + " 등의 정보들을 다시 확인해주세요!!"
               + " 자동으로 1회 더 사업자 인증을 시도 합니다";
-            sendAlertMail(toMail, subject, content);
+            mailService.sendMail(toMail, subject, content);
 
             bnsVLRequestEntity.setStatus(RequestStatus.NONE);
             bnsVLRequestRepository.save(bnsVLRequestEntity);
@@ -246,7 +251,7 @@ public class BnsVLService implements BnsVLServiceInterface {
           String content =
               "서버 상의 문제입니다!!!" +
                   " 저장된 요청이 데이터 베이스에서 삭제됩니다!!";
-          sendAlertMail(toMail, subject, content);
+          mailService.sendMail(toMail, subject, content);
         }catch (Exception e){
           e.printStackTrace();
           log.error("메일 발송 실패!! {}", e.getMessage());
@@ -294,7 +299,7 @@ public class BnsVLService implements BnsVLServiceInterface {
                 ", 개업 일자: " + bnsVLResult.getStartDt() +
                 ", 사업자 번호: " + bnsVLResult.getBNo() +
                 " 실제 사업자임이 확인되었습니다 ^^";
-            sendAlertMail(toMail, subject, content);
+            mailService.sendMail(toMail, subject, content);
           }catch (Exception e){
             e.printStackTrace();
             log.error("메일 발송 실패!! {}", e.getMessage());
@@ -315,7 +320,7 @@ public class BnsVLService implements BnsVLServiceInterface {
                 ", 사업자 번호: " + bnsVLResult.getBNo() +
                 " 등의 정보들을 다시 확인해주세요!!" +
                 " 저장된 요청이 데이터 베이스에서 삭제됩니다!!";
-            sendAlertMail(toMail, subject, content);
+            mailService.sendMail(toMail, subject, content);
           }catch (Exception e){
             e.printStackTrace();
             log.error("메일 발송 실패!! {}", e.getMessage());
@@ -333,7 +338,7 @@ public class BnsVLService implements BnsVLServiceInterface {
           String content =
               "서버 상의 문제입니다!!!" +
               " 저장된 요청이 데이터 베이스에서 삭제됩니다!!";
-          sendAlertMail(toMail, subject, content);
+          mailService.sendMail(toMail, subject, content);
         }catch (Exception e){
           e.printStackTrace();
           log.error("메일 발송 실패!! {}", e.getMessage());
@@ -370,18 +375,6 @@ public class BnsVLService implements BnsVLServiceInterface {
     BnsVLResponse response = webClient.post().uri(uri).bodyValue(payload)
           .retrieve().bodyToMono(BnsVLResponse.class).block();
     return response;
-  }
-
-  @Override
-  //사업자 인증 관련 메일 전송
-  public void sendAlertMail(String to, String subject, String text){
-      SimpleMailMessage message = new SimpleMailMessage();
-      message.setFrom(FromMailAddress);  // 발신자
-      message.setTo(to);
-      message.setSubject(subject);
-      message.setText(text);
-
-      mailSender.send(message);
   }
 
 }

@@ -30,6 +30,4 @@ public interface BnsVLServiceInterface {
   //사업자 인증 진행
   public BnsVLResponse getBnsResponse(List<BnsVLRequest> requests) throws URISyntaxException;
 
-  //사업자 인증 관련 메일 전송
-  public void sendAlertMail(String to, String subject, String text);
 }
