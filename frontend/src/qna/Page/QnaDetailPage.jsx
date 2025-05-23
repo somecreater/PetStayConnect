@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import ApiService from '../../common/Api/ApiService';
 import { useUser } from '../../common/Context/UserContext';
@@ -20,6 +20,7 @@ export default function QnaDetailPage() {
   const [isEditingPost, setIsEditingPost] = useState(false);
   const [editingAnswerId, setEditingAnswerId] = useState(null);
   const [loading, setLoading] = useState(true);
+  const didFetch = useRef(false);
 
   const loadData = async () => {
     try {
@@ -29,18 +30,22 @@ export default function QnaDetailPage() {
       const normalizedAnswers = ansData.map(ans => ({
         ...ans,
         accepted: ans.isAdopted,
-        content: ans.content ?? ans.answer
-      }));
+        content: ans.content ?? ans.answer,
+        userLoginId: ans.userLoginId
+        }));
       setPost(postData);
       setAnswers(normalizedAnswers);
     } catch (error) {
       console.error('Load failed:', error);
     } finally {
       setLoading(false);
-    }
+    }QnA 답변 작성자 표시 및 상세페이지 조회수 증가 추가
+
   };
 
   useEffect(() => {
+    if (didFetch.current) return;
+    didFetch.current = true;
     loadData();
   }, [id]);
 
@@ -94,7 +99,9 @@ export default function QnaDetailPage() {
             </div>
             <p className="text-muted small">
               작성자: <span className="fw-semibold">{post.userLoginId}</span> |
-              작성일: {new Date(post.createdAt).toLocaleString()}
+              작성일: <span className="fw-semibold">
+                        {new Date(post.createdAt).toLocaleDateString('ko-KR')}</span> |
+              조회수: <span className="fw-semibold">{post.viewCount}</span>
             </p>
 
             {canEditPost && (

@@ -15,6 +15,8 @@ public interface QnaPostServiceInterface {
 
     QnaPostDTO getPostById(Long postId);
 
+    QnaPostDTO viewAndGet(Long postId);
+
     QnaPostDTO updatePost(Long postId, QnaPostDTO dto, String userLoginId);
 
     void deletePost(Long postId, String userLoginId);

@@ -70,13 +70,21 @@ public class QnaPostService implements QnaPostServiceInterface {
     public QnaPostDTO getPostById(Long postId) {
         QnaPost post = qnaPostRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("질문을 찾을 수 없습니다."));
-//        post.setViewCount(
-//                post.getViewCount() == null
-//                        ? 1 : post.getViewCount() + 1
-//        );
 
         return qnaPostMapper.toDTO(post);
     }
+
+    @Override
+    @Transactional
+    public QnaPostDTO viewAndGet(Long postId) {
+        qnaPostRepository.incrementViewCount(postId);
+        QnaPost post = qnaPostRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("질문을 찾을 수 없습니다."));
+
+        return qnaPostMapper.toBasicDTO(post);
+    }
+
+
 
     //질문 수정(작성자만 가능)
     @Override
@@ -112,3 +120,5 @@ public class QnaPostService implements QnaPostServiceInterface {
         qnaPostRepository.delete(post);
     }
 }
+
+
