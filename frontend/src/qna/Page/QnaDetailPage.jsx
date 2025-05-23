@@ -39,8 +39,7 @@ export default function QnaDetailPage() {
       console.error('Load failed:', error);
     } finally {
       setLoading(false);
-    }QnA 답변 작성자 표시 및 상세페이지 조회수 증가 추가
-
+    }
   };
 
   useEffect(() => {
