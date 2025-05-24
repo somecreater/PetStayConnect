@@ -37,6 +37,9 @@ export default function AnswerList({
             <div className="card-body py-2 px-3">
                   {/* 채택된 경우 배지 추가 */}
                   <div className="d-flex justify-content-between align-items-center mb-2">
+                      <span className="fw-semibold text-primary">
+                          {ans.userLoginId}
+                      </span>
                     <div className="d-flex align-items-center gap-2">
                       {ans.accepted  && (
                         <span className="badge bg-success">채택된 답변</span>

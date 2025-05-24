@@ -3,6 +3,7 @@ package com.petservice.main.qna.controller;
 import com.petservice.main.qna.database.dto.QnaPostDTO;
 import com.petservice.main.qna.service.post.QnaPostServiceInterface;
 import com.petservice.main.user.database.dto.CustomUserDetails;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -12,6 +13,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 
 @RestController
 @RequestMapping("/api/qnas")
@@ -71,7 +73,7 @@ public class QnaPostController {
     @GetMapping("/{question_id}")
     public ResponseEntity<QnaPostDTO> getPostById(@PathVariable("question_id") Long postId) {
         try {
-            QnaPostDTO post = qnaPostService.getPostById(postId);
+            QnaPostDTO post = qnaPostService.viewAndGet(postId);
             return ResponseEntity.ok(post);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

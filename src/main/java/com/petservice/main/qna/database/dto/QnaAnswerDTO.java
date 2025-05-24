@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 public class QnaAnswerDTO {
   private Long id;
   private Long postId;
+  private String userLoginId;
   private Long userId;
   private String content;
   private Integer score;
