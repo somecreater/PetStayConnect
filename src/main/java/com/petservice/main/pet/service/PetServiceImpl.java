@@ -1,12 +1,12 @@
 package com.petservice.main.pet.service;
 
 import com.petservice.main.user.database.dto.PetDTO;
-import com.petservice.main.user.database.dto.UserDTO;
 import com.petservice.main.user.database.entity.Pet;
+import com.petservice.main.user.database.entity.User;
 import com.petservice.main.user.database.mapper.PetMapper;
 import com.petservice.main.user.database.mapper.UserMapper;
 import com.petservice.main.user.database.repository.PetRepository;
-import com.petservice.main.user.service.Interface.CustomUserServiceInterface;
+import com.petservice.main.user.database.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,7 +22,8 @@ public class PetServiceImpl implements PetServiceInterface {
     private final PetRepository petRepository;
     private final PetMapper petMapper;
     private final UserMapper userMapper;
-    private final CustomUserServiceInterface userService;
+
+    private final UserRepository userRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -53,13 +54,13 @@ public class PetServiceImpl implements PetServiceInterface {
             Pet pet = petMapper.toEntity(petDTO);
 
             // user 객체 세팅
-            UserDTO userDTO = userService.getUserByLoginId(userLoginId);
+            User user = userRepository.findByUserLoginId(userLoginId).orElse(null);
 
-            if(userDTO == null){
+            if(user == null){
                 return null;
             }
 
-            pet.setUser(userMapper.toEntity(userDTO));
+            pet.setUser(user);
             Pet savedPet = petRepository.save(pet);
             return petMapper.toDTO(savedPet);
         } catch (Exception e) {

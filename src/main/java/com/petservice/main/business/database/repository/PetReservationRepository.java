@@ -23,4 +23,8 @@ public interface PetReservationRepository extends JpaRepository<PetReservation,L
   List<PetReservation> findByReservation_Id(Long id);
 
   List<PetReservation> findByPet_Id(Long id);
+
+  long deleteByReservation_User_Id(Long id);
+
+  long deleteByReservation_PetBusiness_Id(Long id);
 }

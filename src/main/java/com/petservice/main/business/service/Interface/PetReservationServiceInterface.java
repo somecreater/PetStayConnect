@@ -14,4 +14,6 @@ public interface PetReservationServiceInterface {
 
   public PetReservationDTO registerPetReservation(PetDTO petDTO, ReservationDTO reservationDTO);
   public boolean deletePetReservation(Long reservation_id);
+  public boolean deletePetReservationByUserId(Long id);
+  public boolean deletePetReservationByBusinessId(Long id);
 }

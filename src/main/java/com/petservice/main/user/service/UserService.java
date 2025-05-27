@@ -7,6 +7,8 @@ import com.petservice.main.business.database.entity.Varification;
 import com.petservice.main.business.database.mapper.PetBusinessMapper;
 import com.petservice.main.business.database.repository.PetBusinessTypeRepository;
 import com.petservice.main.business.service.Interface.PetBusinessServiceInterface;
+import com.petservice.main.business.service.Interface.PetReservationServiceInterface;
+import com.petservice.main.business.service.Interface.ReservationServiceInterface;
 import com.petservice.main.payment.database.entity.Account;
 import com.petservice.main.payment.database.entity.AccountType;
 import com.petservice.main.payment.database.repository.AccountRepository;
@@ -16,12 +18,14 @@ import com.petservice.main.user.database.entity.Role;
 import com.petservice.main.user.database.entity.User;
 import com.petservice.main.user.database.entity.UserType;
 import com.petservice.main.user.database.mapper.UserMapper;
+import com.petservice.main.user.database.repository.BookmarkRepository;
+import com.petservice.main.user.database.repository.PetRepository;
+import com.petservice.main.user.database.repository.RefreshTokenRepository;
 import com.petservice.main.user.database.repository.UserRepository;
 import com.petservice.main.user.service.Interface.CustomUserServiceInterface;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -42,8 +46,12 @@ public class UserService implements CustomUserServiceInterface, UserDetailsServi
   private final UserRepository userRepository;
   private final PetBusinessTypeRepository typeRepository;
   private final AccountRepository accountRepository;
+  private final PetRepository petRepository;
+  private final BookmarkRepository bookmarkRepository;
+  private final RefreshTokenRepository refreshTokenRepository;
   private final PasswordEncoder passwordEncoder;
-
+  private final PetReservationServiceInterface petReservationServiceInterface;
+  private final ReservationServiceInterface reservationServiceInterface;
   private final PetBusinessServiceInterface petBusinessServiceInterface;
 
   private final UserMapper userMapper;
@@ -288,38 +296,59 @@ public class UserService implements CustomUserServiceInterface, UserDetailsServi
   @Override
   @Transactional
   public boolean DeleteUser(CustomUserDetails userDetails, String UserLoginId, String Password){
-    if (userDetails==null){
-      throw new UsernameNotFoundException("User is not authenticated");
-    }
-
-    Optional<User> userOptional=userRepository.findByUserLoginId(userDetails.getUsername());
-
-    if(userOptional.isPresent()){
-      User delete=userOptional.get();
-      Account account=accountRepository.findByUser_Id(delete.getId());
-      if(!passwordEncoder.matches(Password,delete.getPassword())) {
-        return false;
-      }else{
-        //회원의 사업자 정보, 북마크, 펫 정보 삭제(자동)
-        if(delete.getRole().equals(Role.SERVICE_PROVIDER)){
-
-          if(!petBusinessServiceInterface.deleteBusiness(delete.getId())
-              || userRepository.deleteByUserLoginId(delete.getUserLoginId())<=0){
-            throw new RuntimeException("회원 탈퇴가 비정상적으로 실행되었습니다." +
-                " 다시 시도하거나 관리자에게 문의하세요!!");
-          }
-          accountRepository.delete(account);
-        }else {
-          userRepository.deleteByUserLoginId(delete.getUserLoginId());
-          accountRepository.delete(account);
-        }
-
+    try {
+      if (userDetails == null) {
+        throw new UsernameNotFoundException("User is not authenticated");
       }
-    }else{
-      log.error("User not found with LoginId: {}", userDetails.getUsername());
+
+      Optional<User> userOptional = userRepository.findByUserLoginId(userDetails.getUsername());
+
+      if (userOptional.isPresent()) {
+        User delete = userOptional.get();
+        Account account = accountRepository.findByUser_Id(delete.getId());
+        if (!passwordEncoder.matches(Password, delete.getPassword())) {
+          return false;
+        } else {
+          //회원의 사업자 정보, 북마크, 펫 정보 삭제(자동)
+          if (delete.getRole().equals(Role.SERVICE_PROVIDER)) {
+
+            if(account !=null) {
+              accountRepository.delete(account);
+            }
+            if (!petReservationServiceInterface.deletePetReservationByBusinessId(delete.getPetBusiness().getId())
+                || !petReservationServiceInterface.deletePetReservationByUserId(delete.getId())
+                || !reservationServiceInterface.updateDeleteBusiness(
+                    delete.getPetBusiness().getId())
+                || !reservationServiceInterface.updateDeleteUser(delete.getId())
+                || !petBusinessServiceInterface.deleteBusiness(delete.getId())
+                || petRepository.deleteByUser_Id(delete.getId()) <0) {
+              throw new RuntimeException("회원 탈퇴가 비정상적으로 실행되었습니다." + " 다시 시도하거나 관리자에게 문의하세요!!");
+            }
+            userRepository.delete(delete);
+          } else {
+
+            if(account != null) {
+              accountRepository.delete(account);
+            }
+            if(!petReservationServiceInterface.deletePetReservationByUserId(delete.getId())
+                || !reservationServiceInterface.updateDeleteUser(delete.getId())
+                || petRepository.deleteByUser_Id(delete.getId()) <0) {
+              throw new RuntimeException("회원 탈퇴가 비정상적으로 실행되었습니다." + " 다시 시도하거나 관리자에게 문의하세요!!");
+            }
+            userRepository.delete(delete);
+          }
+
+        }
+      } else {
+        log.error("User not found with LoginId: {}", userDetails.getUsername());
+        return false;
+      }
+      return true;
+    }catch (Exception e){
+      log.info("회원 탈퇴중 오류 발생! {}", e.getMessage());
+      e.printStackTrace();
       return false;
     }
-    return true;
   }
 
   @Override

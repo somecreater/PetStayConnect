@@ -281,6 +281,57 @@ public class ReservationService implements ReservationServiceInterface {
     return reservationMapper.toBasicDTO(deleteReservation);
   }
 
+  @Override
+  @Transactional
+  public boolean deleteReservationByUserId(Long id){
+    try{
+      reservationRepository.deleteByUser_Id(id);
+    }catch(Exception e){
+      log.info("예약 삭제 도중 오류 발생!: {}", e.getMessage());
+      e.printStackTrace();
+      return false;
+    }
+    return true;
+  }
+
+  @Override
+  @Transactional
+  public boolean deleteReservationByBusinessId(Long id){
+    try{
+      reservationRepository.deleteByPetBusiness_Id(id);
+    }catch(Exception e){
+      log.info("예약 삭제 도중 오류 발생!: {}", e.getMessage());
+      e.printStackTrace();
+      return false;
+    }
+    return true;
+  }
+
+  @Override
+  @Transactional
+  public boolean updateDeleteUser(Long user_id){
+    try{
+      reservationRepository.nullifyUserReference(user_id);
+    }catch(Exception e){
+      log.info("예약 정보 삭제 관련 수정중 오류 발생: {}", e.getMessage());
+      e.printStackTrace();
+      return false;
+    }
+    return true;
+  }
+
+  @Override
+  @Transactional
+  public boolean updateDeleteBusiness(Long business_id){
+    try{
+      reservationRepository.nullifyBusinessReference(business_id);
+    }catch(Exception e){
+      log.info("예약 정보 삭제 관련 수정중 오류 발생: {}", e.getMessage());
+      e.printStackTrace();
+      return false;
+    }
+    return true;
+  }
 
   @Override
   public boolean UpdateValidation(ReservationDTO reservationDTO){
