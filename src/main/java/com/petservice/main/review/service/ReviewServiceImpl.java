@@ -57,27 +57,27 @@ public class ReviewServiceImpl implements ReviewService {
         return reviewMapper.toDTO(saved);
     }
 
-//    @Override
-//    @Transactional(readOnly = true)
-//    public ReviewDTO getReviewById(Long reviewId, String userLoginId) {
-//        Review review = reviewRepository.findById(reviewId)
-//                .orElseThrow(() -> new IllegalArgumentException("리뷰가 존재하지 않습니다."));
-//
-//        if (!review.getUser().getUserLoginId().equals(userLoginId)) {
-//            throw new AccessDeniedException(("본인의 리뷰만 조회할 수 있습니다."));
-//        }
-//
-//        return reviewMapper.toDTO(review);
-//    }
-
-
     @Override
     @Transactional(readOnly = true)
-    public List<ReviewDTO> getMyReviews(String userLoginId) {
-        return reviewRepository.findAllByUser_UserLoginId(userLoginId).stream()
-                .map(reviewMapper::toDTO)
-                .toList();
+    public ReviewDTO getReviewById(Long reviewId, String userLoginId) {
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new IllegalArgumentException("리뷰가 존재하지 않습니다."));
+
+        if (!review.getUser().getUserLoginId().equals(userLoginId)) {
+            throw new AccessDeniedException(("본인의 리뷰만 조회할 수 있습니다."));
+        }
+
+        return reviewMapper.toDTO(review);
     }
+
+
+//    @Override
+//    @Transactional(readOnly = true)
+//    public List<ReviewDTO> getMyReviews(String userLoginId) {
+//        return reviewRepository.findAllByUser_UserLoginId(userLoginId).stream()
+//                .map(reviewMapper::toDTO)
+//                .toList();
+//    }
 
     @Override
     @Transactional

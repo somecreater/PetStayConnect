@@ -70,7 +70,7 @@ function App() {
 
         <Route path="/reviews" element={<ReviewListPage/>}/>
         <Route path="/reviews/:id" element={<ReviewDetailPage/>}/>
-        <Route path="/user/reviews"    element={<MyReviewListPage />} />
+        <Route path="/reviews/my"    element={<MyReviewListPage />} />
         <Route path="/reviews/register" element={<ReviewRegisterPage/>}/>
 
         <Route path="/error/:code" element={<CustomErrorPage />} />
