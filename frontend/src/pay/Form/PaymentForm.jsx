@@ -6,22 +6,32 @@ import { useUser } from '../../common/Context/UserContext';
 function PaymentForm({ reservation, price = 0, businessName }){
 
   const {user} = useUser();
+  const [petList,setPetList]= useState([]);
   const [computedPrice, setComputedPrice] = useState(price);
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(false);
+
+  //가격의 기본값은 애완동물 사업자에서 설정된 최대 가격 * 예약된 애완동물 수
   useEffect(()=>{
     if(price === 0){
       const fetchBusinessDetail = async () => {
       try {
         const response= await ApiService.business.detail(reservation.petBusinessId);
         const data=response.data;
-        if(data.result){
-          setComputedPrice(data.business.maxPrice);
+
+        const response2= await ApiService.pet.reservation(reservation.id);
+        const data2= response2.data;
+
+        if(data.result && data2.result){
+          const servicePrice=data.business.maxPrice;
+          setPetList(data2.pets);
+          setComputedPrice(servicePrice * petList.length);
         }else{
           setError('서비스 가격 정보를 불러오지 못했습니다.');
         }
+        
       } catch (e) {
         console.error(e);
         setError('서버 통신 중 오류가 발생했습니다.');
