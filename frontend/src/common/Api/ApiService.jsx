@@ -268,7 +268,13 @@ const ApiService = {
       headers: createHeaders(),
       withCredentials: true,
     }),
-  },
+    myList:  () => RefreshApi.get(API_ENDPOINTS.myReviews, {
+        headers:createHeaders(),
+        withCredentials:true
+      })
+    },
+
+
   payments:{
     userlist: (page, size)=> RefreshApi.get(`${API_ENDPOINTS.payments}/user`,{
       params:{page, size},

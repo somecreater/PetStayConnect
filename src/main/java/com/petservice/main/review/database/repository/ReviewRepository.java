@@ -12,6 +12,7 @@ import java.util.Optional;
 public interface ReviewRepository extends JpaRepository<Review, Long> {
     boolean existsByReservationId(Long reservationId);
     List<Review> findAllByUser_UserLoginId(String userLoginId);
+    List<Review> findAllByReservation_PetBusiness_Id(Long businessId);
     @EntityGraph(attributePaths = {"reservation", "reservation.petBusiness"})
     Optional<Review> findById(Long id);
 }

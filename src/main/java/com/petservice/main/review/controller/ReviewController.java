@@ -23,7 +23,7 @@ public class ReviewController {
 
 
 
-    @GetMapping
+    @GetMapping("/my")
     public ResponseEntity<List<ReviewDTO>> getMyReviews(@AuthenticationPrincipal CustomUserDetails principal) {
         String userLoginId = principal.getUsername();
         List<ReviewDTO> reviews = reviewService.getMyReviews(userLoginId);
@@ -31,13 +31,19 @@ public class ReviewController {
 
     }
 
-    @GetMapping("/{reviewId}")
-    public ResponseEntity<ReviewDTO> getReview(@PathVariable Long reviewId,
-                                               @AuthenticationPrincipal CustomUserDetails principal) {
+//    @GetMapping("/{reviewId}")
+//    public ResponseEntity<ReviewDTO> getReview(@PathVariable Long reviewId,
+//                                               @AuthenticationPrincipal CustomUserDetails principal) {
+//
+//        String userLoginId = principal.getUsername();
+//        ReviewDTO review = reviewService.getReviewById(reviewId, userLoginId);
+//        return ResponseEntity.ok(review);
+//    }
 
-        String userLoginId = principal.getUsername();
-        ReviewDTO review = reviewService.getReviewById(reviewId, userLoginId);
-        return ResponseEntity.ok(review);
+    @GetMapping
+    public ResponseEntity<List<ReviewDTO>> listAllReviews() {
+        List<ReviewDTO> all = reviewService.getAllReviews();
+        return ResponseEntity.ok(all);
     }
 
     @PostMapping
