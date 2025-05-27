@@ -10,6 +10,8 @@ import com.petservice.main.review.database.repository.ReviewRepository;
 
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 
 import org.springframework.stereotype.Service;
@@ -55,23 +57,23 @@ public class ReviewServiceImpl implements ReviewService {
         return reviewMapper.toDTO(saved);
     }
 
+//    @Override
+//    @Transactional(readOnly = true)
+//    public ReviewDTO getReviewById(Long reviewId, String userLoginId) {
+//        Review review = reviewRepository.findById(reviewId)
+//                .orElseThrow(() -> new IllegalArgumentException("리뷰가 존재하지 않습니다."));
+//
+//        if (!review.getUser().getUserLoginId().equals(userLoginId)) {
+//            throw new AccessDeniedException(("본인의 리뷰만 조회할 수 있습니다."));
+//        }
+//
+//        return reviewMapper.toDTO(review);
+//    }
+
+
     @Override
     @Transactional(readOnly = true)
-    public ReviewDTO getReviewById(Long reviewId, String userLoginId) {
-        Review review = reviewRepository.findById(reviewId)
-                .orElseThrow(() -> new IllegalArgumentException("리뷰가 존재하지 않습니다."));
-
-        if (!review.getUser().getUserLoginId().equals(userLoginId)) {
-            throw new AccessDeniedException(("본인의 리뷰만 조회할 수 있습니다."));
-        }
-
-        return reviewMapper.toDTO(review);
-    }
-
-
-    @Override
-    @Transactional(readOnly = true)
-    public java.util.List<ReviewDTO> getMyReviews(String userLoginId) {
+    public List<ReviewDTO> getMyReviews(String userLoginId) {
         return reviewRepository.findAllByUser_UserLoginId(userLoginId).stream()
                 .map(reviewMapper::toDTO)
                 .toList();
@@ -96,6 +98,15 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public List<ReviewDTO> getAllReviews() {
+        return reviewRepository.findAll()
+                .stream()
+                .map(reviewMapper::toDTO)
+                .toList();
+    }
+
+    @Override
     @Transactional
     public void deleteReview(Long reviewId, String userLoginId) {
         Review review = reviewRepository.findById(reviewId)
@@ -116,5 +127,19 @@ public class ReviewServiceImpl implements ReviewService {
 
         reviewRepository.delete(review);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<ReviewDTO> getAllReviews(Pageable pageable) {
+        return reviewRepository.findAll(pageable).map(reviewMapper::toDTO);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<ReviewDTO> getMyReviews(String userLoginId, Pageable pageable) {
+        return reviewRepository.findAllByUser_UserLoginId(userLoginId, pageable)
+                .map(reviewMapper::toDTO);
+    }
+
 }
 

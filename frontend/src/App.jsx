@@ -32,6 +32,7 @@ import QnaDetailPage from './qna/Page/QnaDetailPage';
 import ReviewListPage from './review/Page/ReviewListPage';
 import ReviewDetailPage from './review/Page/ReviewDetailPage';
 import ReviewRegisterPage from './review/Page/ReviewRegisterPage';
+import MyReviewListPage from './review/Page/MyReviewListPage';
 
 import BusinessManagePage from './business/Page/BusinessManagePage';
 import UserReservationManagePage from './business/Page/UserReservationManagePage.jsx';
@@ -69,6 +70,7 @@ function App() {
 
         <Route path="/reviews" element={<ReviewListPage/>}/>
         <Route path="/reviews/:id" element={<ReviewDetailPage/>}/>
+        <Route path="/user/reviews"    element={<MyReviewListPage />} />
         <Route path="/reviews/register" element={<ReviewRegisterPage/>}/>
 
         <Route path="/error/:code" element={<CustomErrorPage />} />

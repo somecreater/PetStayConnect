@@ -140,6 +140,13 @@ function UserInfo(props){
           title="정산 계좌"
           onClick={handleAccount}
         />
+
+        <Button
+          classtext="me-2"
+          type="button"
+          title="내 리뷰 보기"
+          onClick={() => navigate('/user/reviews')}
+          />
         {account && accountModal &&
           <Modal isOpen={accountModal} onClose={()=>setAccountModal(false)}>
             <Account account={account}/>

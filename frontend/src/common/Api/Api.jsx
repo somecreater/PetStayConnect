@@ -27,6 +27,7 @@ export const API_ENDPOINTS = {
   businessroom: `${API_BASE_URL}/api/room`,
   businessvalidation: `${API_BASE_URL}/api/validation`,
   reviews: `${API_BASE_URL}/api/reviews`,
+  myReviews:    `${API_BASE_URL}/api/reviews/my`,
   payments: `${API_BASE_URL}/api/payments`,
   accounts: `${API_BASE_URL}/api/account`,
   bookmarks: `${API_BASE_URL}/api/bookmarks`

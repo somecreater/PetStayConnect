@@ -248,10 +248,11 @@ const ApiService = {
     })
   },
   reviews:{
-     list: () => RefreshApi.get(API_ENDPOINTS.reviews, {
-      headers: createHeaders(),
-      withCredentials: true,
-    }),
+    list: (page = 0, size = 10) => RefreshApi.get(`${API_ENDPOINTS.reviews}`, {
+     params: { page, size },
+     headers: createHeaders(),
+     withCredentials: true,
+     }),
     detail: reviewId => RefreshApi.get(`${API_ENDPOINTS.reviews}/${reviewId}`, {
       headers: createHeaders(),
       withCredentials: true,
@@ -268,7 +269,13 @@ const ApiService = {
       headers: createHeaders(),
       withCredentials: true,
     }),
-  },
+    myList: (page = 0, size = 10) => RefreshApi.get(`${API_ENDPOINTS.reviews}/my`, {
+     params: { page, size },
+     headers: createHeaders(),
+     withCredentials: true,
+    }),
+},
+
   payments:{
     userlist: (page, size)=> RefreshApi.get(`${API_ENDPOINTS.payments}/user`,{
       params:{page, size},
@@ -332,6 +339,7 @@ const ApiService = {
       withCredentials: true,
     })
   }
-}
+};
+
 
 export default ApiService;

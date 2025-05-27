@@ -7,6 +7,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -23,21 +27,32 @@ public class ReviewController {
 
 
 
-    @GetMapping
-    public ResponseEntity<List<ReviewDTO>> getMyReviews(@AuthenticationPrincipal CustomUserDetails principal) {
-        String userLoginId = principal.getUsername();
-        List<ReviewDTO> reviews = reviewService.getMyReviews(userLoginId);
-        return ResponseEntity.ok(reviews);
-
+    @GetMapping("/my")
+    public ResponseEntity<Page<ReviewDTO>> listMy(
+            @AuthenticationPrincipal CustomUserDetails user,
+            @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC)
+            Pageable pageable
+    ) {
+        Page<ReviewDTO> page = reviewService.getMyReviews(user.getUsername(), pageable);
+        return ResponseEntity.ok(page);
     }
 
-    @GetMapping("/{reviewId}")
-    public ResponseEntity<ReviewDTO> getReview(@PathVariable Long reviewId,
-                                               @AuthenticationPrincipal CustomUserDetails principal) {
+//    @GetMapping("/{reviewId}")
+//    public ResponseEntity<ReviewDTO> getReview(@PathVariable Long reviewId,
+//                                               @AuthenticationPrincipal CustomUserDetails principal) {
+//
+//        String userLoginId = principal.getUsername();
+//        ReviewDTO review = reviewService.getReviewById(reviewId, userLoginId);
+//        return ResponseEntity.ok(review);
+//    }
 
-        String userLoginId = principal.getUsername();
-        ReviewDTO review = reviewService.getReviewById(reviewId, userLoginId);
-        return ResponseEntity.ok(review);
+    @GetMapping
+    public ResponseEntity<Page<ReviewDTO>> listAll(
+        @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC)
+        Pageable pageable
+            ) {
+                Page<ReviewDTO> page = reviewService.getAllReviews(pageable);
+                return ResponseEntity.ok(page);
     }
 
     @PostMapping
@@ -67,7 +82,6 @@ public class ReviewController {
         reviewService.deleteReview(reviewId, userLoginId);
         return ResponseEntity.ok("리뷰가 삭제되었습니다.");
     }
-
 }
 
 
