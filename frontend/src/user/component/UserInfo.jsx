@@ -145,7 +145,7 @@ function UserInfo(props){
           classtext="me-2"
           type="button"
           title="내 리뷰 보기"
-          onClick={() => navigate('/user/reviews')}
+          onClick={() => navigate('/reviews/my')}
           />
         {account && accountModal &&
           <Modal isOpen={accountModal} onClose={()=>setAccountModal(false)}>

@@ -9,9 +9,9 @@ import java.util.List;
 public interface ReviewService {
     ReviewDTO createReview(String userLoginId, ReviewDTO dto);
 
-//    ReviewDTO getReviewById(Long reviewID, String userLoginId);
+    ReviewDTO getReviewById(Long reviewID, String userLoginId);
 
-    List<ReviewDTO> getMyReviews(String userLoginId);
+//    List<ReviewDTO> getMyReviews(String userLoginId);
 
     ReviewDTO updateReview(String userLoginId, ReviewDTO dto);
 
