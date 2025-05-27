@@ -10,6 +10,8 @@ import com.petservice.main.review.database.repository.ReviewRepository;
 
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 
 import org.springframework.stereotype.Service;
@@ -125,5 +127,19 @@ public class ReviewServiceImpl implements ReviewService {
 
         reviewRepository.delete(review);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<ReviewDTO> getAllReviews(Pageable pageable) {
+        return reviewRepository.findAll(pageable).map(reviewMapper::toDTO);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<ReviewDTO> getMyReviews(String userLoginId, Pageable pageable) {
+        return reviewRepository.findAllByUser_UserLoginId(userLoginId, pageable)
+                .map(reviewMapper::toDTO);
+    }
+
 }
 
