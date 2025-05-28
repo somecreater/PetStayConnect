@@ -23,11 +23,11 @@ public class Reservation extends TimeEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = true)
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "pet_business_id", nullable = false)
+    @JoinColumn(name = "pet_business_id", nullable = true)
     private PetBusiness petBusiness;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -18,6 +18,10 @@ public interface ReservationServiceInterface {
   public ReservationDTO registerReservation(ReservationRequest reservationRequest);
   public ReservationDTO updateReservation(ReservationDTO reservationDTO);
   public ReservationDTO deleteReservation(ReservationDTO reservationDTO);
+  public boolean deleteReservationByUserId(Long id);
+  public boolean deleteReservationByBusinessId(Long id);
+  public boolean updateDeleteUser(Long user_id);
+  public boolean updateDeleteBusiness(Long business_id);
 
   public boolean UpdateValidation(ReservationDTO reservationDTO);
   public boolean isBlank(String str);

@@ -41,7 +41,9 @@ public class ReviewMapper {
     public ReviewDTO toDTO(Review entity) {
         ReviewDTO dto = new ReviewDTO();
         dto.setId(entity.getId());
-        dto.setUserLoginId(entity.getUser().getUserLoginId());
+        if(entity.getUser()!=null) {
+            dto.setUserLoginId(entity.getUser().getUserLoginId());
+        }
         dto.setRating(entity.getRating());
         dto.setContent(entity.getContent());
         dto.setReportCount(entity.getReportCount());

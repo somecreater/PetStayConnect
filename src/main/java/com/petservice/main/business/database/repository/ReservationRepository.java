@@ -5,6 +5,7 @@ import com.petservice.main.business.database.entity.ReservationStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -72,4 +73,21 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
   Page<Reservation> findByUser_UserLoginId(String userLoginId, Pageable pageable);
 
   Page<Reservation> findByPetBusiness_Id(Long PetBusiness_Id, Pageable pageable);
+
+  long deleteByUser_Id(Long id);
+
+  long deleteByPetBusiness_Id(Long id);
+
+  List<Reservation> findByUser_Id(Long id);
+
+  @Query("SELECT r FROM Reservation r JOIN r.petBusiness pb WHERE pb.id = :business_id")
+  List<Reservation> findByBusiness(@Param("business_id") Long business_id);
+
+  @Modifying
+  @Query("UPDATE Reservation r SET r.user = null WHERE r.user.id = :userId")
+  int nullifyUserReference(@Param("userId") Long userId);
+
+  @Modifying
+  @Query("UPDATE Reservation r SET r.petBusiness = null WHERE r.petBusiness.id = :businessId")
+  int nullifyBusinessReference(@Param("businessId") Long businessId);
 }

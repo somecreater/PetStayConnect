@@ -1,8 +1,6 @@
 package com.petservice.main.business.service;
 
 import com.petservice.main.business.database.dto.PetBusinessDTO;
-import com.petservice.main.business.database.dto.PetBusinessRoomDTO;
-import com.petservice.main.business.database.dto.PetBusinessTypeDTO;
 import com.petservice.main.business.database.entity.BusinessStatus;
 import com.petservice.main.business.database.entity.PetBusiness;
 import com.petservice.main.business.database.entity.PetBusinessType;
@@ -23,7 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Slf4j
 @Service
@@ -153,10 +150,24 @@ public class PetBusinessService implements PetBusinessServiceInterface {
 
   // 추후 수정
   @Override
+  @Transactional
   public boolean deleteBusiness(Long business_id) {
     try {
       petBusinessRepository.deleteById(business_id);
       return true;
+    }catch (Exception e){
+      e.printStackTrace();
+      log.error("사업자 데이터 삭제 오류: {}", e.getMessage());
+      throw new RuntimeException(e);
+    }
+  }
+
+  @Override
+  @Transactional
+  public boolean deleteBusinessByUser(Long user_id){
+    try {
+      int count=petBusinessRepository.nullifyUserReference(user_id);
+      return count >= 0;
     }catch (Exception e){
       e.printStackTrace();
       log.error("사업자 데이터 삭제 오류: {}", e.getMessage());
