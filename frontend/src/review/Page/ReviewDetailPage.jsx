@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useUser } from '../../common/Context/UserContext';
 import ApiService from '../../common/Api/ApiService';
 import ReviewUpdateForm from '../Form/ReviewUpdateForm';
 import ReviewDeleteButton from '../Component/ReviewDeleteButton';
@@ -9,6 +10,7 @@ import Button from '../../common/Ui/Button';
 export default function ReviewDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { user } = useUser();
 
   const [review, setReview] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -53,11 +55,15 @@ export default function ReviewDetailPage() {
   if (!review) {
     return <div className="container py-5 text-center">해당 리뷰를 찾을 수 없습니다.</div>;
   }
-  if (isEditing) {
+    const isAuthor = String(user?.id) === String(review.userId) ||
+                       (user?.userLoginId && user.userLoginId === review.userLoginId);
+
+    if (isEditing && isAuthor) {
     return (
       <div className="container mt-4">
         <div className="card">
           <div className="card-body" style={{ minHeight: '500px' }}>
+
             <ReviewUpdateForm
               review={review}
               onSuccess={() => {
@@ -112,6 +118,7 @@ export default function ReviewDetailPage() {
         </div>
 
         {/* Footer */}
+        {isAuthor && (
         <div className="card-footer bg-white border-top-0 d-flex justify-content-end gap-2">
           <Button
             classtext="btn btn-primary btn-sm"
@@ -124,6 +131,7 @@ export default function ReviewDetailPage() {
               onDeleted={() => navigate('/reviews')}
             />
         </div>
+        )}
       </div>
     </div>
   );

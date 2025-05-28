@@ -14,16 +14,21 @@ export default function AnswerList({
   user,
   isBiz,
 }) {
-  return (
 
+  const [expandedIds, setExpandedIds] = useState({});
+  const toggleExpand = id => {
+    setExpandedIds(prev => ({ ...prev, [id]: !prev[id] }));
+  };
+  return (
     <div
       className="list-group overflow-auto"
       style={{ maxHeight: '70vh' }}
     >
       {answers.map(ans => {
         const isQuestionOwner = user?.id === postUserId;
-        const isAnswerAuthor = user?.id === ans.userId
-        const isEditing = editingAnswerId === ans.id
+        const isAnswerAuthor = user?.id === ans.userId;
+        const isAccepted = Boolean(ans.accepted);
+        const isEditing = editingAnswerId === ans.id;
 
         const [expanded, setExpanded] = useState(false);
         const maxLength = 80;
@@ -51,7 +56,7 @@ export default function AnswerList({
 
                     {/* 버튼들 우측 정렬 */}
                     <div className="btn-group btn-group-sm">
-                      {isQuestionOwner && !isAnswerAuthor && !ans.accepted   && (
+                      {isQuestionOwner && !isAnswerAuthor && !isAccepted && (
                         <button
                           className="btn btn-success"
                           onClick={() => onAccept(ans.id)}

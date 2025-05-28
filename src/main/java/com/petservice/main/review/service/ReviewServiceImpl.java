@@ -59,13 +59,9 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     @Transactional(readOnly = true)
-    public ReviewDTO getReviewById(Long reviewId, String userLoginId) {
+    public ReviewDTO getReviewById(Long reviewId) {
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new IllegalArgumentException("리뷰가 존재하지 않습니다."));
-
-        if (!review.getUser().getUserLoginId().equals(userLoginId)) {
-            throw new AccessDeniedException(("본인의 리뷰만 조회할 수 있습니다."));
-        }
 
         return reviewMapper.toDTO(review);
     }
