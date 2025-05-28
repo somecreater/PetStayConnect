@@ -6,6 +6,7 @@ import com.petservice.main.business.database.entity.Varification;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -99,4 +100,8 @@ public interface PetBusinessRepository extends JpaRepository<PetBusiness,Long> {
   PetBusiness findByUser_UserLoginId(String userLoginId);
 
   PetBusiness findByRegistrationNumber(String registrationNumber);
+
+  @Modifying
+  @Query("UPDATE PetBusiness pb SET pb.user = null WHERE pb.user.id = :userId")
+  int nullifyUserReference(@Param("userId") Long userId);
 }

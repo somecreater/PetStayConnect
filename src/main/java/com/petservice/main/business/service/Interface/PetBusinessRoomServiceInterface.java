@@ -13,6 +13,7 @@ public interface PetBusinessRoomServiceInterface {
   public PetBusinessRoomDTO createRoom(Long business_id, PetBusinessRoomDTO petBusinessRoomDTO);
   public PetBusinessRoomDTO updateRoom(Long business_id, Long room_id, PetBusinessRoomDTO petBusinessRoomDTO);
   public boolean deleteRoom(Long business_id, Long room_id);
+  public boolean deleteRoomByBusiness(Long business_id);
   public boolean validationRoom(PetBusinessRoomDTO petBusinessRoomDTO);
   public boolean isBlank(String str);
 }

@@ -112,6 +112,20 @@ public class PetBusinessRoomService implements PetBusinessRoomServiceInterface {
   }
 
   @Override
+  @Transactional
+  public boolean deleteRoomByBusiness(Long business_id){
+    log.info("delete room business_id: {}",business_id);
+    try{
+      long count = petBusinessRoomRepository.deleteByPetBusiness_Id(business_id);
+      return count >= 0;
+    } catch (Exception e) {
+      log.info("예상치 못한 오류 발생!", e.getMessage());
+      e.printStackTrace();
+      return false;
+    }
+  }
+
+  @Override
   public boolean validationRoom(PetBusinessRoomDTO petBusinessRoomDTO){
 
     if(petBusinessRoomDTO == null){

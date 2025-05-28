@@ -6,6 +6,7 @@ import com.petservice.main.business.database.entity.PetBusinessType;
 import com.petservice.main.business.database.entity.Varification;
 import com.petservice.main.business.database.mapper.PetBusinessMapper;
 import com.petservice.main.business.database.repository.PetBusinessTypeRepository;
+import com.petservice.main.business.service.Interface.PetBusinessRoomServiceInterface;
 import com.petservice.main.business.service.Interface.PetBusinessServiceInterface;
 import com.petservice.main.business.service.Interface.PetReservationServiceInterface;
 import com.petservice.main.business.service.Interface.ReservationServiceInterface;
@@ -50,6 +51,7 @@ public class UserService implements CustomUserServiceInterface, UserDetailsServi
   private final BookmarkRepository bookmarkRepository;
   private final RefreshTokenRepository refreshTokenRepository;
   private final PasswordEncoder passwordEncoder;
+  private final PetBusinessRoomServiceInterface petBusinessRoomServiceInterface;
   private final PetReservationServiceInterface petReservationServiceInterface;
   private final ReservationServiceInterface reservationServiceInterface;
   private final PetBusinessServiceInterface petBusinessServiceInterface;
@@ -311,18 +313,22 @@ public class UserService implements CustomUserServiceInterface, UserDetailsServi
         } else {
           //회원의 사업자 정보, 북마크, 펫 정보 삭제(자동)
           if (delete.getRole().equals(Role.SERVICE_PROVIDER)) {
-
+            PetBusiness deleteBusiness= delete.getPetBusiness();
+            delete.setPetBusiness(null);
             if(account !=null) {
               accountRepository.delete(account);
             }
-            if (!petReservationServiceInterface.deletePetReservationByBusinessId(delete.getPetBusiness().getId())
+            if (!petReservationServiceInterface.deletePetReservationByBusinessId(
+                deleteBusiness.getId())
                 || !petReservationServiceInterface.deletePetReservationByUserId(delete.getId())
-                || !reservationServiceInterface.updateDeleteBusiness(
-                    delete.getPetBusiness().getId())
+                || !reservationServiceInterface.updateDeleteBusiness(deleteBusiness.getId())
                 || !reservationServiceInterface.updateDeleteUser(delete.getId())
-                || !petBusinessServiceInterface.deleteBusiness(delete.getId())
+                || !petBusinessRoomServiceInterface.deleteRoomByBusiness(deleteBusiness.getId())
+                || !petBusinessServiceInterface.deleteBusinessByUser(delete.getId())
+                || !petBusinessServiceInterface.deleteBusiness(deleteBusiness.getId())
                 || petRepository.deleteByUser_Id(delete.getId()) <0) {
-              throw new RuntimeException("회원 탈퇴가 비정상적으로 실행되었습니다." + " 다시 시도하거나 관리자에게 문의하세요!!");
+              throw new RuntimeException("회원 탈퇴가 비정상적으로 실행되었습니다."
+                  + " 다시 시도하거나 관리자에게 문의하세요!!");
             }
             userRepository.delete(delete);
           } else {
