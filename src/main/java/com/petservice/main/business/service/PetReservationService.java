@@ -120,6 +120,7 @@ public class PetReservationService implements PetReservationServiceInterface {
     try{
       long delete_count= PetReservationRepository.deleteByReservation_PetBusiness_Id(id);
       if(delete_count >= 0){
+        log.info("숫자: {}",delete_count);
         return true;
       }
       return false;
