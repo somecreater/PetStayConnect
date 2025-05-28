@@ -27,7 +27,7 @@ function PaymentForm({ reservation, price = 0, businessName }){
         if(data.result && data2.result){
           const servicePrice=data.business.maxPrice;
           setPetList(data2.pets);
-          setComputedPrice(servicePrice * petList.length);
+          setComputedPrice(servicePrice * data2.pets.length);
         }else{
           setError('서비스 가격 정보를 불러오지 못했습니다.');
         }
