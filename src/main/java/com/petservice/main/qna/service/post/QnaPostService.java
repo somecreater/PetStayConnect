@@ -81,7 +81,7 @@ public class QnaPostService implements QnaPostServiceInterface {
         QnaPost post = qnaPostRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("질문을 찾을 수 없습니다."));
 
-        return qnaPostMapper.toBasicDTO(post);
+        return qnaPostMapper.toDTO(post);
     }
 
 

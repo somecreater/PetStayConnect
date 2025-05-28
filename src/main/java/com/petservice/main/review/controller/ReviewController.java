@@ -38,11 +38,9 @@ public class ReviewController {
     }
 
     @GetMapping("/{reviewId}")
-    public ResponseEntity<ReviewDTO> getReview(@PathVariable Long reviewId,
-                                               @AuthenticationPrincipal CustomUserDetails principal) {
+    public ResponseEntity<ReviewDTO> getReview(@PathVariable Long reviewId) {
 
-        String userLoginId = principal.getUsername();
-        ReviewDTO review = reviewService.getReviewById(reviewId, userLoginId);
+        ReviewDTO review = reviewService.getReviewById(reviewId);
         return ResponseEntity.ok(review);
     }
 
