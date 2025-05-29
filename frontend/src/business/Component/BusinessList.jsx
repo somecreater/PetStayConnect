@@ -22,13 +22,13 @@ function BusinessList({List, isReservation, petList }){
   };
 
   return (
-    <div className="container py-4">
-      <div className="row g-4 overflow-auto"
+    <div className="container-fluid py-4">
+      <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 overflow-auto align-items-start"
         style={{ maxHeight: '70vh' }}
       >
         {List.map(business => (
-          <div key={business.id} className="col-md-6 col-lg-4">
-            <div className="card h-100">
+          <div key={business.id} className="col">
+            <div className="card">
               <div className="card-body d-flex flex-column">
                 <Business businesssDTO={business} />
                 {(isReservation && business.id) ? (
@@ -38,7 +38,10 @@ function BusinessList({List, isReservation, petList }){
                   >
                     예약하기
                   </button>
-                ):<div className="alert alert-info">외부 데이터여서 예약이 불가능합니다.</div>}
+                ):
+                <div className="alert alert-info mt-auto mb-0 text-center">
+                  외부 데이터여서 예약이 불가능합니다.
+                </div>}
               </div>
             </div>
           </div>

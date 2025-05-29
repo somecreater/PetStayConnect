@@ -13,6 +13,7 @@ function PetManagePage() {
   const [pets, setPets] = useState([]);
   const [editingPet, setEditingPet] = useState(null);
   const [isModalOpen,setModalOpen]=useState(false);
+  const [showRegisterForm, setShowRegisterForm] = useState(false);
   const navigate=useNavigate();
 
   const fetchPets = useCallback(async () => {
@@ -65,9 +66,20 @@ function PetManagePage() {
         />
       </div>
 
-      <div className="mb-4">
-        <PetRegisterForm onRegister={handleRegister} />
+      <div className="mb-3">
+        <Button
+          classtext="btn btn-primary"
+          type="button"
+          title={showRegisterForm ? '등록 폼 숨기기' : '등록 폼 보이기'}
+          onClick={() => setShowRegisterForm(prev => !prev)}
+        />
       </div>
+
+      {showRegisterForm && (
+        <div className="mb-4">
+          <PetRegisterForm onRegister={handleRegister} />
+        </div>
+      )}
 
       <Modal isOpen={isModalOpen} onClose={() => setModalOpen(false)}>
         {editingPet && (
