@@ -1,29 +1,31 @@
-// src/common/Ui/ServicesSection.jsx
 import React from 'react';
 
-// public/assets/images 폴더에 강아지 사진을 넣고 경로만 바꿔주세요
+import img from '../../assets/images/img.png';
+import img_1 from '../../assets/images/img_1.png';
+import img_2 from '../../assets/images/img_2.png';
+
 const services = [
   {
     title: 'Luxury Suite',
     text: '아늑한 방, 정기 물갈이, 맞춤 급여 제공',
-    img: '/assets/images/dog-suite.jpg',
+    img: img
   },
   {
     title: 'Outdoor Walks',
-    text: '전문 산책 서비스로 활기찬 하루',
-    img: '/assets/images/dog-walk.jpg',
+    text: '전문 애견 미용 서비스',
+    img: img_1
   },
   {
     title: 'Grooming',
     text: '프로 그루머의 목욕·미용 서비스',
-    img: '/assets/images/dog-groom.jpg',
+    img: img_2
   },
 ];
 
 export default function ServicesSection() {
   return (
     <section className="services-section">
-      <div className="container">
+       <div className="services-wrapper my-5 px-5">
         <h2 className="text-center mb-5">Our Services</h2>
         <div className="row gy-4">
           {services.map((svc, i) => (
@@ -33,7 +35,7 @@ export default function ServicesSection() {
                 <div className="card-body service-card-body">
                   <h3 className="service-card-title">{svc.title}</h3>
                   <p className="service-card-text">{svc.text}</p>
-                  <button className="btn btn-sm btn-success">
+                  <button className="btn btn-sm btn-warning">
                     자세히 보기
                   </button>
                 </div>
