@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import CusomP from '../../common/Ui/CusomP';
 import CustomLabel from '../../common/Ui/CustomLabel';
 import Button from '../../common/Ui/Button';
@@ -10,7 +10,7 @@ function Pet({ pet, onEdit, isEdit=false }) {
     age, gender, birthDate,
     healthInfo, createAt, updateAt
   } = pet;
-
+  const [isOpen, setIsOpen] = useState(false);
   const items = [
     ['이름 ', name],
     ['종류 ', species],
@@ -25,21 +25,34 @@ function Pet({ pet, onEdit, isEdit=false }) {
 
   return (
     <div className="card mb-3">
-      <div className="card-header d-flex justify-content-between align-items-center">
-        펫 #{id}
-        {isEdit && (
-          <button className="btn btn-sm btn-outline-primary" onClick={() => onEdit(pet)}>
-            수정
-          </button>
-        )}
+      <div className="card-header d-flex justify-content-between align-items-center" style={{ cursor: 'pointer' }} onClick={() => setIsOpen(prev => !prev)}>
+        <span>#{id} {name}</span>
+        <div>
+          <Button
+            classtext="btn btn-sm btn-outline-secondary me-2"
+            type="button"
+            title={isOpen ? '접기' : '펼치기'}
+            onClick={(e) => { e.stopPropagation(); setIsOpen(prev => !prev); }}
+          />
+          {isEdit && (
+            <Button
+              classtext="btn btn-sm btn-outline-primary"
+              type="button"
+              title="수정"
+              onClick={(e) => { e.stopPropagation(); onEdit(pet); }}
+            />
+          )}
+        </div>
       </div>
-      <ul className="list-group list-group-flush">
-        {items.map(([label, value]) => (
-          <li key={label} className="list-group-item d-flex justify-content-between">
-            <strong>{label}</strong><span>{value || '—'}</span>
-          </li>
-        ))}
-      </ul>
+      {isOpen && (
+        <ul className="list-group list-group-flush">
+          {items.map(([label, value]) => (
+            <li key={label} className="list-group-item d-flex justify-content-between">
+              <strong>{label}</strong><span>{value || '—'}</span>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }

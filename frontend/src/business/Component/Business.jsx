@@ -1,8 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
 import CusomP from '../../common/Ui/CusomP';
+import Button from '../../common/Ui/Button';
 
 function Business({businesssDTO}){
   
+  const [isOpen, setIsOpen] = useState(false);
     const { businessName, status, minPrice, maxPrice, facilities, description, avgRate,
         petBusinessTypeName, registrationNumber, province, city, town  } = businesssDTO;
     
@@ -20,15 +22,29 @@ function Business({businesssDTO}){
 
   return(
     <div className="card mb-3">
-      <div className="card-header">{businessName}</div>
-      <ul className="list-group list-group-flush">
-        {items.map(([label, value]) => (
-          <li key={label} className="list-group-item d-flex justify-content-between">
-            <strong>{label}</strong>
-            <span>{value || '—'}</span>
-          </li>
-        ))}
-      </ul>
+      <div
+        className="card-header d-flex justify-content-between align-items-center"
+        style={{ cursor: 'pointer' }}
+        onClick={() => setIsOpen(prev => !prev)}
+      >
+        <span>{businessName}</span>
+        <Button
+          classtext="btn btn-sm btn-outline-secondary"
+          type="button"
+          title={isOpen ? '접기' : '펼치기'}
+          onClick={(e) => { e.stopPropagation(); setIsOpen(prev => !prev); }}
+        />
+      </div>
+      {isOpen && (
+        <ul className="list-group list-group-flush">
+          {items.map(([label, value]) => (
+            <li key={label} className="list-group-item d-flex justify-content-between">
+              <strong>{label}</strong>
+              <span>{value || '—'}</span>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
