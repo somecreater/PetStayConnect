@@ -10,6 +10,7 @@ html, body, #root {
   margin: 0 auto;
   padding: 2rem;*/
   text-align: center;
+
 }
 .navbar-custom-bg {
   background-color: #fff3e0 !important;  /* 푸터와 동일한 색상 */
@@ -151,7 +152,7 @@ html, body, #root {
   flex-direction: column;
 }
 .homepage-container-bg {
-  background-color: #FFD593;
+  background-color: #ffd480;
   border-radius: 1.5rem;
   padding: 2rem 1rem;
   margin-top: 2rem;
@@ -165,23 +166,7 @@ html, body, #root {
 .read-the-docs {
   color: #888;
 }
-/* Hero 배경 + 오버레이 */
-.main-background {
-  background-image: url('/images/main.jpg');
-  background-size: cover;
-  background-position: center;
-  height: 600px;              /* 원하는 높이로 조절 */
-  color: white;               /* 텍스트 흰색 */
-  text-shadow: 0 0 8px rgba(0,0,0,0.5);
-}
-.main-background::before {
-  content: "";
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: url('/assets/images/paw-pattern.png') repeat;
-  opacity: 0.1;
-  pointer-events: none;
-}
+
 .main-content {
   position: relative;
   z-index: 2;
@@ -192,7 +177,13 @@ html, body, #root {
 
 .services-section {
   padding: 4rem 0;
-  background-color: #f8f9fa;
+  background-color: #f5f5dc;
+}
+
+.services-section .service-card {
+  background-color: #FFE4B5;
+  border-radius: 1rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
 
@@ -224,6 +215,27 @@ html, body, #root {
   font-size: .95rem;
   color: #6c757d;
 }
+.services-section .service-card {
+  background-color: #fff4d1;
+  border: none;
+  border-radius: 1rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+.services-section .service-card .card-img-top {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+  display: block;
+  margin: 2rem auto 0;
+}
+
+/*.services-wrapper {
+  background-color: #fff7e4;
+  padding: 2rem;
+  border-radius: 1rem;
+}*/
+
 
 .footer-custom {
   background: #fff3e0; /* 밝은 오렌지 계열 */
@@ -254,5 +266,6 @@ html, body, #root {
   font-size: 0.73rem;
   color: #795548;
 }
+
 
 
