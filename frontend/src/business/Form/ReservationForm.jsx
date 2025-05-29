@@ -115,7 +115,7 @@ function ReservationForm(props){
         {/* 사업자 정보 */}
         <div className="col-12">
           <div 
-            className="p-2 border rounded overflow-auto" 
+            className="p-2 border rounded overflow-auto bg-beige-yellow"
           >
             <dl className="row g-1 m-0">
               {readonlyItems.map(([label, value]) => (
@@ -143,9 +143,7 @@ function ReservationForm(props){
               : <span className="text-muted">없음</span>
             }
           </div>
-          <div
-            className="p-2 border rounded overflow-auto mb-2"
-          >
+          <div className="p-2 border rounded overflow-auto mb-2 bg-beige-yellow">
             {petList?.length > 0 
               ? <PetList pets={petList} selected={handlePetSelected} />
               : <div className="text-warning small">펫을 먼저 등록해주세요!</div>

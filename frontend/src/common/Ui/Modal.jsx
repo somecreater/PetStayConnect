@@ -1,45 +1,47 @@
+// src/common/Ui/Modal.jsx
 import React from 'react';
 import ReactDOM from 'react-dom';
 import '../Css/common.css';
 
-function Modal(props){
-    
-  const {isOpen, onClose, children, maxWidth = '90vw', maxHeight = '90vh'} = props;
+function Modal(props) {
+  const {
+    isOpen,
+    onClose,
+    children,
+    footer,
+    maxWidth = '90vw',
+    maxHeight = '90vh',
+  } = props;
   if (!isOpen) return null;
 
   return ReactDOM.createPortal(
     <>
       {/* Backdrop */}
       <div
-        className="modal-backdrop fade show"
-        style={{ zIndex: 1050 }}
+        className="modal-backdrop"
         onClick={onClose}
       />
 
       {/* Modal dialog */}
       <div
-        className="modal fade show d-block"
-        tabIndex="-1"
-        role="dialog"
-        style={{ zIndex: 1060 }}
+        className="modal d-block"
+        style={{
+          zIndex: 1060,
+          padding: '1rem',
+          overflow: 'hidden',
+        }}
       >
         <div
-          className="modal-dialog modal-dialog-centered"
+          className="modal-dialog"
           role="document"
           style={{
-            // 화면을 넘지 않는 최대 크기 설정
             maxWidth,
+            maxHeight,
             margin: '0 auto',
           }}
         >
-          <div
-            className="modal-content"
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              maxHeight,
-            }}
-          >
+          <div className="modal-content">
+            {/* Header */}
             <div className="modal-header">
               <button
                 type="button"
@@ -48,16 +50,18 @@ function Modal(props){
                 onClick={onClose}
               />
             </div>
-            <div
-              className="modal-body"
-              style={{
-                // 본문만 스크롤 가능하도록
-                overflowY: 'auto',
-                padding: '1rem',
-              }}
-            >
+
+            {/* Body */}
+            <div className="modal-body">
               {children}
             </div>
+
+            {/* Footer (선택적) */}
+            {footer && (
+              <div className="modal-footer">
+                {footer}
+              </div>
+            )}
           </div>
         </div>
       </div>
