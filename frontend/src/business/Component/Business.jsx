@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import CusomP from '../../common/Ui/CusomP';
 import Button from '../../common/Ui/Button';
+import BookmarkButton from '../../user/component/BookmarkButton';
 
 function Business({businesssDTO}){
   
   const [isOpen, setIsOpen] = useState(false);
-    const { businessName, status, minPrice, maxPrice, facilities, description, avgRate,
+    const { id,businessName, status, minPrice, maxPrice, facilities, description, avgRate,
         petBusinessTypeName, registrationNumber, province, city, town  } = businesssDTO;
     
     const items = [
@@ -27,7 +28,8 @@ function Business({businesssDTO}){
         style={{ cursor: 'pointer' }}
         onClick={() => setIsOpen(prev => !prev)}
       >
-        <span>{businessName}</span>
+        <span>#{id} {businessName}</span>
+        <BookmarkButton type="BUSINESS_PROVIDER" targetId={id} size={24} className="ms-2"/>
         <Button
           classtext="btn btn-sm btn-outline-secondary"
           type="button"

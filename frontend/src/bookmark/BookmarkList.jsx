@@ -1,15 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import { fetchBookmarks } from './BookmarkApi';
 import Bookmark from './Bookmark';
+import ApiService from '../common/Api/ApiService';
 
 export default function BookmarkList() {
   const [bookmarks, setBookmarks] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  const bookmarklist= async () => {
+    const response= await ApiService.bookmark.list();
+    const data=response.data;
+    console.log(data);
+    
+    if(data.result){
+      setBookmarks(data.bookmarks);
+      setLoading(false);
+    }
+  }
   useEffect(() => {
-    fetchBookmarks()
-      .then(setBookmarks)
-      .finally(() => setLoading(false));
+    bookmarklist();
   }, []);
 
   if (loading) return <div>불러오는 중...</div>;
