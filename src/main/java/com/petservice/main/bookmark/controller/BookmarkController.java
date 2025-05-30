@@ -74,6 +74,10 @@ public class BookmarkController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result);
         }
         List<BookmarkDTO> bookmarks = bookmarkService.getBookmarksByUser(principal.getUsername());
+        if(bookmarks == null){
+          result.put("result",false);
+          result.put("message","북마크가 존재하지 않습니다.");
+        }
         result.put("result", true);
         result.put("bookmarks", bookmarks);
         return ResponseEntity.ok(result);
