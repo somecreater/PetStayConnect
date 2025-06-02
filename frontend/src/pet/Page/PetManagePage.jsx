@@ -14,7 +14,32 @@ function PetManagePage() {
   const [editingPet, setEditingPet] = useState(null);
   const [isModalOpen,setModalOpen]=useState(false);
   const [showRegisterForm, setShowRegisterForm] = useState(false);
+  const [catBreeds,setCatBreeds] = useState([]);
+  const [dogBreeds, setDogBreeds]= useState([]);
   const navigate=useNavigate();
+
+  const catResponse= async () =>{
+    const response = await ApiService.breed.catList();
+    const data = response.data;
+
+    if(data.result){
+      setCatBreeds(data.catBreedList);
+    }
+  }
+
+  const dogResponse= async () =>{
+    const response = await ApiService.breed.dogList();
+    const data = response.data;
+
+    if(data.result){
+      setDogBreeds(data.dogBreedList);
+    }
+  }
+
+  useEffect(() => {
+    catResponse();
+    dogResponse();
+  },[]);
 
   const fetchPets = useCallback(async () => {
 
@@ -77,7 +102,7 @@ function PetManagePage() {
 
       {showRegisterForm && (
         <div className="mb-4">
-          <PetRegisterForm onRegister={handleRegister} />
+          <PetRegisterForm onRegister={handleRegister} dogBreeds={dogBreeds} catBreeds={catBreeds}/>
         </div>
       )}
 
