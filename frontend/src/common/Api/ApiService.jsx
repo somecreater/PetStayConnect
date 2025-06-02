@@ -338,6 +338,24 @@ const ApiService = {
       headers: createHeaders(),
       withCredentials: true,
     })
+  },
+  breed:{
+    catList: () => RefreshApi.get(`${API_ENDPOINTS.breed}/cat`,{
+      headers: createHeaders(),
+      withCredentials: true,
+    }),
+    cat: (cat_id) => RefreshApi.get(`${API_ENDPOINTS.breed}/cat/${cat_id}`,{
+      headers: createHeaders(),
+      withCredentials: true,
+    }),
+    dogList: () => RefreshApi.get(`${API_ENDPOINTS.breed}/dog`,{
+      headers: createHeaders(),
+      withCredentials: true,
+    }),
+    dog: (dog_id) => RefreshApi.get(`${API_ENDPOINTS.breed}/dog/${dog_id}`,{
+      headers: createHeaders(),
+      withCredentials: true,
+    })
   }
 };
 

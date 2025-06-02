@@ -21,7 +21,7 @@ public class DogBreedMapper {
   public DogBreedDTO toDTO(DogBreed dogBreed){
     DogBreedDTO dogBreedDTO= new DogBreedDTO();
     dogBreedDTO.setId(dogBreed.getId());
-    dogBreedDTO.setName(dogBreedDTO.getName());
+    dogBreedDTO.setName(dogBreed.getName());
     dogBreedDTO.setTemperament(dogBreed.getTemperament());
     dogBreedDTO.setLifeSpan(dogBreed.getLifeSpan());
     return dogBreedDTO;
