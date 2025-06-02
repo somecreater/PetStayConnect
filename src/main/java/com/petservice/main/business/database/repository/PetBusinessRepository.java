@@ -104,4 +104,6 @@ public interface PetBusinessRepository extends JpaRepository<PetBusiness,Long> {
   @Modifying
   @Query("UPDATE PetBusiness pb SET pb.user = null WHERE pb.user.id = :userId")
   int nullifyUserReference(@Param("userId") Long userId);
+
+  PetBusiness findByBusinessName(String businessName);
 }
