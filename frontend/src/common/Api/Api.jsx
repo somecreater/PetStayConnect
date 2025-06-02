@@ -30,7 +30,8 @@ export const API_ENDPOINTS = {
   myReviews:    `${API_BASE_URL}/api/reviews/my`,
   payments: `${API_BASE_URL}/api/payments`,
   accounts: `${API_BASE_URL}/api/account`,
-  bookmarks: `${API_BASE_URL}/api/bookmarks`
+  bookmarks: `${API_BASE_URL}/api/bookmarks`,
+  breed: `${API_BASE_URL}/api/breed`,
 }
 
 export const createHeaders = () => ({
