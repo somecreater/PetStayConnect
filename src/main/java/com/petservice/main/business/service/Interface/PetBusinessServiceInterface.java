@@ -2,6 +2,7 @@ package com.petservice.main.business.service.Interface;
 
 import com.petservice.main.business.database.dto.PetBusinessDTO;
 import com.petservice.main.business.database.dto.PetBusinessRoomDTO;
+import com.petservice.main.business.database.dto.PetBusinessTagDTO;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -15,6 +16,7 @@ public interface PetBusinessServiceInterface {
   */
   public Page<PetBusinessDTO> getBusinessList(String businessName, String sectorCode, String typeCode,
       String userLoginId, boolean is_around, int page, int size);
+  public Page<PetBusinessDTO> getBusinessListByTag(PetBusinessTagDTO tagDTO, int page, int size);
   public PetBusinessDTO getBusinessDto(Long business_id);
   public PetBusinessDTO getBusinessDtoByUserLoginId(String userLoginId);
   public PetBusinessDTO getBusinessDtoBYUserId(Long User_id);
