@@ -20,7 +20,7 @@ public class PetBusinessTagMapper {
     petBusinessTag.setTagType(petBusinessTagDTO.getTagType());
     if(petBusinessTagDTO.getBusiness_id() != null){
       petBusinessTag.setPetBusiness(petBusinessRepository
-          .findById(petBusinessTagDTO.getId()).orElse(null));
+          .findById(petBusinessTagDTO.getBusiness_id()).orElse(null));
     }else if(petBusinessTagDTO.getBusiness_name() != null){
       petBusinessTag.setPetBusiness(petBusinessRepository
           .findByBusinessName(petBusinessTagDTO.getBusiness_name()));

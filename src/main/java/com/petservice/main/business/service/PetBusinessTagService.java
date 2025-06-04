@@ -56,7 +56,6 @@ public class PetBusinessTagService implements PetBusinessTagServiceInterface {
     }
     PetBusinessTag insert=petBusinessTagRepository.save(
         petBusinessTagMapper.toEntity(petBusinessTagDTO));
-
     return petBusinessTagMapper.toDto(insert);
   }
 
@@ -79,8 +78,7 @@ public class PetBusinessTagService implements PetBusinessTagServiceInterface {
       return false;
     }
 
-    if(petBusinessTagDTO.getId() == null
-    || isBlank(petBusinessTagDTO.getTagName())
+    if(isBlank(petBusinessTagDTO.getTagName())
     || isBlank(petBusinessTagDTO.getBusiness_name())
     || petBusinessTagDTO.getTagType() == null
     || petBusinessTagDTO.getBusiness_id() ==null){

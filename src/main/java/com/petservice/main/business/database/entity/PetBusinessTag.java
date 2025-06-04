@@ -17,6 +17,7 @@ public class PetBusinessTag {
   @Column(name = "tag_name")
   private String tagName;
 
+  @Enumerated(EnumType.STRING)
   @Column(name = "tag_type")
   private TagType tagType;
 
