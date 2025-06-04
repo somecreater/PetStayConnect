@@ -36,7 +36,7 @@ function BusinessRoomList(props){
         ))}
       </div>
     </div>
-  )
+  );
 }
 
 export default BusinessRoomList;

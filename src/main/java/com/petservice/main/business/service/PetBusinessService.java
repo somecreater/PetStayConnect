@@ -1,12 +1,14 @@
 package com.petservice.main.business.service;
 
 import com.petservice.main.business.database.dto.PetBusinessDTO;
+import com.petservice.main.business.database.dto.PetBusinessTagDTO;
 import com.petservice.main.business.database.entity.BusinessStatus;
 import com.petservice.main.business.database.entity.PetBusiness;
 import com.petservice.main.business.database.entity.PetBusinessType;
 import com.petservice.main.business.database.entity.Varification;
 import com.petservice.main.business.database.mapper.PetBusinessMapper;
 import com.petservice.main.business.database.repository.PetBusinessRepository;
+import com.petservice.main.business.database.repository.PetBusinessTagRepository;
 import com.petservice.main.business.database.repository.PetBusinessTypeRepository;
 import com.petservice.main.business.service.Interface.PetBusinessServiceInterface;
 import com.petservice.main.business.service.Interface.PetBusinessTypeServiceInterface;
@@ -30,6 +32,7 @@ public class PetBusinessService implements PetBusinessServiceInterface {
   private final PetBusinessTypeServiceInterface petBusinessTypeService;
   private final PetBusinessRepository petBusinessRepository;
   private final PetBusinessTypeRepository typeRepository;
+  private final PetBusinessTagRepository petBusinessTagRepository;
   private final AddressServiceInterface addressService;
   private final PetBusinessMapper petBusinessMapper;
 
@@ -98,6 +101,20 @@ public class PetBusinessService implements PetBusinessServiceInterface {
       business.setBankAccount(null);
       return petBusinessMapper.toBasicDTO(business);
     });
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public Page<PetBusinessDTO> getBusinessListByTag(PetBusinessTagDTO tagDTO, int page, int size){
+    Pageable pageable = PageRequest.of(page, size);
+    Page<PetBusiness> petBusinessPage = null;
+    petBusinessPage= petBusinessTagRepository.findByTagNameAndTagType(
+        tagDTO.getTagName(),tagDTO.getTagType(),pageable);
+    if(petBusinessPage.getSize() == 0){
+      return null;
+    }
+
+    return petBusinessPage.map(petBusinessMapper::toDTO);
   }
 
   @Override

@@ -140,7 +140,7 @@ function PetRegisterForm({ onRegister, dogBreeds, catBreeds }) {
           <TextInput
             classtext="form-control"
             value={species}
-            placeholderText="종류"
+            placeholderText="종류(견종이나 묘종은 정보창을 참고해주세요)"
             onChange={e => setSpecies(e.target.value)}
           />
         </div>

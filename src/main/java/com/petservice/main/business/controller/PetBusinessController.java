@@ -2,6 +2,7 @@ package com.petservice.main.business.controller;
 
 import com.petservice.main.api.database.dto.NaverSearchRequest;
 import com.petservice.main.business.database.dto.PetBusinessDTO;
+import com.petservice.main.business.database.dto.PetBusinessTagDTO;
 import com.petservice.main.business.database.dto.SearchRequest;
 import com.petservice.main.api.service.Interface.NaverSearchServiceInterface;
 import com.petservice.main.business.service.Interface.PetBusinessServiceInterface;
@@ -46,6 +47,31 @@ public class PetBusinessController {
     }
     return ResponseEntity.ok(result);
   }
+
+  @GetMapping("/tag")
+  public ResponseEntity<?> getPetBusinessListByTag(
+      @AuthenticationPrincipal CustomUserDetails principal,
+      @ModelAttribute PetBusinessTagDTO petBusinessTagDTO,
+      @RequestParam(defaultValue = "0") int page,
+      @RequestParam(defaultValue = "5") int size){
+
+    Map<String,Object> result = new HashMap<>();
+    Page<PetBusinessDTO> petBusinessDTOS=petBusinessService
+        .getBusinessListByTag(petBusinessTagDTO, page, size);
+    if(petBusinessDTOS == null){
+      result.put("result",false);
+      result.put("message","태그 검색 결과가 존재하지 않습니다.");
+    }else{
+      result.put("result",true);
+      result.put("message","태그 검색 결과를 가져옵니다");
+      result.put("businessList",petBusinessDTOS);
+      result.put("totalPages",petBusinessDTOS.getTotalPages());
+      result.put("currentPage",petBusinessDTOS.getNumber());
+    }
+
+    return ResponseEntity.ok(result);
+  }
+
   @GetMapping("/list")
   public ResponseEntity<?> getPetBusinessList(
     @AuthenticationPrincipal CustomUserDetails principal,

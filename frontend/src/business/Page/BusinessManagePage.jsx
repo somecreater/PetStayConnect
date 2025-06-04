@@ -8,6 +8,8 @@ import Modal from "../../common/Ui/Modal";
 import RoomRegisterForm from "../Form/RoomRegisterForm";
 import RoomUpdateForm from "../Form/RoomUpdateForm";
 import { useNavigate } from "react-router-dom";
+import BusinessTagList from "../Component/BusinessTagList";
+import Button from "../../common/Ui/Button";
 
 
 /*
@@ -22,14 +24,17 @@ function BusinessManagePage(props){
   const { user } = useUser();
   const navigate= useNavigate();
   const businessId = user.petBusinessDTO?.id;
+  const business_name = user.petBusinessDTO?.businessName;
 
-  const [activeTab, setActiveTab] = useState("reservations"); // "reservations" | "rooms" | "payments"
+  const [activeTab, setActiveTab] = useState("reservations"); // "reservations" | "rooms" | "payments" | "tags"
   const [updateModal, setUpdateModal] = useState(false);
-  const [registerModal, setRegisterModal]=useState(false);
+  const [registerModal, setRegisterModal] = useState(false);
+  const [showTagForm,setShowTagForm] = useState(false);
 
   const [reservations,setReservations]= useState([]);
-  const [rooms, setRooms]= useState([]);
-  const [pays, setPays]= useState([]);
+  const [rooms, setRooms] = useState([]);
+  const [pays, setPays] = useState([]);
+  const [tags, setTags] = useState([]);
   const [page, setPage] = useState(0);
   const [size] = useState(10);
   const [TotalPages, setTotalPages] = useState(1);
@@ -37,6 +42,10 @@ function BusinessManagePage(props){
   const [reservation, setReservation] = useState(null);
   const [room, setRoom] = useState(null);
   const [pay, setPay] = useState(null);
+  const [tag, setTag] = useState(null);
+
+  const [tagName, setTagName] = useState("");
+  const [tagType, setTagType] = useState("PET_SPECIES");
 
   const reservationList=async () =>{ 
     const response= await ApiService.business.bnsReservation(page, size);
@@ -80,6 +89,17 @@ function BusinessManagePage(props){
     }
   };
 
+  const tagList= async ()=>{
+    const response= await ApiService.businesstag.list(businessId,page,size);
+    const data= response.data;
+
+    if(data.result){
+      setTags(data.tags);
+    }else{
+      setTag([]);
+    }
+  }
+
 //추후 컨트롤러 구현시 주석 해제
   useEffect(() => {
   if (!businessId) {
@@ -94,6 +114,10 @@ function BusinessManagePage(props){
   else if (activeTab === "payments") {
     payList();
   }
+  else if (activeTab === "tags") {
+    tagList();
+  }
+
   },[activeTab, businessId, page]);
 
   const goPrevPage = () => {
@@ -137,7 +161,6 @@ function BusinessManagePage(props){
         " 잔액 부족 등의 문제로 결제가 취소되지 않았습니다!");
     }
   };
-
   const RoomDelete= async (id) => {
     const response= await ApiService.businessroom.delete(businessId,id);
     const data= response.data;
@@ -148,6 +171,16 @@ function BusinessManagePage(props){
       alert("방 삭제에 실패했습니다!");
     }
   }
+  const TagDelete= async (id) => {
+    const response= await ApiService.businesstag.delete(id);
+    const data= response.data;
+    if(data.result){
+      alert(data.message);
+    }else{
+      alert(data.message);
+    }
+  };
+
   const SelectedRoom = (selRoom)=>{
     if(room === null){
       setRoom(selRoom);
@@ -161,13 +194,40 @@ function BusinessManagePage(props){
     }else{
       setReservation(null);
     }
-  }
+  };
   const SelectPay = (selPay) =>{
   if (pay?.id === selPay.id) {
     setPay(null);
   } else {
     setPay(selPay);
   }
+  };
+  const SelectTag = (selTag) =>{
+    if(tag?.id ===selTag.id){
+      setTag(null);
+    }else{
+      setTag(selTag);
+    }
+  };
+
+  const tagSubmit = async ()=> {
+    const dto={
+      id: null,
+      tagName: tagName,
+      tagType: tagType,
+      business_id: businessId,
+      business_name: business_name
+    }
+    if(tagName  !== ""){
+      const response= await ApiService.businesstag.register(dto);
+      const data= response.data;
+
+      if(data.result){
+        tagList();
+      }else{
+        alert(data.message);
+      }
+    }
   };
 
   return (
@@ -198,6 +258,14 @@ function BusinessManagePage(props){
             onClick={() => setActiveTab("payments")}
           >
             결제 관리
+          </button>
+        </li>
+        <li className="nav-item">
+          <button
+            className={`nav-link ${activeTab === "tags" ? "active" : ""}`}
+            onClick={() => setActiveTab("tags")}
+          >
+            태그 관리
           </button>
         </li>
       </ul>
@@ -318,6 +386,66 @@ function BusinessManagePage(props){
               다음
             </button>
           </div>
+        </div>
+      )}
+      {activeTab === "tags" &&(
+        <div>
+          <h5>태그 목록</h5>
+          <Button 
+            classtext="btn btn-primary btn-sm" 
+            type="button" 
+            title={showTagForm ? '태그 등록 폼 숨기기':'태그 등록 폼'}
+            onClick={()=>setShowTagForm(prev => !prev)} 
+          />
+
+          {showTagForm &&(
+            <div className="mb-4">
+              <form onSubmit={tagSubmit} className="border p-4 rounded bg-light">
+                <h5 className="mb-4">신규 태그 등록</h5>
+                
+                <div className="mb-3">
+                  <label className="form-label">태그 종류</label>
+                  <select
+                    className="form-select"
+                    value={tagType}
+                    onChange={e => setTagType(e.target.value)}
+                  >
+                    <option value="PET_SPECIES">애완동물 종</option>
+                    <option value="PET_WEIGHT">애완동물 사이즈</option>
+                  </select>
+                </div>
+                
+                <div className="mb-3">
+                  <label className="form-label">태그 이름</label>
+                  <input
+                    className="form-control"
+                    type="text"
+                    value={tagName}
+                    onChange={e => setTagName(e.target.value)}
+                  />
+                </div>
+
+                <Button
+                  classtext="btn btn-success w-100" 
+                  type="submit" 
+                  title="태그 등록" 
+                />
+              </form>
+            </div>
+          )}
+
+          {tag &&(
+            <div className="mt-3 p-2 border rounded bg-light">
+              <strong>선택된 태그:</strong> #{tag.tagType} · 이름: {tag.tagName}
+            </div>
+          )}
+
+          <BusinessTagList
+            tagList={tags}
+            onSelect={SelectTag}
+            isDelete={true}
+            onDelete={TagDelete}
+          />
         </div>
       )}
     </div>
