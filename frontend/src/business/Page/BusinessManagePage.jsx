@@ -37,6 +37,7 @@ function BusinessManagePage(props){
   const [reservation, setReservation] = useState(null);
   const [room, setRoom] = useState(null);
   const [pay, setPay] = useState(null);
+  
 
   const reservationList=async () =>{ 
     const response= await ApiService.business.bnsReservation(page, size);
@@ -80,6 +81,7 @@ function BusinessManagePage(props){
     }
   };
 
+
 //추후 컨트롤러 구현시 주석 해제
   useEffect(() => {
   if (!businessId) {
@@ -94,6 +96,7 @@ function BusinessManagePage(props){
   else if (activeTab === "payments") {
     payList();
   }
+
   },[activeTab, businessId, page]);
 
   const goPrevPage = () => {
@@ -200,6 +203,7 @@ function BusinessManagePage(props){
             결제 관리
           </button>
         </li>
+
       </ul>
 
       {activeTab === "reservations" &&(
@@ -320,6 +324,7 @@ function BusinessManagePage(props){
           </div>
         </div>
       )}
+      
     </div>
   );
 }

@@ -159,6 +159,11 @@ const ApiService = {
       headers: createHeaders(),
       withCredentials: true
     }),
+    tag: (tag,page,size) => RefreshApi.get(API_ENDPOINTS.business.tag,{
+      params: { ...tag, page, size},
+      headers: createHeaders(),
+      withCredentials: true
+    }),
     list: (dto,page,size) => RefreshApi.get(API_ENDPOINTS.business.list, 
     {
       params:{ ...dto, page, size},
@@ -206,7 +211,29 @@ const ApiService = {
       withCredentials: true,
     }),
   },
-
+  businesstag:{
+    list: (business_id) => RefreshApi.get(`${API_ENDPOINTS.businesstag}/business/${business_id}`,
+    {
+      headers: createHeaders(),
+      withCredentials: true,
+    }),
+    detail: (id) => RefreshApi.get(`${API_ENDPOINTS.businesstag}/${id}`,
+    {
+      headers: createHeaders(),
+      withCredentials: true,
+    }),
+    register: (dto) => RefreshApi.post(`${API_ENDPOINTS.businesstag}`,
+    dto,
+    {
+      headers: createHeaders(),
+      withCredentials: true,
+    }),
+    delete: (id) => RefreshApi.delete(`${API_ENDPOINTS.businesstag}/${id}`,
+    {
+      headers: createHeaders(),
+      withCredentials: true,
+    })
+  },
   businessroom:{
     list: (business_id)=> RefreshApi.get(`${API_ENDPOINTS.businessroom}/${business_id}`,
     {

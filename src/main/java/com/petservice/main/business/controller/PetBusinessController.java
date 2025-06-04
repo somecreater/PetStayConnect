@@ -65,6 +65,8 @@ public class PetBusinessController {
       result.put("result",true);
       result.put("message","태그 검색 결과를 가져옵니다");
       result.put("businessList",petBusinessDTOS);
+      result.put("totalPages",petBusinessDTOS.getTotalPages());
+      result.put("currentPage",petBusinessDTOS.getNumber());
     }
 
     return ResponseEntity.ok(result);
