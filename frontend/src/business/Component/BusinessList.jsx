@@ -4,7 +4,7 @@ import Modal from '../../common/Ui/Modal';
 import ReservationForm from '../Form/ReservationForm';
 import { useUser } from '../../common/Context/UserContext';
 
-function BusinessList({List, isReservation, petList }){
+function BusinessList({List, isReservation, petList, isSelect, onSelect }){
   
   //추후 예약 버튼 추가, 페이징 처리는 Page 컴포넌트에 추가 
   
@@ -12,6 +12,12 @@ function BusinessList({List, isReservation, petList }){
   const [selectedBusiness, setSelectedBusiness] = useState(null);
   const { user } =useUser();
   
+  const handleClick= (business) => {
+    if(isSelect){
+      onSelect(business);
+    }
+  };
+
   const openModal = (business) => {
     setSelectedBusiness(business);
     setIsModalOpen(true);
@@ -29,7 +35,10 @@ function BusinessList({List, isReservation, petList }){
         {List.map(business => (
           <div key={business.id} className="col">
             <div className="card">
-              <div className="card-body d-flex flex-column">
+              <div 
+                className="card-body d-flex flex-column"
+                onClick={()=>handleClick(business)} 
+              >
                 <Business businesssDTO={business} />
                 {(isReservation && business.id) ? (
                   <button

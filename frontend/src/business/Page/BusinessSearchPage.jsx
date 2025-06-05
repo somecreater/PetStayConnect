@@ -6,6 +6,7 @@ import { useUser } from '../../common/Context/UserContext';
 import Button from '../../common/Ui/Button';
 import Modal from '../../common/Ui/Modal';
 import BreedList from '../../common/Component/BreedList';
+import BusinessTagList from '../Component/BusinessTagList';
 
 const style={
   Breeds: {
@@ -50,10 +51,12 @@ function BusinessSearchPage(props){
   });
 
   const [tag, setTag] = useState('');
+  const [tagList,setTagList] = useState([]);
   const [tagType, setTagType] = useState('PET_SPECIES');
   const [catBreed, setCatBreed] = useState([]);
   const [dogBreed,setDogBreed] = useState([]);
   const [openTagModal,setOpenTagModal] = useState(false);
+  const [business,setBusiness] = useState(null);
 
   const fetchPets = useCallback(async () => {
     const res = await ApiService.pet.userpet();
@@ -217,6 +220,19 @@ function BusinessSearchPage(props){
   const goNext = () => setPage(prev => Math.min(totalPages - 1, prev + 1));
   const goLast = () => setPage(totalPages - 1);
 
+  const selectBusiness = async (selbusiness) => {
+    if(business?.id === selbusiness.id){
+      setTagList([]);
+      setBusiness(null);
+    }else{
+      const response = await ApiService.businesstag.list(selbusiness.id);
+      const data = response.data;
+      if(data.result){
+        setTagList(data.tags);
+        setBusiness(selbusiness);
+      }
+    }
+  }
 
   return (
     <div className="container py-4">
@@ -391,7 +407,26 @@ function BusinessSearchPage(props){
       )}
       
       {businesses.length > 0 ? (
-        <BusinessList List={businesses} petList={petList} isReservation={true} />
+        <>
+          {business &&(
+            <div className="mt-3 p-2 border rounded bg-light">
+              <strong>태그 목록</strong>
+              <BusinessTagList 
+                tagList={tagList} 
+                onSelect={null} 
+                isDelete={false} 
+                onDelete={null}
+              />
+            </div>
+          )}
+          <BusinessList 
+            List={businesses} 
+            petList={petList} 
+            isReservation={true} 
+            isSelect={true}
+            onSelect={selectBusiness} 
+          />
+        </>
       ) : (
         <div className="alert alert-info">검색 결과가 없습니다.</div>
       )}
