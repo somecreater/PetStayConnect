@@ -30,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -85,7 +86,7 @@ public class PaymentService implements PaymentServiceInterface{
     return paymentMapper.toDTO(payment);
   }
 
-  //약 5%의 수수료를 때서 사업자에 전달
+  //약 10%의 수수료를 때서 사업자에 전달
   @Override
   @Transactional
   public PaymentDTO RegisterPayment(PaymentRequestDTO dto) {
@@ -106,7 +107,14 @@ public class PaymentService implements PaymentServiceInterface{
     AccountDTO manager_account = accountService.getMasterAccount();
 
     BigDecimal amount = dto.getAmount();
-    BigDecimal fee = amount.multiply(serviceFeeRate);
+    BigDecimal expectedTotal =
+        BigDecimal.valueOf(reservation.getPetBusiness().getMaxPrice())
+            .multiply(BigDecimal.valueOf(reservation.getPetReservationList().size()));
+    if(amount.compareTo(expectedTotal) != 0){
+      return null;
+    }
+    BigDecimal fee = amount.multiply(serviceFeeRate)
+        .setScale(2, RoundingMode.HALF_UP);
 
     payment.setReservation(reservation);
     payment.setImpUid(dto.getImpUid());
@@ -157,25 +165,124 @@ public class PaymentService implements PaymentServiceInterface{
     AccountDTO master_account = accountService.getMasterAccount();
     Reservation reservation= payment.getReservation();
     if("paid".equalsIgnoreCase(status)) {
-      payment.setPaymentStatus(PaymentStatus.PAID);
-      reservation.setStatus(ReservationStatus.CONFIRMED);
-      reservationRepository.save(reservation);
+      if(payment.getPaymentStatus() == PaymentStatus.POINT_PAID_READY){
+        payment.setPaymentStatus(PaymentStatus.POINT_PAID);
+        reservation.setStatus(ReservationStatus.CONFIRMED);
+        reservationRepository.save(reservation);
 
-      BigDecimal amount = payment.getAmount();
-      BigDecimal fee = payment.getServiceFee();
-      accountService.updateAccount(consumer_account.getId(), amount.negate().intValue());
-      accountService.updateAccount(business_account.getId(), amount.subtract(fee).intValue());
-      accountService.updateAccount(master_account.getId(), fee.intValue());
+        BigDecimal amount = payment.getAmount();
+        BigDecimal orgAmount = payment.getAmount()
+            .multiply(BigDecimal.valueOf(10))
+            .divide(BigDecimal.valueOf(7), 0, RoundingMode.HALF_UP);
+        BigDecimal fee = payment.getServiceFee();
+        accountService.updateAccount(consumer_account.getId(), amount.negate().intValue());
+        accountService.updateAccount(business_account.getId(), orgAmount.subtract(fee).intValue());
 
-      user.setPoint(user.getPoint() + fee.intValue());
-      userRepository.save(user);
+        BigDecimal subRate = new BigDecimal("0.30");
+        BigDecimal subAmount =orgAmount.multiply(subRate).setScale(0, RoundingMode.DOWN);
+        accountService.updateAccount(master_account.getId(), fee.intValue());
+        accountService.updateAccount(master_account.getId(), subAmount.negate().intValue());
+        user.setPoint(user.getPoint()-subAmount.intValue());
+        userRepository.save(user);
+      }else {
+        payment.setPaymentStatus(PaymentStatus.PAID);
+        reservation.setStatus(ReservationStatus.CONFIRMED);
+        reservationRepository.save(reservation);
 
+        BigDecimal amount = payment.getAmount();
+        BigDecimal fee = payment.getServiceFee();
+        accountService.updateAccount(consumer_account.getId(), amount.negate().intValue());
+        accountService.updateAccount(business_account.getId(), amount.subtract(fee).intValue());
+        accountService.updateAccount(master_account.getId(), fee.intValue());
+
+        user.setPoint(user.getPoint() + fee.intValue());
+        userRepository.save(user);
+      }
     }else if ("failed".equalsIgnoreCase(status)
         || "cancelled".equalsIgnoreCase(status)) {
       // 입금 실패 혹은 기한 만료
       payment.setPaymentStatus(PaymentStatus.FAILED);
     }
     saved=paymentRepository.save(payment);
+    return paymentMapper.toDTO(saved);
+  }
+
+  /*
+  포인트 할인을 이용한 결제, 환불 불가, 포인트 적립 안됨,
+  30 % 할인, 사업자에게는 수수료 빼고, 정산 금액 지급,
+  할인된 값은 관리자 계좌에서 차감
+  */
+  @Override
+  @Transactional
+  public PaymentDTO RegisterPaymentByPoint(PaymentRequestDTO dto){
+
+    Payment payment=new Payment();
+    Payment saved;
+    if(Objects.equals(dto.getStatus(), "failed")||!ValidationPayment(dto)){
+      return null;
+    }
+    Reservation reservation=reservationRepository
+        .findById(dto.getReservationId()).orElse(null);
+    if(reservation == null){
+      return null;
+    }
+    User user= reservation.getUser();
+    AccountDTO consumer_account = accountService.getAccountByUserId(user.getId());
+    AccountDTO business_account = accountService
+        .getAccountByBusinessId(reservation.getPetBusiness().getId());
+    AccountDTO manager_account = accountService.getMasterAccount();
+
+    BigDecimal amount = dto.getAmount();
+    BigDecimal expectedOrg = BigDecimal.valueOf(reservation.getPetBusiness().getMaxPrice())
+        .multiply(BigDecimal.valueOf(reservation.getPetReservationList().size()));
+    BigDecimal discountRate= new BigDecimal("0.7");
+    BigDecimal discountPrice= new BigDecimal("0.3");
+    BigDecimal expectedDiscounted = expectedOrg.multiply(discountRate)
+        .setScale(0, RoundingMode.DOWN);
+    BigDecimal expectedDiscountPrice= expectedOrg.multiply(discountPrice)
+        .setScale(0, RoundingMode.DOWN);
+    if(amount.compareTo(expectedDiscounted) != 0){
+      return null;
+    }
+    if(user.getPoint() < expectedDiscountPrice.intValue()){
+      throw new IllegalStateException("포인트 부족");
+    }
+
+    BigDecimal fee = expectedOrg.multiply(serviceFeeRate).setScale(2, RoundingMode.HALF_UP);
+
+    payment.setReservation(reservation);
+    payment.setImpUid(dto.getImpUid());
+    payment.setMerchantUid(dto.getMerchantUid());
+    payment.setAmount(amount);
+    payment.setFeeRate(serviceFeeRate);
+    payment.setServiceFee(fee);
+    payment.setPaymentMethod(dto.getPayMethod());
+
+    if(!Objects.equals(dto.getPayMethod(), "vbank")) {
+      payment.setPaymentStatus(PaymentStatus.POINT_PAID);
+      reservation.setStatus(ReservationStatus.CONFIRMED);
+
+      accountService.updateAccount(consumer_account.getId(), amount.negate().intValue());
+      accountService.updateAccount(business_account.getId(), expectedOrg.subtract(fee).intValue());
+
+      //할인된 가격은 관리자 계좌에서 인출
+      BigDecimal subPrice = expectedOrg.multiply(BigDecimal.valueOf(0.3));
+      accountService.updateAccount(manager_account.getId(), fee.intValue());
+      accountService.updateAccount(manager_account.getId(), subPrice.negate().intValue());
+      user.setPoint(user.getPoint()-expectedDiscountPrice.intValue());
+      reservationRepository.save(reservation);
+    }else{
+      payment.setPaymentStatus(
+          "ready".equalsIgnoreCase(dto.getStatus()) ? PaymentStatus.POINT_PAID_READY : PaymentStatus.FAILED
+      );
+    }
+    payment.setTransactionId(dto.getImpUid());
+    payment.setTransactionTime(
+        LocalDateTime.ofInstant(Instant.ofEpochSecond(dto.getPaidAt()), ZoneId.systemDefault()));
+    payment.setRefundStatus(RefundStatus.NONE);
+    payment.setRefundAmount(BigDecimal.ZERO);
+
+    saved = paymentRepository.save(payment);
     return paymentMapper.toDTO(saved);
   }
 
@@ -191,6 +298,7 @@ public class PaymentService implements PaymentServiceInterface{
     if(exPayment.getPaymentStatus() == PaymentStatus.FAILED
       || exPayment.getPaymentStatus() == PaymentStatus.CANCELED
       || exPayment.getPaymentStatus() == PaymentStatus.READY
+      || exPayment.getPaymentStatus() == PaymentStatus.POINT_PAID
       || exPayment.getRefundStatus() != RefundStatus.NONE){
       return null;
     }

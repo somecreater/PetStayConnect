@@ -6,10 +6,7 @@ import com.petservice.main.business.database.entity.PetBusinessType;
 import com.petservice.main.business.database.entity.Varification;
 import com.petservice.main.business.database.mapper.PetBusinessMapper;
 import com.petservice.main.business.database.repository.PetBusinessTypeRepository;
-import com.petservice.main.business.service.Interface.PetBusinessRoomServiceInterface;
-import com.petservice.main.business.service.Interface.PetBusinessServiceInterface;
-import com.petservice.main.business.service.Interface.PetReservationServiceInterface;
-import com.petservice.main.business.service.Interface.ReservationServiceInterface;
+import com.petservice.main.business.service.Interface.*;
 import com.petservice.main.payment.database.entity.Account;
 import com.petservice.main.payment.database.entity.AccountType;
 import com.petservice.main.payment.database.repository.AccountRepository;
@@ -55,6 +52,7 @@ public class UserService implements CustomUserServiceInterface, UserDetailsServi
   private final PetReservationServiceInterface petReservationServiceInterface;
   private final ReservationServiceInterface reservationServiceInterface;
   private final PetBusinessServiceInterface petBusinessServiceInterface;
+  private final PetBusinessTagServiceInterface petBusinessTagServiceInterface;
 
   private final UserMapper userMapper;
   private final PetBusinessMapper petBusinessMapper;
@@ -324,6 +322,7 @@ public class UserService implements CustomUserServiceInterface, UserDetailsServi
                 || !reservationServiceInterface.updateDeleteBusiness(deleteBusiness.getId())
                 || !reservationServiceInterface.updateDeleteUser(delete.getId())
                 || !petBusinessRoomServiceInterface.deleteRoomByBusiness(deleteBusiness.getId())
+                || !petBusinessTagServiceInterface.deleteTagByBusinessId(deleteBusiness.getId())
                 || !petBusinessServiceInterface.deleteBusinessByUser(delete.getId())
                 || !petBusinessServiceInterface.deleteBusiness(deleteBusiness.getId())
                 || petRepository.deleteByUser_Id(delete.getId()) <0) {

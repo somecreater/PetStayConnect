@@ -28,4 +28,6 @@ public interface PetBusinessTagRepository extends JpaRepository<PetBusinessTag, 
       @Param("tagName") String tagName,
       @Param("tagType") TagType tagType,
       Pageable pageable);
+
+  long deleteByPetBusiness_Id(Long id);
 }
