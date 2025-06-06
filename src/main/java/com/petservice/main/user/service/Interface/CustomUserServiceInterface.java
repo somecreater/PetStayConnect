@@ -15,5 +15,4 @@ public interface CustomUserServiceInterface {
   public boolean UserValidation(UserDTO userDTO);
   public boolean isBlank(String str);
 
-  public UserDTO registerMasterUser(UserDTO userDTO);
 }

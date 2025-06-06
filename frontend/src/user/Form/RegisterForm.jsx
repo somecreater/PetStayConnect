@@ -166,7 +166,7 @@ function RegisterForm(props){
           >
             <option value="CUSTOMER">일반 회원</option>
             <option value="SERVICE_PROVIDER">사업자</option>
-            <option value="MANAGER">관리자</option>
+            <option value="MANAGER">관리자(가입불가)</option>
           </select>
         </div>
 
