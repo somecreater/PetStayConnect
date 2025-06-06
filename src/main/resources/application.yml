@@ -109,7 +109,9 @@ cat:
 
 payment:
   service:
-    fee-rate: ${SERVICE_FEE_RATE:0.05}
+    fee-rate: ${SERVICE_FEE_RATE:0.10}
+  point:
+    fee-rate: ${POINT_FEE_RATE:0.05}
 
 async:
   mail:

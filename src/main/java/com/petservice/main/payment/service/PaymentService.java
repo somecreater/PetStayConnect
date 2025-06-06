@@ -52,6 +52,9 @@ public class PaymentService implements PaymentServiceInterface{
   @Value("${payment.service.fee-rate}")
   private BigDecimal serviceFeeRate;
 
+  @Value("${payment.point.fee-rate}")
+  private BigDecimal pointFeeRate;
+
   @Override
   @Transactional(readOnly = true)
   public Page<PaymentDTO> PaymentListByBusiness(Long business_id, int page, int size) {
@@ -87,6 +90,7 @@ public class PaymentService implements PaymentServiceInterface{
   }
 
   //약 10%의 수수료를 때서 사업자에 전달
+  //약 5%만 포인트로 사용자에게 적립
   @Override
   @Transactional
   public PaymentDTO RegisterPayment(PaymentRequestDTO dto) {
@@ -113,6 +117,8 @@ public class PaymentService implements PaymentServiceInterface{
     if(amount.compareTo(expectedTotal) != 0){
       return null;
     }
+    BigDecimal point = amount.multiply(pointFeeRate)
+        .setScale(2, RoundingMode.HALF_UP);
     BigDecimal fee = amount.multiply(serviceFeeRate)
         .setScale(2, RoundingMode.HALF_UP);
 
@@ -127,7 +133,7 @@ public class PaymentService implements PaymentServiceInterface{
     if(!Objects.equals(dto.getPayMethod(), "vbank")) {
       payment.setPaymentStatus(PaymentStatus.PAID);
       reservation.setStatus(ReservationStatus.CONFIRMED);
-      user.setPoint(user.getPoint() + fee.intValue());
+      user.setPoint(user.getPoint() + point.intValue());
 
       accountService.updateAccount(consumer_account.getId(), amount.negate().intValue());
       accountService.updateAccount(business_account.getId(), amount.subtract(fee).intValue());
@@ -191,11 +197,13 @@ public class PaymentService implements PaymentServiceInterface{
 
         BigDecimal amount = payment.getAmount();
         BigDecimal fee = payment.getServiceFee();
+        BigDecimal point=  amount.multiply(pointFeeRate)
+            .setScale(2, RoundingMode.HALF_UP);
         accountService.updateAccount(consumer_account.getId(), amount.negate().intValue());
         accountService.updateAccount(business_account.getId(), amount.subtract(fee).intValue());
         accountService.updateAccount(master_account.getId(), fee.intValue());
 
-        user.setPoint(user.getPoint() + fee.intValue());
+        user.setPoint(user.getPoint() + point.intValue());
         userRepository.save(user);
       }
     }else if ("failed".equalsIgnoreCase(status)

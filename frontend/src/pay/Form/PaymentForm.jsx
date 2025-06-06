@@ -171,11 +171,9 @@ function PaymentForm({ reservation, price = 0, businessName }){
     ['체크 아웃', reservation.checkOut],
     ['특별 요구사항', reservation.specialRequests],
     ['사업자 요구정보', reservation.businessRequestInfo],
-    ['결제 대행사(PG사)', paymentRequest.pg],
-    ['결제 방식', paymentRequest.pay_method],
-    ['주문 번호', paymentRequest.merchant_uid],
-    ['상품 이름', paymentRequest.name],
-    ['결제 가격', paymentRequest.amount]
+    ['결제 대행사(PG사)', 'html5_inicis'],
+    ['결제 방식', 'card'],
+    ['결제 가격', `${computedPrice.toLocaleString()}원`]
   ];
 
   return (
