@@ -185,7 +185,7 @@ public class PaymentService implements PaymentServiceInterface{
         accountService.updateAccount(business_account.getId(), orgAmount.subtract(fee).intValue());
 
         BigDecimal subRate = new BigDecimal("0.30");
-        BigDecimal subAmount =orgAmount.multiply(subRate).setScale(0, RoundingMode.DOWN);
+        BigDecimal subAmount =orgAmount.multiply(subRate).setScale(2, RoundingMode.HALF_UP);
         accountService.updateAccount(master_account.getId(), fee.intValue());
         accountService.updateAccount(master_account.getId(), subAmount.negate().intValue());
         user.setPoint(user.getPoint()-subAmount.intValue());
@@ -246,9 +246,9 @@ public class PaymentService implements PaymentServiceInterface{
     BigDecimal discountRate= new BigDecimal("0.7");
     BigDecimal discountPrice= new BigDecimal("0.3");
     BigDecimal expectedDiscounted = expectedOrg.multiply(discountRate)
-        .setScale(0, RoundingMode.DOWN);
+        .setScale(2, RoundingMode.HALF_UP);
     BigDecimal expectedDiscountPrice= expectedOrg.multiply(discountPrice)
-        .setScale(0, RoundingMode.DOWN);
+        .setScale(2, RoundingMode.HALF_UP);
     if(amount.compareTo(expectedDiscounted) != 0){
       return null;
     }
