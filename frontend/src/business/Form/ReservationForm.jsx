@@ -62,8 +62,14 @@ function ReservationForm(props){
 
   const handleRoomSelect = (room) => {
     console.log('선택된 방:', room);
-    setSelectedRoom(room);
-    setReservationForm(prev => ({ ...prev, roomType: room.roomType }));
+    if(selectedRoom?.id === room.id){
+      setSelectedRoom(null);
+      setReservationForm(prev => ({ ...prev, roomType: ''}));
+    }
+    else{
+      setSelectedRoom(room);
+      setReservationForm(prev => ({ ...prev, roomType: room.roomType }));
+    }
   };
 
   const handleSubmit = async ()=>{

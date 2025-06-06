@@ -13,6 +13,7 @@ public interface PaymentServiceInterface {
   public PaymentDTO getPayment(Long payment_id);
   public PaymentDTO RegisterPayment(PaymentRequestDTO dto);
   public PaymentDTO RegisterVBankPayment(String impUid, String status);
+  public PaymentDTO RegisterPaymentByPoint(PaymentRequestDTO dto);
   public PaymentDTO CancelPayment(PaymentCancelRequestDTO dto);
 
   public boolean ValidationPayment(PaymentRequestDTO dto);

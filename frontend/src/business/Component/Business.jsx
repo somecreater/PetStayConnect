@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import CusomP from '../../common/Ui/CusomP';
 import Button from '../../common/Ui/Button';
 import BookmarkButton from '../../user/component/BookmarkButton';
+import BusinessTagList from './BusinessTagList';
 
-function Business({businesssDTO}){
+function Business({businesssDTO,tagList}){
   
   const [isOpen, setIsOpen] = useState(false);
     const { id,businessName, status, minPrice, maxPrice, facilities, description, avgRate,
@@ -38,14 +39,16 @@ function Business({businesssDTO}){
         />
       </div>
       {isOpen && (
-        <ul className="list-group list-group-flush">
-          {items.map(([label, value]) => (
-            <li key={label} className="list-group-item d-flex justify-content-between">
-              <strong>{label}</strong>
-              <span>{value || '—'}</span>
-            </li>
-          ))}
-        </ul>
+        <div>
+          <ul className="list-group list-group-flush">
+            {items.map(([label, value]) => (
+              <li key={label} className="list-group-item d-flex justify-content-between">
+                <strong>{label}</strong>
+                <span>{value || '—'}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
       )}
     </div>
   );

@@ -24,6 +24,29 @@ public class PayController {
 
   private final PaymentServiceInterface paymentService;
 
+  @PostMapping("/point")
+  public ResponseEntity<?> registerPaymentByPoint(
+      @AuthenticationPrincipal CustomUserDetails principal,
+      @RequestBody PaymentRequestDTO requestDTO){
+    Map<String, Object> response=new HashMap<>();
+    PaymentDTO paymentDTO=paymentService.RegisterPaymentByPoint(requestDTO);
+
+    if(paymentDTO  != null){
+      response.put("result", true);
+      response.put("message", "포인트를 이용한 할인 결제가 완료되었습니다." +
+          " 만약 가상 계좌 수단일 경우, 나중에 결제 됩니다.");
+      response.put("paymentResult","결제 방법: " + paymentDTO.getPaymentMethod()
+          + " 결제 상태: " + paymentDTO.getPaymentStatus()
+          + " 결제 UID: " + paymentDTO.getImpUid());
+      response.put("payment",paymentDTO);
+    }else{
+      response.put("result", false);
+      response.put("message","알수 없는 오류로 포인트를 이용한 할인 결제가 비정상 처리 되었습니다." +
+          "만약 금전적 손실이 있을 경우 문의 게시판이나, 아래의 번호를 통해 문의해 주세요.");
+    }
+    return ResponseEntity.ok(response);
+  }
+
   @PostMapping
   public ResponseEntity<?> registerPayment(
       @AuthenticationPrincipal CustomUserDetails principal,

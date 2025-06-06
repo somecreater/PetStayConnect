@@ -322,6 +322,10 @@ const ApiService = {
       headers: createHeaders(),
       withCredentials: true,
     }),
+    pointregister: (dto)=>RefreshApi.post(`${API_ENDPOINTS.payments}/point`, dto, {
+      headers: createHeaders(),
+      withCredentials: true,
+    }),
     delete: (dto, payment_id)=>RefreshApi.delete(`${API_ENDPOINTS.payments}/${payment_id}`,{
       headers: createHeaders(),
       withCredentials: true,

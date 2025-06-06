@@ -60,9 +60,23 @@ public class PetBusinessTagService implements PetBusinessTagServiceInterface {
   }
 
   @Override
+  @Transactional
   public boolean deleteTag(Long id) {
     try {
       petBusinessTagRepository.deleteById(id);
+      return true;
+    }catch (Exception e){
+      log.info(e.getMessage());
+      e.printStackTrace();
+      return false;
+    }
+  }
+
+  @Override
+  @Transactional
+  public boolean deleteTagByBusinessId(Long business_id) {
+    try{
+      petBusinessTagRepository.deleteByPetBusiness_Id(business_id);
       return true;
     }catch (Exception e){
       log.info(e.getMessage());

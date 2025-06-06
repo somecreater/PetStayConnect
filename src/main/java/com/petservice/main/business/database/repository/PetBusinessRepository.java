@@ -28,16 +28,19 @@ public interface PetBusinessRepository extends JpaRepository<PetBusiness,Long> {
         SELECT pb.*
           FROM pet_business pb
           LEFT JOIN pet_business_type t ON pb.business_type_id = t.id
+          LEFT JOIN users             u ON pb.user_id          = u.id
          WHERE (:businessName IS NULL OR :businessName = '' 
            OR pb.business_name LIKE CONCAT('%', :businessName, '%'))
            AND (:sectorCode   IS NULL OR :sectorCode   = '' OR t.sector_code = :sectorCode)
            AND (:typeCode     IS NULL OR :typeCode     = '' OR t.type_code   = :typeCode)
            AND (:city         IS NULL OR :city         = '' OR pb.city         = :city)
+         ORDER BY u.qna_score DESC
         """,
       countQuery = """
         SELECT COUNT(*)
           FROM pet_business pb
           LEFT JOIN pet_business_type t ON pb.business_type_id = t.id
+          LEFT JOIN users             u ON pb.user_id          = u.id
          WHERE (:businessName IS NULL OR :businessName = '' 
            OR pb.business_name LIKE CONCAT('%', :businessName, '%'))
            AND (:sectorCode   IS NULL OR :sectorCode   = '' OR t.sector_code = :sectorCode)
@@ -61,15 +64,18 @@ public interface PetBusinessRepository extends JpaRepository<PetBusiness,Long> {
         SELECT pb.*
           FROM pet_business pb
           LEFT JOIN pet_business_type t ON pb.business_type_id = t.id
+          LEFT JOIN users             u ON pb.user_id          = u.id
          WHERE (:businessName IS NULL OR :businessName = '' 
            OR pb.business_name LIKE CONCAT('%', :businessName, '%'))
            AND (:sectorCode   IS NULL OR :sectorCode   = '' OR t.sector_code = :sectorCode)
            AND (:typeCode     IS NULL OR :typeCode     = '' OR t.type_code   = :typeCode)
+         ORDER BY u.qna_score DESC
         """,
       countQuery = """
         SELECT COUNT(*)
           FROM pet_business pb
           LEFT JOIN pet_business_type t ON pb.business_type_id = t.id
+          LEFT JOIN users             u ON pb.user_id          = u.id
          WHERE (:businessName IS NULL OR :businessName = '' 
            OR pb.business_name LIKE CONCAT('%', :businessName, '%'))
            AND (:sectorCode   IS NULL OR :sectorCode   = '' OR t.sector_code = :sectorCode)
