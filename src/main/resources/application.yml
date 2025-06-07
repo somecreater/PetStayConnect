@@ -107,6 +107,10 @@ cat:
     key: ${CAT_API_KEY:""}
     url: ${CAT_API_URL:""}
 
+kakao:
+  search-url: ${KAKAO_SEARCH_URL:""}
+  api-key: ${KAKAO_API_KEY:""}
+
 payment:
   service:
     fee-rate: ${SERVICE_FEE_RATE:0.10}
