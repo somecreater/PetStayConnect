@@ -1,6 +1,6 @@
 package com.petservice.main.business.controller;
 
-import com.petservice.main.api.database.dto.NaverSearchRequest;
+import com.petservice.main.api.database.dto.Naver.NaverSearchRequest;
 import com.petservice.main.business.database.dto.PetBusinessDTO;
 import com.petservice.main.business.database.dto.PetBusinessTagDTO;
 import com.petservice.main.business.database.dto.SearchRequest;

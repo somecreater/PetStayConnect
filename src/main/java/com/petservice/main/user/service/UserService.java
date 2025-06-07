@@ -112,7 +112,7 @@ public class UserService implements CustomUserServiceInterface, UserDetailsServi
         }
         user.setPetBusiness(petBusinessMapper.toEntity(InsertBusiness));
 
-      } else {
+      } else if(userDTO.getRole() == Role.CUSTOMER){
         User newuser = userMapper.toEntity(userDTO);
         newuser.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         user = userRepository.save(newuser);
@@ -124,54 +124,27 @@ public class UserService implements CustomUserServiceInterface, UserDetailsServi
         if(insert.getId() == null){
           throw new IllegalArgumentException("Account Information Invalid!!");
         }
+      } else if(userDTO.getRole() == Role.MANAGER){
+        if(userRepository.existsByRole(Role.MANAGER)){
+          throw new IllegalArgumentException("권한이 없습니다!!");
+        }
+        User newuser = userMapper.toEntity(userDTO);
+        newuser.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        user = userRepository.save(newuser);
+        account.setAmount(BigDecimal.ZERO);
+        account.setUser(user);
+        account.setAccountType(AccountType.SERVER);
+        Account insert=accountRepository.save(account);
+
+        if(insert.getId() == null){
+          throw new IllegalArgumentException("Account Information Invalid!!");
+        }
       }
     }catch (Exception e){
       log.info(e.getMessage());
       throw new RuntimeException("회원 가입 중 문제 발생!!, 다시 해주세요.");
     }
 
-    return userMapper.toBasicDTO(user);
-  }
-
-  //관리자 회원 가입(최초 1회만 실행 가능하도록 추후 설정)
-  @Override
-  @Transactional
-  public UserDTO registerMasterUser(UserDTO userDTO){
-
-    User user=null;
-    Account account=new Account();
-    if(userDTO == null){
-      throw new IllegalArgumentException("Data is not valid");
-    }
-
-    userDTO.setRole(Role.MANAGER);
-
-    if(!UserValidation(userDTO)){
-      throw new IllegalArgumentException("Data is not valid");
-    }
-
-    if(userRepository.findByUserLoginId(userDTO.getUserLoginId()).isPresent()){
-      throw new IllegalArgumentException("LoginId already in use");
-    }
-
-    if(userRepository.existsByEmail(userDTO.getEmail()) ||
-        userRepository.existsByPhone(userDTO.getPhone())){
-      throw new IllegalArgumentException("Email or Phone already in use");
-    }
-    userDTO.setCreateAt(LocalDateTime.now());
-    userDTO.setUpdateAt(LocalDateTime.now());
-
-    User newuser = userMapper.toEntity(userDTO);
-    newuser.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-    user = userRepository.save(newuser);
-
-    account.setAmount(BigDecimal.ZERO);
-    account.setUser(user);
-    account.setAccountType(AccountType.SERVER);
-    Account insert=accountRepository.save(account);
-    if(insert.getId() == null){
-      throw new IllegalArgumentException("서버 정산계좌가 생성되지 않았습니다.");
-    }
     return userMapper.toBasicDTO(user);
   }
 

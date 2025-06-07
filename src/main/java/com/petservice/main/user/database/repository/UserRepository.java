@@ -1,5 +1,6 @@
 package com.petservice.main.user.database.repository;
 
+import com.petservice.main.user.database.entity.Role;
 import com.petservice.main.user.database.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -27,4 +28,6 @@ public interface UserRepository extends JpaRepository<User,Long> {
   boolean existsByPhone(String phone);
 
   User findByName(String name);
+
+  boolean existsByRole(Role role);
 }

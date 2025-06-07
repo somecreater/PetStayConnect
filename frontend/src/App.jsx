@@ -36,6 +36,7 @@ import MyReviewListPage from './review/Page/MyReviewListPage';
 
 import BusinessManagePage from './business/Page/BusinessManagePage';
 import UserReservationManagePage from './business/Page/UserReservationManagePage.jsx';
+import RecommendPage from './recommend/Page/RecommendPage.jsx';
 
 function App() {
 
@@ -73,8 +74,11 @@ function App() {
         <Route path="/reviews/my"    element={<MyReviewListPage />} />
         <Route path="/reviews/register" element={<ReviewRegisterPage/>}/>
 
+        <Route path="/recommend" element={<RecommendPage/>}/>
+        
         <Route path="/error/:code" element={<CustomErrorPage />} />
         <Route path="*" element={<CustomErrorPage/>} />
+        
       </Routes>
       </main>
       <Footer/>

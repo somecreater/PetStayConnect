@@ -387,7 +387,13 @@ const ApiService = {
       headers: createHeaders(),
       withCredentials: true,
     })
-  }
+  },
+  recommend: (latitude, longitude, distance, page, size, searchType) =>
+    RefreshApi.get(`${API_ENDPOINTS.recommend}`,{
+      params:{latitude, longitude, distance, page, size, searchType},
+      headers: createHeaders(),
+      withCredentials: true,
+    })
 };
 
 
