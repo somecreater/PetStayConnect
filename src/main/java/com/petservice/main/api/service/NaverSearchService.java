@@ -1,9 +1,9 @@
 package com.petservice.main.api.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.petservice.main.api.database.dto.NaverApiResponse;
-import com.petservice.main.api.database.dto.NaverPlaceItem;
-import com.petservice.main.api.database.dto.NaverSearchRequest;
+import com.petservice.main.api.database.dto.Naver.NaverApiResponse;
+import com.petservice.main.api.database.dto.Naver.NaverPlaceItem;
+import com.petservice.main.api.database.dto.Naver.NaverSearchRequest;
 import com.petservice.main.business.database.dto.*;
 import com.petservice.main.business.database.entity.BusinessStatus;
 import com.petservice.main.business.database.entity.Varification;
@@ -27,7 +27,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;

@@ -1,9 +1,9 @@
 package com.petservice.main.api.service;
 
-import com.petservice.main.api.database.dto.BnsVLRequest;
-import com.petservice.main.api.database.dto.BnsVLRequestList;
-import com.petservice.main.api.database.dto.BnsVLResponse;
-import com.petservice.main.api.database.dto.BnsVLResult;
+import com.petservice.main.api.database.dto.BnsVL.BnsVLRequest;
+import com.petservice.main.api.database.dto.BnsVL.BnsVLRequestList;
+import com.petservice.main.api.database.dto.BnsVL.BnsVLResponse;
+import com.petservice.main.api.database.dto.BnsVL.BnsVLResult;
 import com.petservice.main.api.database.entity.BnsVLRequestEntity;
 import com.petservice.main.api.database.entity.RequestStatus;
 import com.petservice.main.api.database.mapper.BnsVLRequestMapper;

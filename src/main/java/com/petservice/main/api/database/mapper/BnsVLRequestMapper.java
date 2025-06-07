@@ -1,6 +1,6 @@
 package com.petservice.main.api.database.mapper;
 
-import com.petservice.main.api.database.dto.BnsVLRequest;
+import com.petservice.main.api.database.dto.BnsVL.BnsVLRequest;
 import com.petservice.main.api.database.entity.BnsVLRequestEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

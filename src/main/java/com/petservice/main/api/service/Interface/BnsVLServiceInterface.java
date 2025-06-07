@@ -1,7 +1,7 @@
 package com.petservice.main.api.service.Interface;
 
-import com.petservice.main.api.database.dto.BnsVLRequest;
-import com.petservice.main.api.database.dto.BnsVLResponse;
+import com.petservice.main.api.database.dto.BnsVL.BnsVLRequest;
+import com.petservice.main.api.database.dto.BnsVL.BnsVLResponse;
 
 import java.net.URISyntaxException;
 import java.util.List;

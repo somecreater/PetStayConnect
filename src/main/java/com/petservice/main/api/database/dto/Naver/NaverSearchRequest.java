@@ -1,4 +1,4 @@
-package com.petservice.main.api.database.dto;
+package com.petservice.main.api.database.dto.Naver;
 
 import lombok.Data;
 

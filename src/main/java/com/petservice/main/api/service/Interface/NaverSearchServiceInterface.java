@@ -1,7 +1,7 @@
 package com.petservice.main.api.service.Interface;
 
-import com.petservice.main.api.database.dto.NaverPlaceItem;
-import com.petservice.main.api.database.dto.NaverSearchRequest;
+import com.petservice.main.api.database.dto.Naver.NaverPlaceItem;
+import com.petservice.main.api.database.dto.Naver.NaverSearchRequest;
 import com.petservice.main.business.database.dto.PetBusinessDTO;
 import com.petservice.main.business.database.dto.PetBusinessTypeDTO;
 import com.petservice.main.user.database.dto.AddressDTO;

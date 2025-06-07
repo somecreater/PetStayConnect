@@ -1,6 +1,6 @@
 package com.petservice.main.api.controller;
 
-import com.petservice.main.api.database.dto.BnsVLRequest;
+import com.petservice.main.api.database.dto.BnsVL.BnsVLRequest;
 import com.petservice.main.api.service.Interface.BnsVLServiceInterface;
 import com.petservice.main.user.database.dto.CustomUserDetails;
 import com.petservice.main.user.database.dto.UserDTO;
@@ -21,7 +21,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/validation")
-public class ApiController {
+public class ValidationApiController {
 
   private final BnsVLServiceInterface bnsVLService;
   private final CustomUserServiceInterface userService;
