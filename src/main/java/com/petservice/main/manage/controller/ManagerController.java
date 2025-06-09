@@ -36,7 +36,7 @@ public class ManagerController {
     if(announcementDTOS != null && announcementDTOS.getTotalElements() > 0){
       result.put("result", true);
       result.put("message", "공지 목록입니다.");
-      result.put("announcementList", announcementDTOS);
+      result.put("announcementList", announcementDTOS.getContent());
       result.put("totalPages", announcementDTOS.getTotalPages());
       result.put("currentPage", announcementDTOS.getNumber());
     }else{

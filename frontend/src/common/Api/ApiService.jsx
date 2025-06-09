@@ -393,7 +393,38 @@ const ApiService = {
       params:{latitude, longitude, distance, page, size, searchType},
       headers: createHeaders(),
       withCredentials: true,
+  }),
+  announce:{
+    list: (page, size) => RefreshApi.get(`${API_ENDPOINTS.announcement}`,{
+      params:{page, size},
+      headers: createHeaders(),
+      withCredentials: true,
+    }),
+    priority: () => RefreshApi.get(`${API_ENDPOINTS.announcement}/priority`,{
+      headers: createHeaders(),
+      withCredentials: true,
+    }),
+    detail: (announce_id) => RefreshApi.get(`${API_ENDPOINTS.announcement}/${announce_id}`,{
+      headers: createHeaders(),
+      withCredentials: true,
+    }),
+    register: (announce) => RefreshApi.post(`${API_ENDPOINTS.announcement}`,
+    announce,
+    {
+      headers: createHeaders(),
+      withCredentials: true,
+    }),
+    update: (announce_id,announce) => RefreshApi.put(`${API_ENDPOINTS.announcement}/${announce_id}`,
+    announce,
+    {
+      headers: createHeaders(),
+      withCredentials: true,
+    }),
+    delete: (announce_id) => RefreshApi.delete(`${API_ENDPOINTS.announcement}/${announce_id}`,{
+      headers: createHeaders(),
+      withCredentials: true,
     })
+  }
 };
 
 

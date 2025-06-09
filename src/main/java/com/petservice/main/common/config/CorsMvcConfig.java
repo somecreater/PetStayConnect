@@ -7,6 +7,8 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.util.List;
+
 
 @Configuration
 public class CorsMvcConfig implements WebMvcConfigurer {
@@ -14,11 +16,14 @@ public class CorsMvcConfig implements WebMvcConfigurer {
   @Value("${app.cors.enabled}")
   private boolean corsEnabled;
 
+  @Value("${app.cors.allowed-origins}")
+  private String allowedOrigins;
+
   @Override
   public void addCorsMappings(@NonNull CorsRegistry corsRegistry) {
     if (corsEnabled) {
       corsRegistry.addMapping("/**").exposedHeaders("Set-Cookie", "Authorization")
-          .allowedOrigins("http://localhost:5173")
+          .allowedOrigins(allowedOrigins)
           .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS").allowedHeaders("*")
           .allowCredentials(true).maxAge(3600L);
     }
