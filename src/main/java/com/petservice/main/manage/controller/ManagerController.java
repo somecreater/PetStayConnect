@@ -81,7 +81,7 @@ public class ManagerController {
     return ResponseEntity.ok(result);
   }
 
-  @PreAuthorize("hasRole('MANAGER')")
+  @PreAuthorize("hasAuthority('MANAGER')")
   @PostMapping("/announce")
   public ResponseEntity<?> registerAnnouncement(
       @AuthenticationPrincipal CustomUserDetails principal,
@@ -100,7 +100,7 @@ public class ManagerController {
     return ResponseEntity.ok(result);
   }
 
-  @PreAuthorize("hasRole('MANAGER')")
+  @PreAuthorize("hasAuthority('MANAGER')")
   @PutMapping("/announce/{announce_id}")
   public ResponseEntity<?> updateAnnouncement(
       @AuthenticationPrincipal CustomUserDetails principal,
@@ -120,7 +120,7 @@ public class ManagerController {
     return ResponseEntity.ok(result);
   }
 
-  @PreAuthorize("hasRole('MANAGER')")
+  @PreAuthorize("hasAuthority('MANAGER')")
   @DeleteMapping("/announce/{announce_id}")
   public ResponseEntity<?> deleteAnnouncement(
       @AuthenticationPrincipal CustomUserDetails principal,

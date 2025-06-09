@@ -27,7 +27,7 @@ function Announcement(props){
           <span className="text-secondary">#{id}</span>
           <span className="badge bg-info text-white text-uppercase">{type}</span>
           <span className="flex-grow-1">{title}</span>
-          <span className={getBadgeClass(priority)}>{priority}</span>
+          <span className={primaryColor(priority)}>{priority}</span>
         </h2>
 
         <div

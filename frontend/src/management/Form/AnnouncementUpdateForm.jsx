@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ApiService from "../../common/Api/ApiService";
+import { useUser } from "../../common/Context/UserContext";
 
 function AnnouncementUpdateForm(props){
 
   const navigate= useNavigate();
-  const [user]= useUser();
-  const {announcement} = props;
+  const {user}= useUser();
+  const {announcement, onCancel} = props;
   const [form, setForm]= useState({
     id: announcement.id,
     title: announcement.title,
@@ -16,7 +17,7 @@ function AnnouncementUpdateForm(props){
     createdAt: announcement.createdAt,
     updatedAt: announcement.updatedAt,
     userId: announcement.userId,
-    userLoginId: announcement,userLoginId
+    userLoginId: announcement.userLoginId
   });
 
   const handleChange = (e) =>{
@@ -24,7 +25,7 @@ function AnnouncementUpdateForm(props){
     setForm(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try{
       const response= await ApiService.announce.update(form.id, form);
@@ -109,12 +110,19 @@ function AnnouncementUpdateForm(props){
         </p>
       </div>
 
-      <div className="d-grid">
+      <div className="d-flex justify-content-end">
+        <button
+          type="button"
+          className="btn btn-secondary me-2"
+           onClick={onCancel}
+        >
+            취소
+        </button>
         <button
           className="btn btn-primary"
           type="submit"
         >
-          공지 등록
+          공지 수정
         </button>
       </div>
     </form>
