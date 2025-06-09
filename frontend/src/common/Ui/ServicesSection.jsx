@@ -5,7 +5,6 @@ import img_1 from '../../assets/images/img_1.png';
 import img_2 from '../../assets/images/img_2.png';
 import { useNavigate } from 'react-router-dom';
 
-//실제 서비스 화면과 연결 시키자(새로운 기능)
 //이벤트, 위치, 종 기반 애완동물 호텔 추천, 서비스 공지사항
 const services = [
   {

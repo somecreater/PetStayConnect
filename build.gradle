@@ -78,6 +78,7 @@ tasks.register('buildFrontend', Exec) {
 }
 tasks.register('copyFrontendBuild', Copy) {
 	dependsOn tasks.named("buildFrontend")
+	doFirst { delete fileTree('src/main/resources/static')}
 	from file("frontend/dist")  // Vite 빌드 결과 폴더
 	into file("src/main/resources/static")
 }
