@@ -66,7 +66,7 @@ public class AnnouncementService implements AnnouncementServiceInterface{
   @Transactional
   public AnnouncementDTO registerAnnouncement(AnnouncementDTO announcementDTO) {
     try {
-      if (ValidationAnnouncement(announcementDTO)) {
+      if (!ValidationAnnouncement(announcementDTO)) {
         throw new IllegalArgumentException("공지를 다시 입력해주세요.");
       }
       Announcement announcement = announcementMapper.toEntity(announcementDTO);
@@ -89,7 +89,7 @@ public class AnnouncementService implements AnnouncementServiceInterface{
       if (exAnnouncement == null) {
         return null;
       }
-      if (ValidationAnnouncement(announcementDTO)) {
+      if (!ValidationAnnouncement(announcementDTO)) {
         return null;
       }
       exAnnouncement.setTitle(announcementDTO.getTitle());

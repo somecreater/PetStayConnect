@@ -10,7 +10,6 @@ export default function BookmarkList() {
   const bookmarklist= async () => {
     const response= await ApiService.bookmark.list();
     const data=response.data;
-    console.log(data);
     
     if(data.result){
       setBookmarks(data.bookmarks);

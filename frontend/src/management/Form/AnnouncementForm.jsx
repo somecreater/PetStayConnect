@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 function AnnouncementForm(props){
   
   const navigate= useNavigate();
-  const [user] =useUser();
+  const {user} = useUser();
   const [form,setForm]= useState({
     id: null,
     title: '',
