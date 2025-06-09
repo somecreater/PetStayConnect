@@ -34,7 +34,8 @@ export const API_ENDPOINTS = {
   accounts: `${API_BASE_URL}/api/account`,
   bookmarks: `${API_BASE_URL}/api/bookmarks`,
   breed: `${API_BASE_URL}/api/breed`,
-  recommend: `${API_BASE_URL}/api/recommend`
+  recommend: `${API_BASE_URL}/api/recommend`,
+  announcement: `${API_BASE_URL}/api/manage/announce`
 }
 
 export const createHeaders = () => ({

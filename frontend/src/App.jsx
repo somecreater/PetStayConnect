@@ -37,6 +37,9 @@ import MyReviewListPage from './review/Page/MyReviewListPage';
 import BusinessManagePage from './business/Page/BusinessManagePage';
 import UserReservationManagePage from './business/Page/UserReservationManagePage.jsx';
 import RecommendPage from './recommend/Page/RecommendPage.jsx';
+import AnnouncementPage from './management/Page/AnnouncementPage.jsx';
+import AnnouncementDetailPage from './management/Page/AnnouncementDetailPage.jsx';
+import AnnouncementRegisterPage from './management/Page/AnnouncementRegisterPage.jsx';
 
 function App() {
 
@@ -76,6 +79,10 @@ function App() {
 
         <Route path="/recommend" element={<RecommendPage/>}/>
         
+        <Route path="/announcements" element={<AnnouncementPage/>}/>
+        <Route path="/announcements/:id" element={<AnnouncementDetailPage/>}/>
+        <Route path="/announcements/register" element={<AnnouncementRegisterPage/>}/>
+
         <Route path="/error/:code" element={<CustomErrorPage />} />
         <Route path="*" element={<CustomErrorPage/>} />
         

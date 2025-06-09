@@ -24,7 +24,7 @@ const services = [
     title: 'Announcement',
     text: '공지 사항',
     img: img_2,
-    url: ''
+    url: '/announcements'
   },
 ];
 

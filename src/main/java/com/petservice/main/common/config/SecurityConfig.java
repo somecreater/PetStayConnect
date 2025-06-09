@@ -32,6 +32,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
 import java.util.Collections;
+import java.util.List;
 
 @Slf4j
 @Configuration
@@ -42,6 +43,9 @@ public class SecurityConfig{
 
   @Value("${app.cors.enabled}")
   private boolean corsEnabled;
+
+  @Value("${app.cors.allowed-origins}")
+  private String allowedOrigins;
 
   private final JwtService jwtService;
   private final RefreshTokenServiceInterface refreshTokenService;
@@ -61,7 +65,7 @@ public class SecurityConfig{
           @Override
           public CorsConfiguration getCorsConfiguration(@NonNull HttpServletRequest request) {
             CorsConfiguration configuration = new CorsConfiguration();
-            configuration.setAllowedOrigins(Collections.singletonList("http://localhost:5173"));
+            configuration.setAllowedOrigins(Collections.singletonList(allowedOrigins));
             configuration.setAllowedMethods(Collections.singletonList("*"));
             configuration.setAllowCredentials(true);
             configuration.setAllowedHeaders(Collections.singletonList("*"));
