@@ -113,6 +113,10 @@ kakao:
   search-url: ${KAKAO_SEARCH_URL:""}
   api-key: ${KAKAO_API_KEY:""}
 
+google:
+  geolocate-url: ${GOOGLE_GEOLOCATION_URL:""}
+  api-key: ${GOOGLE_API_KEY:""}
+
 payment:
   service:
     fee-rate: ${SERVICE_FEE_RATE:0.10}

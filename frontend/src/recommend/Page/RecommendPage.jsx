@@ -27,31 +27,31 @@ function RecommendPage(props){
     }
   }, [page,size]);
 
-  const handleGetLocation = () => {
-    if(!navigator.geolocation){
-      setErrorLoc('이 브라우저는 Geolocation API를 지원하지 않습니다.');
-      return;
-    }
-
+  const handleGetLocationAPI = async ()=>{
     setLoadingLoc(true);
     setErrorLoc("");
 
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const lat = position.coords.latitude;
-        const lon = position.coords.longitude;
+    try {
+      const response= await ApiService.location();
+      const data= response.data;
+
+      if(data.result){
+        console.log(data);
+        const lat = data.location.location.lat;
+        const lng = data.location.location.lng;
         setLatitude(lat);
-        setLongitude(lon);
+        setLongitude(lng);
         setLoadingLoc(false);
         console.log("latitude: " + lat + " \n"
-          + "longitude: " + lon);
-      },
-      (error) => {
-        setErrorLoc(error.message);
-        setLoadingLoc(false);
+          + "longitude: " + lng);
+      }else{
+        alert(data.message);
       }
-    )
-  }
+    } catch (e) {
+      setErrorLoc(e.message);
+      setLoadingLoc(false);
+    }
+  };
 
   const handleRecommend = async () => {
     try{
@@ -97,7 +97,7 @@ function RecommendPage(props){
           <button
             className="btn btn-primary mb-3"
             type="button"
-            onClick={handleGetLocation}
+            onClick={handleGetLocationAPI}
           >
             현재 위치 가져오기
           </button>

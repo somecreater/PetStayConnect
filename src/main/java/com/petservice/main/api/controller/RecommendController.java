@@ -1,5 +1,6 @@
 package com.petservice.main.api.controller;
 
+import com.petservice.main.api.database.dto.Kakao.GeolocationResponse;
 import com.petservice.main.api.database.dto.Kakao.KakaoLocalRequest;
 import com.petservice.main.api.database.dto.Kakao.KakaoPlaceDTO;
 import com.petservice.main.api.database.dto.Kakao.LocalSearchType;
@@ -23,6 +24,22 @@ import java.util.Map;
 public class RecommendController {
 
   private final KakaoLocalServiceInterface kakaoLocalServiceInterface;
+
+  @GetMapping("/getLocation")
+  public ResponseEntity<?> getLocation(){
+    Map<String,Object> result = new HashMap<>();
+    GeolocationResponse geolocationResponse= kakaoLocalServiceInterface.geolocate();
+
+    if(geolocationResponse != null){
+      result.put("result", true);
+      result.put("message", "위치정보를 전송합니다.");
+      result.put("location", geolocationResponse);
+    }else{
+      result.put("result",false);
+      result.put("message", "위치정보를 얻어오는것을 실패하였습니다.");
+    }
+    return ResponseEntity.ok(result);
+  }
 
   @GetMapping
   public ResponseEntity<?> getRecommendPlace(
