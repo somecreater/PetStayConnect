@@ -11,4 +11,6 @@ public interface QnaAnswerRepository extends JpaRepository<QnaAnswer, Long> {
     List<QnaAnswer> findByPostId(Long postId);
 
     boolean existsByPostIdAndIsAdoptedTrue(Long postId);
+
+    long deleteByPost_Id(Long id);
 }

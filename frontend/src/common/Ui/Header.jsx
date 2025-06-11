@@ -198,27 +198,14 @@ export default function Header() {
             </li>
                   <li className="nav-item">
               <form className="d-flex ms-lg-3 align-items-center flex-nowrap">
-                <div style={{ position: 'relative', display: 'inline-block' }}>
-                  <input
-                    className="form-control form-control-sm search-input"
-                    type="search"
-                    placeholder="Search"
-                    aria-label="Search"
-                    style={{ paddingLeft: '2rem' }}
-                  />
-                  <FaSearch
-                    style={{
-                      position: 'absolute',
-                      left: '0.7rem',
-                      top: '50%',
-                      transform: 'translateY(-50%)',
-                      color: '#FF914D88',
-                      fontSize: '1.2rem'
-                    }}
-                  />
-                </div>
-
-                <button className="btn btn-outline-dark btn-sm ms-2" type="submit">Go</button>
+                {user?.id&& user.role === 'MANAGER'&&(
+                <NavLink
+                  to="/management"
+                  className="nav-link"
+                >
+                  Management
+                </NavLink>
+                )}
                 {/* PC(큰 화면)에서만 보이는 아이콘 */}
                 <Link
                   to="/user/info"
