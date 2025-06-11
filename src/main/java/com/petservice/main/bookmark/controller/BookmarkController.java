@@ -77,9 +77,10 @@ public class BookmarkController {
         if(bookmarks == null){
           result.put("result",false);
           result.put("message","북마크가 존재하지 않습니다.");
+        }else {
+            result.put("result", true);
+            result.put("bookmarks", bookmarks);
         }
-        result.put("result", true);
-        result.put("bookmarks", bookmarks);
         return ResponseEntity.ok(result);
     }
 

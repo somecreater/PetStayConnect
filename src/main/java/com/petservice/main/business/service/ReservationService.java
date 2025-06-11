@@ -136,7 +136,8 @@ public class ReservationService implements ReservationServiceInterface {
     if(user == null || petBusiness == null
         || reservationRequest.getCheckIn() == null
         || reservationRequest.getCheckOut() ==null
-        || reservationRequest.getPetDTOList() == null){
+        || reservationRequest.getPetDTOList() == null
+    || Objects.equals(user.getPetBusiness().getId(), petBusiness.getId())){
       log.error("부적절한 값입니다!!!");
       throw new IllegalArgumentException("부적절한 값입니다!!!");
     }
