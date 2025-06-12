@@ -223,10 +223,17 @@ function ManagementPage(props){
             ))}
             {deletable && (
               <td>
+                { type ==='users'?
                 <Button variant="danger" size="sm"
-                  onClick={() => deleteItem(type, item.id || item.userLoginId)}>
+                  onClick={() => deleteItem(type, item.userLoginId)}>
                   강제 삭제
                 </Button>
+                :
+                <Button variant="danger" size="sm"
+                  onClick={() => deleteItem(type, item.id)}>
+                  강제 삭제
+                </Button>
+                }    
               </td>
             )}
             {type === 'users' && (
