@@ -79,6 +79,7 @@ public class ManagementService implements ManagementServiceInterface{
   }
 
   @Override
+  @Transactional
   public boolean forceDeleteUser(String userLoginId) {
     try {
 
@@ -151,6 +152,7 @@ public class ManagementService implements ManagementServiceInterface{
   }
 
   @Override
+  @Transactional(readOnly = true)
   public Page<QnaAnswerDTO> getQnaAnswerByPage(int page, int size) {
     Pageable pageable= PageRequest.of(page,size, Sort.by("updatedAt").descending());
     Page<QnaAnswer> qnaAnswerPage= qnaAnswerRepository.findAll(pageable);
@@ -158,6 +160,7 @@ public class ManagementService implements ManagementServiceInterface{
   }
 
   @Override
+  @Transactional
   public boolean deleteQna(Long id) {
     try {
       qnaAnswerRepository.deleteByPost_Id(id);
@@ -171,6 +174,7 @@ public class ManagementService implements ManagementServiceInterface{
   }
 
   @Override
+  @Transactional
   public boolean deleteQnaAnswer(Long id) {
     try{
       qnaAnswerRepository.deleteById(id);
@@ -183,6 +187,7 @@ public class ManagementService implements ManagementServiceInterface{
   }
 
   @Override
+  @Transactional(readOnly = true)
   public Page<ReviewDTO> getReviewPage(int page, int size) {
     Pageable pageable=PageRequest.of(page,size,Sort.by("updatedAt").descending());
     Page<Review> reviews=reviewRepository.findAll(pageable);
@@ -190,6 +195,7 @@ public class ManagementService implements ManagementServiceInterface{
   }
 
   @Override
+  @Transactional
   public boolean deleteReview(Long id) {
     try {
       reviewRepository.deleteById(id);
@@ -202,15 +208,17 @@ public class ManagementService implements ManagementServiceInterface{
   }
 
   @Override
+  @Transactional(readOnly = true)
   public Page<ReservationDTO> getReservation(int page, int size) {
     Pageable pageable=PageRequest.of(page,size,Sort.by("updatedAt").descending());
     Page<Reservation> reservations= reservationRepository.findAll(pageable);
-    return reservations.map(reservationMapper::toBasicDTO);
+    return reservations.map(reservationMapper::toDTO);
   }
 
   @Override
+  @Transactional(readOnly = true)
   public Page<PaymentDTO> getPayment(int page, int size) {
-    Pageable pageable=PageRequest.of(page,size,Sort.by("updatedAt").descending());
+    Pageable pageable=PageRequest.of(page,size,Sort.by("transactionTime").descending());
     Page<Payment> payments=paymentRepository.findAll(pageable);
     return payments.map(paymentMapper::toDTO);
   }

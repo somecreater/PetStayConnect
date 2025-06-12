@@ -173,7 +173,8 @@ public class ReservationService implements ReservationServiceInterface {
       reservation.setPeriod((int) ChronoUnit.DAYS.between(reservationRequest.getCheckIn(),
           reservationRequest.getCheckOut()));
       reservation.setStatus(ReservationStatus.PENDING);
-
+      reservation.setCreatedAt(LocalDateTime.now());
+      reservation.setUpdatedAt(LocalDateTime.now());
       Reservation newReservation = reservationRepository.save(reservation);
       ReservationDTO newReservationDto = reservationMapper.toDTO(newReservation);
       List<PetReservationDTO> petReservations = new ArrayList<>();

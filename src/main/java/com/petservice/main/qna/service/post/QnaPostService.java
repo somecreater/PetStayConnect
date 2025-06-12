@@ -36,7 +36,8 @@ public class QnaPostService implements QnaPostServiceInterface {
 
         QnaPost post = qnaPostMapper.toEntity(dto);
         post.setUser(user);
-
+        post.setCreatedAt(LocalDateTime.now());
+        post.setUpdatedAt(LocalDateTime.now());
         QnaPost saved = qnaPostRepository.save(post);
         return qnaPostMapper.toDTO(saved);
 

@@ -428,6 +428,60 @@ const ApiService = {
       headers: createHeaders(),
       withCredentials: true,
     })
+  },
+  manage:{
+    userList:(page, size) => RefreshApi.get(`${API_ENDPOINTS.manage}/user`,{
+      params:{page, size},
+      headers: createHeaders(),
+      withCredentials: true,
+    }),
+    userDelete:(userLoginId) => RefreshApi.delete(`${API_ENDPOINTS.manage}/user/${userLoginId}`,{
+      headers: createHeaders(),
+      withCredentials: true,
+    }),
+    userSend:(sendMail) => RefreshApi.post(`${API_ENDPOINTS.manage}/user/send`,
+    sendMail,
+    {
+      headers: createHeaders(),
+      withCredentials: true,
+    }),
+    qnaPostList:(page, size) => RefreshApi.get(`${API_ENDPOINTS.manage}/qna/post`,{
+      params:{page, size},
+      headers: createHeaders(),
+      withCredentials: true,
+    }),
+    qnaAnswerList:(page, size) => RefreshApi.get(`${API_ENDPOINTS.manage}/qna/answer`,{
+      params:{page, size},
+      headers: createHeaders(),
+      withCredentials: true,
+    }),
+    qnaPostDelete:(id) => RefreshApi.delete(`${API_ENDPOINTS.manage}/qna/post/${id}`,{
+      headers: createHeaders(),
+      withCredentials: true,
+    }),
+    qnaAnswerDelete:(id) => RefreshApi.delete(`${API_ENDPOINTS.manage}/qna/answer/${id}`,{
+      headers: createHeaders(),
+      withCredentials: true,
+    }),
+    reviewList:(page, size) => RefreshApi.get(`${API_ENDPOINTS.manage}/review`,{
+      params:{page, size},
+      headers: createHeaders(),
+      withCredentials: true,
+    }),
+    reviewDelete:(id) => RefreshApi.delete(`${API_ENDPOINTS.manage}/review/${id}`,{
+      headers: createHeaders(),
+      withCredentials: true,
+    }),
+    reservationList:(page, size) => RefreshApi.get(`${API_ENDPOINTS.manage}/reservation`,{
+      params:{page, size},
+      headers: createHeaders(),
+      withCredentials: true,
+    }),
+    paymentList:(page, size) => RefreshApi.get(`${API_ENDPOINTS.manage}/payment`,{
+      params:{page, size},
+      headers: createHeaders(),
+      withCredentials: true,
+    }),
   }
 };
 

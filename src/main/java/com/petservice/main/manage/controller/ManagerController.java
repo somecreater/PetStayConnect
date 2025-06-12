@@ -168,9 +168,9 @@ public class ManagerController {
     return ResponseEntity.ok(result);
   }
   @PreAuthorize("hasAuthority('MANAGER')")
-  @DeleteMapping("/user")
+  @DeleteMapping("/user/{userLoginId}")
   public ResponseEntity<?> deleteForceUser(
-      @RequestParam String userLoginId
+      @PathVariable("userLoginId") String userLoginId
   ){
     Map<String, Object> result = new HashMap<>();
     if(managementService.forceDeleteUser(userLoginId)){
