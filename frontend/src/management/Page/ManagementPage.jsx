@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Container, Tabs, Tab, Table, Button, Spinner, Form, OverlayTrigger, Tooltip  } from 'react-bootstrap';
+import { Container, Tabs, Tab, Table, Button, Spinner, Form, OverlayTrigger, Tooltip, Pagination } from 'react-bootstrap';
 import { useNavigate } from "react-router-dom";
 import ApiService from "../../common/Api/ApiService";
 import Modal from "../../common/Ui/Modal";
@@ -22,8 +22,11 @@ function ManagementPage(props){
   const [mailContent, setMailContent]= useState('');
   useEffect(() => {
     getData(key);
-  }, [key]);
+  }, [key, page]);
 
+  useEffect(() => {
+    setPage(0);
+  }, [key]);
   
   const handleSendMail = async () => {
     const sendMail = {
@@ -257,33 +260,90 @@ function ManagementPage(props){
     </Table>
   );
 
+  const renderPagination = () => {
+    if (totalPage <= 1) return null;
+
+    const items = [];
+    for (let i = 0; i < totalPage; i++) {
+      items.push(
+        <Pagination.Item
+          key={i}
+          active={i === page}
+          onClick={() => {
+            setPage(i);
+          }}
+        >
+          {i + 1}
+        </Pagination.Item>
+      );
+    }
+
+    return (
+      <Pagination className="justify-content-center mt-3">
+        <Pagination.Prev
+          disabled={page === 0}
+          onClick={() => setPage((prev) => Math.max(prev - 1, 0))}
+        />
+        {items}
+        <Pagination.Next
+          disabled={page === totalPage - 1}
+          onClick={() => setPage((prev) => Math.min(prev + 1, totalPage - 1))}
+        />
+      </Pagination>
+    );
+  };
+
   return (
     <Container className="mt-4">
       <h3>관리자 페이지</h3>
       <Tabs activeKey={key} onSelect={(k) => setKey(k)} className="mb-3" justify>
         <Tab eventKey="users" title="유저">
           {loading ? <Spinner animation="border" /> :
-            renderTable('users', data.users || [], ['userLoginId', 'email'], true)}
+            <>
+              {renderTable('users', data.users || [], ['userLoginId', 'email'], true)}
+              {renderPagination()}
+            </>
+          }
         </Tab>
         <Tab eventKey="qnaPosts" title="QnA 질문">
           {loading ? <Spinner animation="border" /> :
-            renderTable('qnaPosts', data.qnaPosts || [], ['id', 'title'], true)}
+            <>
+              {renderTable('qnaPosts', data.qnaPosts || [], ['id', 'title'], true)}
+              {renderPagination()}
+            </>
+          }
         </Tab>
         <Tab eventKey="qnaAnswers" title="QnA 답변">
           {loading ? <Spinner animation="border" /> :
-            renderTable('qnaAnswers', data.qnaAnswers || [], ['id', 'content'], true)}
+            <>
+              {renderTable('qnaAnswers', data.qnaAnswers || [], ['id', 'content'], true)}
+              {renderPagination()}
+            </>
+          }
         </Tab>
         <Tab eventKey="reviews" title="리뷰">
           {loading ? <Spinner animation="border" /> :
-            renderTable('reviews', data.reviews || [], ['id', 'content'], true)}
+            <>
+              {renderTable('reviews', data.reviews || [], ['id', 'content'], true)}
+              {renderPagination()}
+            </>  
+          }
         </Tab>
         <Tab eventKey="reservations" title="예약">
           {loading ? <Spinner animation="border" /> :
-            renderTable('reservations', data.reservations || [], ['id', 'status', 'checkIn', 'checkOut'])}
+            <>
+              {renderTable('reservations', data.reservations || [], ['id', 'status', 'checkIn', 'checkOut'])}
+              {renderPagination()}
+            </>
+          }
         </Tab>
         <Tab eventKey="payments" title="결제">
           {loading ? <Spinner animation="border" /> :
-            renderTable('payments', data.payments || [], ['id', 'reservationId', 'amount', 'paymentStatus', 'refundAmount'])}
+            <>
+              {renderTable('payments', data.payments || [], ['id', 'reservationId', 'amount', 'paymentStatus', 'refundAmount'])}
+              {renderPagination()}
+            </>
+          }
         </Tab>
       </Tabs>
 
