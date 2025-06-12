@@ -39,12 +39,14 @@ public class KakaoLocalService implements KakaoLocalServiceInterface {
         .defaultHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
         .build();
 
+    GeolocationRequest requestBody = new GeolocationRequest(true);
+
     GeolocationResponse resp = client.post()
         .uri(uriBuilder -> uriBuilder
             .queryParam("key", googleApiKey)
             .build()
         )
-        .bodyValue(Collections.emptyMap())
+        .bodyValue(requestBody)
         .retrieve()
         .bodyToMono(GeolocationResponse.class)
         .block();
