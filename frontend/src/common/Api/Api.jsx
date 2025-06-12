@@ -35,6 +35,7 @@ export const API_ENDPOINTS = {
   bookmarks: `${API_BASE_URL}/api/bookmarks`,
   breed: `${API_BASE_URL}/api/breed`,
   recommend: `${API_BASE_URL}/api/recommend`,
+  manage: `${API_BASE_URL}/api/manage`,
   announcement: `${API_BASE_URL}/api/manage/announce`
 }
 

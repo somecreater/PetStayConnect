@@ -14,6 +14,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -34,6 +35,8 @@ public class QnaAnswerService implements QnaAnswerServiceInterface {
 
         dto.setPostId(post.getId());
         dto.setUserId(businessOwner.getId());
+        dto.setCreatedAt(LocalDateTime.now());
+        dto.setUpdatedAt(LocalDateTime.now());
         QnaAnswer saved = answerRepo.save(mapper.toEntity(dto));
         return mapper.toDTO(saved);
     }
@@ -63,6 +66,7 @@ public class QnaAnswerService implements QnaAnswerServiceInterface {
         QnaAnswer answer = findAnswerForPost(postId, answerId);
         verifyOwner(answer, userLoginId);
 
+        answer.setUpdatedAt(LocalDateTime.now());
         answer.setContent(dto.getContent());
         answer.setScore(dto.getScore());
 
@@ -87,7 +91,7 @@ public class QnaAnswerService implements QnaAnswerServiceInterface {
         if (answerRepo.existsByPostIdAndIsAdoptedTrue(postId)) {
             throw new IllegalStateException("This question already has an adopted answer");
         }
-
+        answer.setUpdatedAt(LocalDateTime.now());
         answer.setIsAdopted(true);
         answerRepo.save(answer);
 

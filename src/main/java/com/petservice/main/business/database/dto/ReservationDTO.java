@@ -38,7 +38,7 @@ public class ReservationDTO {
     private LocalDateTime updatedAt;
 
     //추가 정보
-    private String PetBusinessName;
+    private String petBusinessName;
     private String petBusinessRegisterNumber;
-    private String UserLoginId;
+    private String userLoginId;
 }

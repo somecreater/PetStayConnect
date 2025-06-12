@@ -136,7 +136,8 @@ public class ReservationService implements ReservationServiceInterface {
     if(user == null || petBusiness == null
         || reservationRequest.getCheckIn() == null
         || reservationRequest.getCheckOut() ==null
-        || reservationRequest.getPetDTOList() == null){
+        || reservationRequest.getPetDTOList() == null
+    || Objects.equals(user.getPetBusiness().getId(), petBusiness.getId())){
       log.error("부적절한 값입니다!!!");
       throw new IllegalArgumentException("부적절한 값입니다!!!");
     }
@@ -172,7 +173,8 @@ public class ReservationService implements ReservationServiceInterface {
       reservation.setPeriod((int) ChronoUnit.DAYS.between(reservationRequest.getCheckIn(),
           reservationRequest.getCheckOut()));
       reservation.setStatus(ReservationStatus.PENDING);
-
+      reservation.setCreatedAt(LocalDateTime.now());
+      reservation.setUpdatedAt(LocalDateTime.now());
       Reservation newReservation = reservationRepository.save(reservation);
       ReservationDTO newReservationDto = reservationMapper.toDTO(newReservation);
       List<PetReservationDTO> petReservations = new ArrayList<>();

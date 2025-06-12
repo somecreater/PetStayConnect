@@ -7,10 +7,12 @@ import BusinessTagList from './BusinessTagList';
 function Business({businesssDTO,tagList}){
   
   const [isOpen, setIsOpen] = useState(false);
-    const { id,businessName, status, minPrice, maxPrice, facilities, description, avgRate,
-        petBusinessTypeName, registrationNumber, province, city, town  } = businesssDTO;
-    
-    const items = [
+  const { id,businessName, status, minPrice, maxPrice, facilities, description, avgRate,
+        petBusinessTypeName, registrationNumber, varification, province, city, town  } = businesssDTO;
+
+  const label='사업자 인증 여부';
+  let varify=varification !== 'NONE' ? '인증됨' : '미인증';
+  const items = [
     ['상태 ', status],
     ['최저 가격 ', `${minPrice}원`],
     ['최고 가격 ', `${maxPrice}원`],
@@ -20,6 +22,7 @@ function Business({businesssDTO,tagList}){
     ['주소 ', `${province} ${city} ${town}`],
     ['서비스 타입 ', petBusinessTypeName],
     ['등록번호 ', registrationNumber],
+    ['사업자 인증 여부', varify]
   ];
 
   return(

@@ -17,6 +17,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -52,7 +53,8 @@ public class ReviewServiceImpl implements ReviewService {
         review.setReservation(reservation);
         review.setUser(reservation.getUser());
         review.setReportCount(0);
-
+        review.setCreatedAt(LocalDateTime.now());
+        review.setUpdatedAt(LocalDateTime.now());
         Review saved = reviewRepository.save(review);
         return reviewMapper.toDTO(saved);
     }
@@ -87,7 +89,7 @@ public class ReviewServiceImpl implements ReviewService {
 
         review.setRating(dto.getRating());
         review.setContent(dto.getContent());
-
+        review.setUpdatedAt(LocalDateTime.now());
         Review updated = reviewRepository.save(review);
         return reviewMapper.toBasicDTO(updated);
 
