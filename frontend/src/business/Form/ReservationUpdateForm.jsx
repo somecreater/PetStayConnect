@@ -88,7 +88,9 @@ function ReservationUpdateForm({ reservation, onSubmit, onCancel }){
           <span className="text-muted">없음</span>
         )}
       </div>
-      
+      <div className="mb-2 text-muted small">
+        ※ 이미 등록된 애완동물은 수정할 수 없습니다. 해당 예약을 취소하고 다시 예약 해주세요.
+      </div>
       <div className="mb-3 p-2 border rounded overflow-auto">
         <PetList
           pets={pets}
