@@ -31,8 +31,8 @@ function RoomRegisterForm(props){
         const room=data.room;
         console.log(data.message);
         alert("새로운 방이 추가되었습니다.\n" 
-          + "새로운 방 타입: " + room.roomType 
-          + "새로운 방 설명: " + room.description
+          + "새로운 방 타입: " + room.roomType + "\n"
+          + "새로운 방 설명: " + room.description + "\n"
           + "새로운 방의 수: " + room.roomCount);
       }else{
         const message=data.message;

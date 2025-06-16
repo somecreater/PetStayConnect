@@ -16,6 +16,7 @@ import com.petservice.main.payment.database.entity.Payment;
 import com.petservice.main.payment.service.PaymentServiceInterface;
 import com.petservice.main.pet.service.PetServiceInterface;
 import com.petservice.main.user.database.dto.PetDTO;
+import com.petservice.main.user.database.entity.Role;
 import com.petservice.main.user.database.entity.User;
 import com.petservice.main.user.database.repository.PetRepository;
 import com.petservice.main.user.database.repository.UserRepository;
@@ -132,15 +133,29 @@ public class ReservationService implements ReservationServiceInterface {
           reservationRequest.getRoomType(), reservationRequest.getBusiness_register_number()
       );
     }
-
-    if(user == null || petBusiness == null
-        || reservationRequest.getCheckIn() == null
-        || reservationRequest.getCheckOut() ==null
-        || reservationRequest.getPetDTOList() == null
-    || Objects.equals(user.getPetBusiness().getId(), petBusiness.getId())){
+    if(user == null){
       log.error("부적절한 값입니다!!!");
       throw new IllegalArgumentException("부적절한 값입니다!!!");
     }
+    if(user.getRole() == Role.SERVICE_PROVIDER){
+      if(petBusiness == null
+          || reservationRequest.getCheckIn() == null
+          || reservationRequest.getCheckOut() == null
+          || reservationRequest.getPetDTOList() == null
+          || Objects.equals(user.getPetBusiness().getId(), petBusiness.getId())){
+        log.error("부적절한 값입니다!!!");
+        throw new IllegalArgumentException("부적절한 값입니다!!!");
+      }
+    }else {
+      if (petBusiness == null
+          || reservationRequest.getCheckIn() == null
+          || reservationRequest.getCheckOut() == null
+          || reservationRequest.getPetDTOList() == null) {
+        log.error("부적절한 값입니다!!!");
+        throw new IllegalArgumentException("부적절한 값입니다!!!");
+      }
+    }
+
     if(!reservationRequest.getCheckIn().isAfter(today)
         || !reservationRequest.getCheckOut().isAfter(today)
         || !reservationRequest.getCheckOut().isAfter(reservationRequest.getCheckIn())){

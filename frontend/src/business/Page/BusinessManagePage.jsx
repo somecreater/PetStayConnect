@@ -100,7 +100,6 @@ function BusinessManagePage(props){
     }
   }
 
-//추후 컨트롤러 구현시 주석 해제
   useEffect(() => {
   if (!businessId) {
     return;
@@ -135,8 +134,8 @@ function BusinessManagePage(props){
     const response= await ApiService.business.deleteReservation(id);
     const data=response.data;
     if(data.result){
-      alert("예약이 취소되었습니다.\n"+
-        " 탭 전환이나 새로 고침시 데이터가 변경됩니다.");
+      alert("예약이 취소되었습니다.");
+      reservationList();
     }else{
       alert("이미 날짜가 지난 예약이거나, "+
         "시스템 문제로 실패하였습니다.");
@@ -153,8 +152,7 @@ function BusinessManagePage(props){
     const response= await ApiService.payments.delete(request, id);
     const data=response.data;
     if(data.result){
-      alert("해당 결제를 취소 시켰으며, 해당되는 예약도 삭제되었습니다.\n"+
-        " 탭 전환이나 새로 고침시 데이터가 변경됩니다.");
+      alert("해당 결제를 취소 시켰으며, 해당되는 예약도 삭제되었습니다.");
       payList();
     }else{
       alert("이미 날짜가 지난 예약 이거나, " +
@@ -167,6 +165,7 @@ function BusinessManagePage(props){
     if(data.result){
       alert("방이 삭제되었습니다.\n"+
         " 탭 전환이나 새로 고침시 데이터가 변경됩니다.");
+      roomList();
     }else{
       alert("방 삭제에 실패했습니다!");
     }
@@ -176,6 +175,7 @@ function BusinessManagePage(props){
     const data= response.data;
     if(data.result){
       alert(data.message);
+      tagList();
     }else{
       alert(data.message);
     }
@@ -338,12 +338,12 @@ function BusinessManagePage(props){
           </div>
           
           {(registerModal && activeTab === "rooms")&&
-            <Modal isOpen={registerModal} onClose={()=>setRegisterModal(false)}>
+            <Modal isOpen={registerModal} onClose={()=>{setRegisterModal(false); roomList();}}>
               <RoomRegisterForm/>
             </Modal>
           }
           {(updateModal && room && activeTab === "rooms")&&
-            <Modal isOpen={updateModal} onClose={()=>setUpdateModal(false)}>
+            <Modal isOpen={updateModal} onClose={()=>{setUpdateModal(false); roomList();}}>
               <RoomUpdateForm room={room}/>
             </Modal>
           }
