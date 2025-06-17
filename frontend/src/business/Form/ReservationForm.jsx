@@ -116,14 +116,12 @@ function ReservationForm(props){
 
         <div
           style={{ maxHeight: '75vh', overflowY: 'auto' }}
-          className="p-2 border rounded"
+          className="p-3 border rounded bg-light"
         >
         {/* 사업자 정보 */}
-        <div className="col-12">
-          <div 
-            className="p-2 border rounded overflow-auto bg-beige-yellow"
-          >
-            <dl className="row g-1 m-0">
+        <section className="mb-4">
+          <h6 className="fw-bold border-bottom pb-1 mb-2">사업자 정보</h6>
+            <dl className="row g-1">
               {readonlyItems.map(([label, value]) => (
                 <React.Fragment key={label}>
                   <dt className="col-4 fw-bold small text-truncate">{label}</dt>
@@ -131,52 +129,50 @@ function ReservationForm(props){
                 </React.Fragment>
               ))}
             </dl>
-          </div>
-        </div>
+        </section>
 
 
         {/* 선택 리스트들 */}
-        <div className="col-12">
-          <div className="small text-secondary mb-1">애완동물 선택</div>
-          <div className="small">
-            선택된 펫:{' '}
-            {selectedPet.length > 0
-              ? selectedPet.map(p => (
-                  <span key={p.id} className="badge bg-primary me-1">
-                    {p.name+', '} 
-                  </span>
-                ))
-              : <span className="text-muted">없음</span>
-            }
+        <section className="mb-4">
+          <h6 className="fw-bold border-bottom pb-1 mb-2">애완동물 선택</h6>
+          <div className="mb-2">
+            {selectedPet.length > 0 ? (
+              selectedPet.map(p => (
+                <span key={p.id} className="badge bg-info text-dark me-1">{p.name}</span>
+              ))
+            ) : (
+              <span className="text-muted small">선택된 펫이 없습니다.</span>
+            )}
           </div>
-          <div className="p-2 border rounded overflow-auto mb-2 bg-beige-yellow">
-            {petList?.length > 0 
-              ? <PetList pets={petList} selected={handlePetSelected} />
-              : <div className="text-warning small">펫을 먼저 등록해주세요!</div>
-            }
+          <div className="p-2 border rounded bg-beige-yellow">
+            {petList?.length > 0 ? (
+              <PetList pets={petList} selected={handlePetSelected} />
+            ) : (
+              <div className="text-warning small">펫을 먼저 등록해주세요!</div>
+            )}
           </div>
-        </div>
+        </section>
 
         {/* 방 선택 */}
         {roomList.length > 0 && (
-          <div className="col-12">
-            <div className="small text-secondary mb-1">방 선택</div>
-            <BusinessRoomList roomList={roomList} onRoomSelect={handleRoomSelect} />
-
-            {/* ✨ 선택된 방 표시 ✨ */}
-            {selectedRoom && (
-              <div className="mt-2 p-2 border rounded bg-light">
-                <strong>선택된 방:</strong> {selectedRoom.roomType} – {selectedRoom.description}
-              </div>
-            )}
-          </div>
+        <section className="mb-4">
+          <h6 className="fw-bold border-bottom pb-1 mb-2">방 선택</h6>
+          <BusinessRoomList roomList={roomList} onRoomSelect={handleRoomSelect} />
+          {selectedRoom && (
+            <div className="mt-2 p-2 bg-white border rounded">
+              <span className="fw-semibold">선택된 방:</span> {selectedRoom.roomType} – {selectedRoom.description}
+            </div>
+          )}
+        </section>
         )}
 
         {/* 날짜 및 요청사항 */}
-          <div className="row g-2 mb-3">
+        <section className="mb-4">
+          <h6 className="fw-bold border-bottom pb-1 mb-2">예약 정보 입력</h6>
+          <div className="row g-2">
             {inputItems.map(({ name, label, type }) => (
               <div key={name} className="col-md-6">
-                <label htmlFor={name} className="visually-hidden">{label}</label>
+                <label htmlFor={name} className="form-label small fw-semibold">{label}</label>
                 <input
                   id={name}
                   name={name}
@@ -189,14 +185,15 @@ function ReservationForm(props){
               </div>
             ))}
           </div>
-        </div>
+        </section>
         {/* 예약 버튼 */}
-        <div className="col-12 text-end">
+        <div className="text-end">
           <Button
-            classtext="btn btn-success btn-sm"
+            classtext="btn btn-success btn-sm px-4"
             type="submit"
             title="예약하기"
           />
+        </div>
         </div>
       </form>
       {paymentModal && newReservation &&
