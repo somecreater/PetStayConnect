@@ -100,10 +100,20 @@ function UserInfo(props){
     }
   };
   
-
-  if (!user) {
-    return <h2>Not User Information</h2>;
-  }
+  const updateUserInfo = async () => {  
+    try{
+      const response=await ApiService.userService.info();
+      if(response.data.auth){
+        await getuserDetailInfo(response.data.loginId);
+      }
+    }catch(err){
+      console.error('사용자 정보 가져오기 오류:', err);
+    }
+  };
+  
+  useEffect(()=>{
+    updateUserInfo();
+  },[]);
 
   return (
     <div className="container py-4">

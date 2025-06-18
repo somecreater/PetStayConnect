@@ -5,6 +5,7 @@ import com.petservice.main.user.database.dto.UserDTO;
 import com.petservice.main.user.database.entity.Role;
 import com.petservice.main.user.database.entity.UserType;
 import com.petservice.main.user.database.mapper.UserMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.util.Map;
 import java.util.UUID;
 
+@Slf4j
 @Service
 public class Oauth2Service extends DefaultOAuth2UserService {
 
@@ -54,7 +56,7 @@ public class Oauth2Service extends DefaultOAuth2UserService {
     userDTO.setEmail(oAuth2User.getAttribute("email"));
     userDTO.setName(oAuth2User.getAttribute("name"));
     userDTO.setLoginType(UserType.GOOGLE);
-    userDTO.setPhone(null);
+    userDTO.setPhone("GOOGLE");
     userDTO.setPetNumber(0);
     userDTO.setQnaScore(0);
     userDTO.setPoint(0);
