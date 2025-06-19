@@ -110,9 +110,12 @@ function BusinessSearchPage(props){
     const { value } = e.target;
     setSearch(prev => {
       const next = { ...prev };
+
       if (searchType === 'business') {
         next.businessName = value;
+        next.typeCode = '';
       } else if (searchType === 'type') {
+        next.businessName = '';
         next.typeCode = value;
       } else{
         next.businessName = value;

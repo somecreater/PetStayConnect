@@ -90,11 +90,28 @@ public class PetBusinessService implements PetBusinessServiceInterface {
     if (is_around) {
       log.info("city(시)를 기준으로 주변을 탐색합니다.");
       AddressDTO userAddress=addressService.getAddressByUserLoginId(userLoginId);
-      petBusinessPage=petBusinessRepository.findServiceAndAround(
-          businessName,sectorCode,typeCode,userAddress.getCity(),pageable);
+      //둘중에 하나만 값이 존재
+      if((!isBlank(businessName) || !isBlank(typeCode)) &&
+          !(!isBlank(businessName) && !isBlank(typeCode))) {
+        petBusinessPage =
+            petBusinessRepository.findServiceAndAround(businessName, sectorCode, typeCode,
+                userAddress.getCity(), pageable);
+      }else{
+        petBusinessPage =
+            petBusinessRepository.findServiceAndAroundByOr(businessName, typeCode,
+                userAddress.getCity(), pageable);
+      }
     }else{
-      petBusinessPage=petBusinessRepository.findServiceAll(
-          businessName,sectorCode,typeCode,pageable);
+      //둘중에 하나만 값이 존재
+      if((!isBlank(businessName) || !isBlank(typeCode)) &&
+          !(!isBlank(businessName) && !isBlank(typeCode))) {
+        petBusinessPage =
+            petBusinessRepository.findServiceAll(businessName, sectorCode, typeCode, pageable);
+      }
+      else{
+        petBusinessPage =
+            petBusinessRepository.findServiceAllByOr(businessName, typeCode, pageable);
+      }
     }
 
     return petBusinessPage.map(business -> {

@@ -1,5 +1,6 @@
 package com.petservice.main.user.service;
 
+import com.petservice.main.bookmark.service.BookmarkServiceInterface;
 import com.petservice.main.business.database.dto.PetBusinessDTO;
 import com.petservice.main.business.database.entity.PetBusiness;
 import com.petservice.main.business.database.entity.PetBusinessType;
@@ -12,6 +13,7 @@ import com.petservice.main.payment.database.entity.AccountType;
 import com.petservice.main.payment.database.repository.AccountRepository;
 import com.petservice.main.user.database.dto.CustomUserDetails;
 import com.petservice.main.user.database.dto.UserDTO;
+import com.petservice.main.user.database.entity.BookmarkType;
 import com.petservice.main.user.database.entity.Role;
 import com.petservice.main.user.database.entity.User;
 import com.petservice.main.user.database.entity.UserType;
@@ -45,14 +47,13 @@ public class UserService implements CustomUserServiceInterface, UserDetailsServi
   private final PetBusinessTypeRepository typeRepository;
   private final AccountRepository accountRepository;
   private final PetRepository petRepository;
-  private final BookmarkRepository bookmarkRepository;
-  private final RefreshTokenRepository refreshTokenRepository;
   private final PasswordEncoder passwordEncoder;
   private final PetBusinessRoomServiceInterface petBusinessRoomServiceInterface;
   private final PetReservationServiceInterface petReservationServiceInterface;
   private final ReservationServiceInterface reservationServiceInterface;
   private final PetBusinessServiceInterface petBusinessServiceInterface;
   private final PetBusinessTagServiceInterface petBusinessTagServiceInterface;
+  private final BookmarkServiceInterface bookmarkService;
 
   private final UserMapper userMapper;
   private final PetBusinessMapper petBusinessMapper;
@@ -306,6 +307,8 @@ public class UserService implements CustomUserServiceInterface, UserDetailsServi
               throw new RuntimeException("회원 탈퇴가 비정상적으로 실행되었습니다."
                   + " 다시 시도하거나 관리자에게 문의하세요!!");
             }
+            bookmarkService.cleanupDeletedItem(BookmarkType.BUSINESS_PROVIDER,deleteBusiness.getId());
+            bookmarkService.cleanUserBookmark(delete.getUserLoginId());
             userRepository.delete(delete);
           } else {
 
@@ -317,6 +320,7 @@ public class UserService implements CustomUserServiceInterface, UserDetailsServi
                 || petRepository.deleteByUser_Id(delete.getId()) <0) {
               throw new RuntimeException("회원 탈퇴가 비정상적으로 실행되었습니다." + " 다시 시도하거나 관리자에게 문의하세요!!");
             }
+            bookmarkService.cleanUserBookmark(delete.getUserLoginId());
             userRepository.delete(delete);
           }
 

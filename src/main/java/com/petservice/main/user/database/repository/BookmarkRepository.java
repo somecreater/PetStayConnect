@@ -22,4 +22,5 @@ public interface BookmarkRepository extends JpaRepository<Bookmark,Long> {
     // 특정 타입/타겟ID로 북마크 일괄 삭제 (예: QnA 게시글 삭제 시)
     void deleteByBookmarkTypeAndTargetId(BookmarkType bookmarkType, Long targetId);
 
+    long deleteByUser_UserLoginId(String userLoginId);
 }
