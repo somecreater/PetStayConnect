@@ -1,5 +1,6 @@
 package com.petservice.main.manage.service;
 
+import com.petservice.main.bookmark.service.BookmarkServiceInterface;
 import com.petservice.main.business.database.dto.ReservationDTO;
 import com.petservice.main.business.database.entity.PetBusiness;
 import com.petservice.main.business.database.entity.Reservation;
@@ -26,6 +27,7 @@ import com.petservice.main.review.database.entity.Review;
 import com.petservice.main.review.database.mapper.ReviewMapper;
 import com.petservice.main.review.database.repository.ReviewRepository;
 import com.petservice.main.user.database.dto.UserDTO;
+import com.petservice.main.user.database.entity.BookmarkType;
 import com.petservice.main.user.database.entity.Role;
 import com.petservice.main.user.database.entity.User;
 import com.petservice.main.user.database.mapper.UserMapper;
@@ -54,6 +56,7 @@ public class ManagementService implements ManagementServiceInterface{
   private final PetBusinessServiceInterface petBusinessServiceInterface;
   private final PetBusinessTagServiceInterface petBusinessTagServiceInterface;
   private final MailServiceInterface mailServiceInterface;
+  private final BookmarkServiceInterface bookmarkService;
 
   private final PaymentRepository paymentRepository;
   private final AccountRepository accountRepository;
@@ -107,6 +110,8 @@ public class ManagementService implements ManagementServiceInterface{
               || petRepository.deleteByUser_Id(delete.getId()) <0) {
             throw new RuntimeException("회원 강제 탈퇴가 비정상적으로 실행되었습니다.");
           }
+          bookmarkService.cleanupDeletedItem(BookmarkType.BUSINESS_PROVIDER,deleteBusiness.getId());
+          bookmarkService.cleanUserBookmark(delete.getUserLoginId());
           userRepository.delete(delete);
 
         }else{
@@ -118,6 +123,7 @@ public class ManagementService implements ManagementServiceInterface{
               || petRepository.deleteByUser_Id(delete.getId()) <0) {
             throw new RuntimeException("회원 강제 탈퇴가 비정상적으로 실행되었습니다." );
           }
+          bookmarkService.cleanUserBookmark(delete.getUserLoginId());
           userRepository.delete(delete);
         }
 
@@ -165,6 +171,7 @@ public class ManagementService implements ManagementServiceInterface{
     try {
       qnaAnswerRepository.deleteByPost_Id(id);
       qnaPostRepository.deleteById(id);
+      bookmarkService.cleanupDeletedItem(BookmarkType.QNA,id);
       return true;
     }catch (Exception e){
       e.printStackTrace();

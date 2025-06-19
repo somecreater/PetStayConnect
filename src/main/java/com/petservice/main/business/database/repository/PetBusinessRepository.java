@@ -29,11 +29,11 @@ public interface PetBusinessRepository extends JpaRepository<PetBusiness,Long> {
           FROM pet_business pb
           LEFT JOIN pet_business_type t ON pb.business_type_id = t.id
           LEFT JOIN users             u ON pb.user_id          = u.id
-         WHERE (:businessName IS NULL OR :businessName = '' 
+         WHERE (:businessName IS NULL OR TRIM(:businessName) = ''
            OR pb.business_name LIKE CONCAT('%', :businessName, '%'))
-           AND (:sectorCode   IS NULL OR :sectorCode   = '' OR t.sector_code = :sectorCode)
-           AND (:typeCode     IS NULL OR :typeCode     = '' OR t.type_code   = :typeCode)
-           AND (:city         IS NULL OR :city         = '' OR pb.city         = :city)
+           AND (:sectorCode   IS NULL OR TRIM(:sectorCode)   = '' OR t.sector_code LIKE CONCAT('%', :sectorCode, '%'))
+           AND (:typeCode     IS NULL OR TRIM(:typeCode)     = '' OR t.type_code   LIKE CONCAT('%', :typeCode, '%'))
+           AND (:city         IS NULL OR TRIM(:city)         = '' OR pb.city       LIKE CONCAT('%', :city, '%'))
          ORDER BY u.qna_score DESC
         """,
       countQuery = """
@@ -41,11 +41,11 @@ public interface PetBusinessRepository extends JpaRepository<PetBusiness,Long> {
           FROM pet_business pb
           LEFT JOIN pet_business_type t ON pb.business_type_id = t.id
           LEFT JOIN users             u ON pb.user_id          = u.id
-         WHERE (:businessName IS NULL OR :businessName = '' 
+         WHERE (:businessName IS NULL OR TRIM(:businessName) = ''
            OR pb.business_name LIKE CONCAT('%', :businessName, '%'))
-           AND (:sectorCode   IS NULL OR :sectorCode   = '' OR t.sector_code = :sectorCode)
-           AND (:typeCode     IS NULL OR :typeCode     = '' OR t.type_code   = :typeCode)
-           AND (:city         IS NULL OR :city         = '' OR pb.city         = :city)
+           AND (:sectorCode   IS NULL OR TRIM(:sectorCode)   = '' OR t.sector_code LIKE CONCAT('%', :sectorCode, '%'))
+           AND (:typeCode     IS NULL OR TRIM(:typeCode)     = '' OR t.type_code   LIKE CONCAT('%', :typeCode, '%'))
+           AND (:city         IS NULL OR TRIM(:city)         = '' OR pb.city       LIKE CONCAT('%', :city, '%'))
         """,
       nativeQuery = true)
   Page<PetBusiness> findServiceAndAround(
@@ -56,6 +56,34 @@ public interface PetBusinessRepository extends JpaRepository<PetBusiness,Long> {
       Pageable pageable
   );
 
+  @Query(value = """
+        SELECT pb.*
+          FROM pet_business pb
+          LEFT JOIN pet_business_type t ON pb.business_type_id = t.id
+          LEFT JOIN users             u ON pb.user_id          = u.id
+         WHERE ((:businessName IS NULL OR TRIM(:businessName) = ''
+           OR pb.business_name LIKE CONCAT('%', :businessName, '%'))
+           OR (:typeCode     IS NULL OR TRIM(:typeCode)     = '' OR t.type_code   LIKE CONCAT('%', :typeCode, '%'))
+           AND (:city        IS NULL OR TRIM(:city)         = '' OR pb.city       LIKE CONCAT('%', :city, '%')))
+         ORDER BY u.qna_score DESC
+        """,
+      countQuery = """
+        SELECT COUNT(*)
+          FROM pet_business pb
+          LEFT JOIN pet_business_type t ON pb.business_type_id = t.id
+          LEFT JOIN users             u ON pb.user_id          = u.id
+         WHERE ((:businessName IS NULL OR TRIM(:businessName) = ''
+           OR pb.business_name LIKE CONCAT('%', :businessName, '%'))
+           OR (:typeCode     IS NULL OR TRIM(:typeCode)     = '' OR t.type_code   LIKE CONCAT('%', :typeCode, '%'))
+           AND (:city        IS NULL OR TRIM(:city)         = '' OR pb.city       LIKE CONCAT('%', :city, '%')))
+        """,
+      nativeQuery = true)
+  Page<PetBusiness> findServiceAndAroundByOr(
+      String businessName,
+      String typeCode,
+      String city,
+      Pageable pageable
+  );
   /**
    * 2. 서비스에 등록된 내부 사업자 중
    *    - 주변 조건 제외, 전체 조회
@@ -65,10 +93,10 @@ public interface PetBusinessRepository extends JpaRepository<PetBusiness,Long> {
           FROM pet_business pb
           LEFT JOIN pet_business_type t ON pb.business_type_id = t.id
           LEFT JOIN users             u ON pb.user_id          = u.id
-         WHERE (:businessName IS NULL OR :businessName = '' 
+         WHERE (:businessName IS NULL OR TRIM(:businessName) = ''
            OR pb.business_name LIKE CONCAT('%', :businessName, '%'))
-           AND (:sectorCode   IS NULL OR :sectorCode   = '' OR t.sector_code = :sectorCode)
-           AND (:typeCode     IS NULL OR :typeCode     = '' OR t.type_code   = :typeCode)
+           AND (:sectorCode   IS NULL OR TRIM(:sectorCode)   = '' OR t.sector_code LIKE CONCAT('%', :sectorCode, '%'))
+           AND (:typeCode     IS NULL OR TRIM(:typeCode)     = '' OR t.type_code   LIKE CONCAT('%', :typeCode, '%'))
          ORDER BY u.qna_score DESC
         """,
       countQuery = """
@@ -76,15 +104,41 @@ public interface PetBusinessRepository extends JpaRepository<PetBusiness,Long> {
           FROM pet_business pb
           LEFT JOIN pet_business_type t ON pb.business_type_id = t.id
           LEFT JOIN users             u ON pb.user_id          = u.id
-         WHERE (:businessName IS NULL OR :businessName = '' 
+         WHERE (:businessName IS NULL OR TRIM(:businessName) = ''
            OR pb.business_name LIKE CONCAT('%', :businessName, '%'))
-           AND (:sectorCode   IS NULL OR :sectorCode   = '' OR t.sector_code = :sectorCode)
-           AND (:typeCode     IS NULL OR :typeCode     = '' OR t.type_code   = :typeCode)
+           AND (:sectorCode   IS NULL OR TRIM(:sectorCode)   = '' OR t.sector_code LIKE CONCAT('%', :sectorCode, '%'))
+           AND (:typeCode     IS NULL OR TRIM(:typeCode)     = '' OR t.type_code   LIKE CONCAT('%', :typeCode, '%'))
         """,
       nativeQuery = true)
   Page<PetBusiness> findServiceAll(
       String businessName,
       String sectorCode,
+      String typeCode,
+      Pageable pageable
+  );
+
+  @Query(value = """
+        SELECT pb.*
+          FROM pet_business pb
+          LEFT JOIN pet_business_type t ON pb.business_type_id = t.id
+          LEFT JOIN users             u ON pb.user_id          = u.id
+         WHERE ((:businessName IS NULL OR TRIM(:businessName) = ''
+           OR pb.business_name LIKE CONCAT('%', :businessName, '%'))
+           OR (:typeCode     IS NULL OR TRIM(:typeCode)     = '' OR t.type_code   LIKE CONCAT('%', :typeCode, '%')))
+         ORDER BY u.qna_score DESC
+        """,
+      countQuery = """
+        SELECT COUNT(*)
+          FROM pet_business pb
+          LEFT JOIN pet_business_type t ON pb.business_type_id = t.id
+          LEFT JOIN users             u ON pb.user_id          = u.id
+         WHERE ((:businessName IS NULL OR TRIM(:businessName) = ''
+           OR pb.business_name LIKE CONCAT('%', :businessName, '%'))
+           OR (:typeCode     IS NULL OR TRIM(:typeCode)     = '' OR t.type_code   LIKE CONCAT('%', :typeCode, '%')))
+        """,
+      nativeQuery = true)
+  Page<PetBusiness> findServiceAllByOr(
+      String businessName,
       String typeCode,
       Pageable pageable
   );

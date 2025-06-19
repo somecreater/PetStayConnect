@@ -1,10 +1,13 @@
 package com.petservice.main.qna.service.post;
 
+import com.petservice.main.bookmark.service.BookmarkServiceInterface;
 import com.petservice.main.qna.database.dto.QnaPostDTO;
 import com.petservice.main.qna.database.entity.QnaPost;
 import com.petservice.main.qna.database.mapper.QnaPostMapper;
+import com.petservice.main.qna.database.repository.QnaAnswerRepository;
 import com.petservice.main.qna.database.repository.QnaPostRepository;
 import com.petservice.main.user.database.dto.CustomUserDetails;
+import com.petservice.main.user.database.entity.BookmarkType;
 import com.petservice.main.user.database.entity.User;
 import com.petservice.main.user.database.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,8 +28,11 @@ import java.util.stream.Collectors;
 public class QnaPostService implements QnaPostServiceInterface {
 
     private final QnaPostRepository qnaPostRepository;
+    private final QnaAnswerRepository qnaAnswerRepository;
     private final UserRepository userRepository;
     private final QnaPostMapper qnaPostMapper;
+
+    private final BookmarkServiceInterface bookmarkService;
 
     @Override
     @Transactional
@@ -119,6 +125,8 @@ public class QnaPostService implements QnaPostServiceInterface {
         }
 
         qnaPostRepository.delete(post);
+        qnaAnswerRepository.deleteByPost_Id(postId);
+        bookmarkService.cleanupDeletedItem(BookmarkType.QNA,postId);
     }
 }
 

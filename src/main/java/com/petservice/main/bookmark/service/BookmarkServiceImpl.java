@@ -68,4 +68,11 @@ public class BookmarkServiceImpl implements BookmarkServiceInterface {
         // 커스텀 쿼리로 북마크 일괄 삭제
         bookmarkRepository.deleteByBookmarkTypeAndTargetId(bookmarkType, targetId);
     }
+
+    @Override
+    @Transactional
+    public void cleanUserBookmark(String userLoginId){
+        // 커스텀 쿼리로 회원의 북마크 일괄 삭제
+        bookmarkRepository.deleteByUser_UserLoginId(userLoginId);
+    }
 }

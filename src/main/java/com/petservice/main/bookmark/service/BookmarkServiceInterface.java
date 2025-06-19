@@ -5,9 +5,10 @@ import com.petservice.main.user.database.entity.BookmarkType;
 import java.util.List;
 
 public interface BookmarkServiceInterface {
-    void addBookmark(String userLoginId, BookmarkType bookmarkType, Long targetId);
-    void removeBookmark(String userLoginId, BookmarkType bookmarkType, Long targetId);
-    List<BookmarkDTO> getBookmarksByUser(String userLoginId);
-    boolean isBookmarked(String userLoginId, BookmarkType bookmarkType, Long targetId);
-    void cleanupDeletedItem(BookmarkType bookmarkType, Long targetId);
+    public void addBookmark(String userLoginId, BookmarkType bookmarkType, Long targetId);
+    public void removeBookmark(String userLoginId, BookmarkType bookmarkType, Long targetId);
+    public List<BookmarkDTO> getBookmarksByUser(String userLoginId);
+    public boolean isBookmarked(String userLoginId, BookmarkType bookmarkType, Long targetId);
+    public void cleanupDeletedItem(BookmarkType bookmarkType, Long targetId);
+    public void cleanUserBookmark(String userLoginId);
 }
