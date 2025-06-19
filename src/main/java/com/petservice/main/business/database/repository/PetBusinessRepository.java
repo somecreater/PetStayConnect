@@ -63,8 +63,8 @@ public interface PetBusinessRepository extends JpaRepository<PetBusiness,Long> {
           LEFT JOIN users             u ON pb.user_id          = u.id
          WHERE ((:businessName IS NULL OR TRIM(:businessName) = ''
            OR pb.business_name LIKE CONCAT('%', :businessName, '%'))
-           OR (:typeCode     IS NULL OR TRIM(:typeCode)     = '' OR t.type_code   LIKE CONCAT('%', :typeCode, '%'))
-           AND (:city        IS NULL OR TRIM(:city)         = '' OR pb.city       LIKE CONCAT('%', :city, '%')))
+           OR (:typeCode     IS NULL OR TRIM(:typeCode)     = '' OR t.type_code   LIKE CONCAT('%', :typeCode, '%')))
+           AND (:city        IS NULL OR TRIM(:city)         = '' OR pb.city       LIKE CONCAT('%', :city, '%'))
          ORDER BY u.qna_score DESC
         """,
       countQuery = """
@@ -74,8 +74,8 @@ public interface PetBusinessRepository extends JpaRepository<PetBusiness,Long> {
           LEFT JOIN users             u ON pb.user_id          = u.id
          WHERE ((:businessName IS NULL OR TRIM(:businessName) = ''
            OR pb.business_name LIKE CONCAT('%', :businessName, '%'))
-           OR (:typeCode     IS NULL OR TRIM(:typeCode)     = '' OR t.type_code   LIKE CONCAT('%', :typeCode, '%'))
-           AND (:city        IS NULL OR TRIM(:city)         = '' OR pb.city       LIKE CONCAT('%', :city, '%')))
+           OR (:typeCode     IS NULL OR TRIM(:typeCode)     = '' OR t.type_code   LIKE CONCAT('%', :typeCode, '%')))
+           AND (:city        IS NULL OR TRIM(:city)         = '' OR pb.city       LIKE CONCAT('%', :city, '%'))
         """,
       nativeQuery = true)
   Page<PetBusiness> findServiceAndAroundByOr(
