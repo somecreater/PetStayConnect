@@ -33,11 +33,15 @@ const ApiService = {
       headers: createHeaders(),
       withCredentials: true,
     }),
-    detail: (userLoginId) =>RefreshApi.get(API_ENDPOINTS.auth.detail, { 
+    detail: (userLoginId) => RefreshApi.get(API_ENDPOINTS.auth.detail, { 
       params: { userLoginId }, 
       headers: createHeaders(),
       withCredentials: true, 
     }), 
+    updatePassword: (dto) => RefreshApi.put(API_ENDPOINTS.auth.updatePassword, dto, {
+      headers: createHeaders(),
+      withCredentials: true,
+    })
   },
 
   pet:{
