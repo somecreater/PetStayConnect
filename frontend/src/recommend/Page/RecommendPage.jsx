@@ -53,6 +53,32 @@ function RecommendPage(props){
     }
   };
 
+  //https 적용시 사용
+  const handleGetLocation = () =>{
+    if(!navigator.geolocation){
+      setErrorLoc('이 브라우저는 Geolocation API를 지원하지 않습니다.');
+      return;
+    }
+    
+    setLoadingLoc(true);
+    setErrorLoc("");
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
+        setLatitude(lat);
+        setLongitude(lon);
+        setLoadingLoc(false);
+        console.log("latitude: " + lat + " \n"
+          + "longitude: " + lon);
+      },
+      (error) => {
+        setErrorLoc(error.message);
+        setLoadingLoc(false);
+      }
+    )
+  }
+
   const handleRecommend = async () => {
     try{
       console.log("lat: "+latitude

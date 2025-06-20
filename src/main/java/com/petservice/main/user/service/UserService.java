@@ -337,6 +337,28 @@ public class UserService implements CustomUserServiceInterface, UserDetailsServi
     }
   }
 
+  public boolean UpdatePassword(String UserLoginId, String Password, String newPassword){
+    Optional<User> userOptional=userRepository.findByUserLoginId(UserLoginId);
+
+    if (!userOptional.isPresent()){
+      throw new BadCredentialsException("Invalid ID or password");
+    }
+
+    User user = userOptional.get();
+
+    if(user.getPassword()==null || !passwordEncoder.matches(Password,user.getPassword())){
+      throw new BadCredentialsException("Invalid ID or password");
+    }
+
+    user.setPassword(passwordEncoder.encode(newPassword));
+    User updateUser = userRepository.save(user);
+    if(passwordEncoder.matches(newPassword,updateUser.getPassword())){
+      return true;
+    }else{
+      return false;
+    }
+  }
+
   @Override
   public boolean UserValidation(UserDTO userDTO){
     try {

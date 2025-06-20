@@ -12,6 +12,7 @@ public interface CustomUserServiceInterface {
   public UserDTO getUserByLoginId(String LoginId);
   public UserDTO UpdateUser(CustomUserDetails userDetails, UserDTO userDTO);
   public boolean DeleteUser(CustomUserDetails userDetails, String UserLoginId, String Password);
+  public boolean UpdatePassword(String UserLoginId, String Password, String newPassword);
   public boolean UserValidation(UserDTO userDTO);
   public boolean isBlank(String str);
 
