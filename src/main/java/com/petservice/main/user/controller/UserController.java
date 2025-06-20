@@ -348,4 +348,23 @@ public class UserController {
     result.put("userDetail",userDetailInfo);
     return ResponseEntity.ok(result);
   }
+
+  @PutMapping("/updatePassword")
+  public ResponseEntity<?> updatePassword(
+      @AuthenticationPrincipal CustomUserDetails principal,
+      @RequestBody UpdatePasswordRequest updatePasswordRequest){
+    Map<String,Object> result=new HashMap<>();
+    if(principal != null && customUserService.UpdatePassword(
+        updatePasswordRequest.getUserLoginId(),
+        updatePasswordRequest.getOldPassword(),
+        updatePasswordRequest.getNewPassword())){
+      result.put("auth", true);
+      result.put("message","비밀번호 변경 완료");
+    }else{
+      result.put("auth", false);
+      result.put("message","비밀번호 변경 실패");
+    }
+
+    return ResponseEntity.ok(result);
+  }
 }
