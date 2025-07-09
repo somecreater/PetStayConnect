@@ -48,7 +48,7 @@ public class Oauth2SuccessHandler implements AuthenticationSuccessHandler {
     ResponseCookie.ResponseCookieBuilder token =
         ResponseCookie.from("accessToken", accessToken);
     token.httpOnly(true);
-    token.secure(true);
+    token.secure(false);
     token.path("/");
     token.sameSite("Strict");
     ResponseCookie accessCookie = token.build();
@@ -57,7 +57,7 @@ public class Oauth2SuccessHandler implements AuthenticationSuccessHandler {
     ResponseCookie.ResponseCookieBuilder
         refreshCookieBuilder = ResponseCookie.from("refreshToken", refreshToken);
     refreshCookieBuilder.httpOnly(true);
-    refreshCookieBuilder.secure(true);
+    refreshCookieBuilder.secure(false);
     refreshCookieBuilder.path("/api/user/refresh");
     refreshCookieBuilder.maxAge(refreshMaxAge);
     refreshCookieBuilder.sameSite("Strict");

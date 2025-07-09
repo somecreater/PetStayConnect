@@ -20,7 +20,7 @@ public class MailService implements MailServiceInterface{
 
   private final JavaMailSender mailSender;
 
-  @Async("mailTaskExecutor")
+//  @Async("mailTaskExecutor")
   @Retryable(
       value = { Exception.class },
       maxAttempts = 3,
@@ -34,9 +34,13 @@ public class MailService implements MailServiceInterface{
     message.setSubject(subject);
     message.setText(text);
 
-    mailSender.send(message);
+    try {
+      mailSender.send(message);
+      log.info("✅ 메일 전송 성공: to={}", to);
+    } catch (Exception e) {
+      log.error("❌ 메일 전송 실패: {}", e.getMessage(), e);
+    }
   }
-
   @Recover
   public void Recover(Exception e, String to, String subject, String body){
     System.err.println(

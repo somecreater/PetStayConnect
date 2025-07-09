@@ -61,7 +61,7 @@ public class JwtFilter extends OncePerRequestFilter {
       if(accessToken ==null) {
         String hdr  = request.getHeader("Authorization");
           if (StringUtils.hasText(hdr ) && hdr.startsWith("Bearer ")) {
-            accessToken = accessToken.substring(7);
+            accessToken = hdr.substring(7);
           }
       }
 
@@ -92,7 +92,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
         ResponseCookie cookie = ResponseCookie.from("accessToken", newAccessToken)
             .httpOnly(true)
-            .secure(true)
+            .secure(false)
             .path("/")
             //.maxAge(ACCESS_TOKEN_MAX_AGE_SECONDS)
             .sameSite("None")

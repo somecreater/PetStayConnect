@@ -66,8 +66,8 @@ spring:
     secret: ${SPRING_JWT_SECRET:""}
   sql:
     init:
-      mode: ${SPRING_SQL_INIT_MODE:""}
-      schema-locations: ${SQL_SHEMA:""}
+      mode: ${SPRING_SQL_INIT_MODE:never}
+      schema-locations: ${SQL_SCHEMA:""}
       data-locations: ${SQL_DATA:""}
 app:
 

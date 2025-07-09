@@ -23,7 +23,7 @@ public class CorsMvcConfig implements WebMvcConfigurer {
   public void addCorsMappings(@NonNull CorsRegistry corsRegistry) {
     if (corsEnabled) {
       corsRegistry.addMapping("/**").exposedHeaders("Set-Cookie", "Authorization")
-          .allowedOrigins(allowedOrigins)
+          .allowedOrigins("https://your-alb-domain.ap-northeast-2.elb.amazonaws.com")
           .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS").allowedHeaders("*")
           .allowCredentials(true).maxAge(3600L);
     }

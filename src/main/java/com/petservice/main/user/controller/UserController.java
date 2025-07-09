@@ -49,7 +49,7 @@ public class UserController {
   //토큰 리프레시
   @PostMapping("/refresh")
   public ResponseEntity<?> refreshToken(HttpServletRequest request,
-      HttpServletResponse response) {
+                                        HttpServletResponse response) {
 
     Map<String, Object> result = new HashMap<>();
 
@@ -85,13 +85,13 @@ public class UserController {
     try {
       User user = verifiedToken.getUser();
       String newAccessToken =
-          jwtService.createJwt(user.getUserLoginId(), user.getRole().name(), user.getName(),
-          JWT_EXPIRATION, "ACCESS");
+              jwtService.createJwt(user.getUserLoginId(), user.getRole().name(), user.getName(),
+                      JWT_EXPIRATION, "ACCESS");
 
       ResponseCookie.ResponseCookieBuilder token =
-          ResponseCookie.from("accessToken", newAccessToken);
+              ResponseCookie.from("accessToken", newAccessToken);
       token.httpOnly(true);
-      token.secure(true);
+      token.secure(false);
       token.path("/");
       //token.maxAge(JWT_EXPIRATION / 1000);
       token.sameSite("None");
@@ -111,7 +111,7 @@ public class UserController {
   //회원 로그인
   @PostMapping("/login")
   public ResponseEntity<?> AuthenticateUser(@RequestBody LoginRequest loginRequest,
-      HttpServletResponse response) {
+                                            HttpServletResponse response) {
     try {
       String userLoginId = loginRequest.getUsername();
       String userPassword = loginRequest.getPassword();
@@ -129,23 +129,23 @@ public class UserController {
       String refreshToken = refreshTokenEntity.getToken();
 
       ResponseCookie.ResponseCookieBuilder token =
-          ResponseCookie.from("accessToken", accessToken);
+              ResponseCookie.from("accessToken", accessToken);
       token.httpOnly(true);
-      token.secure(true);
+      token.secure(false);
       token.path("/");
       //token.maxAge(5);
-      token.sameSite("None");
+      token.sameSite("Lax");
       ResponseCookie accessCookie = token.build();
 
       long refreshMaxAge = refreshTokenEntity.getExpiryDate().getEpochSecond() -
-          (System.currentTimeMillis() / 1000);
+              (System.currentTimeMillis() / 1000);
       ResponseCookie.ResponseCookieBuilder
-          refreshCookieBuilder = ResponseCookie.from("refreshToken", refreshToken);
+              refreshCookieBuilder = ResponseCookie.from("refreshToken", refreshToken);
       refreshCookieBuilder.httpOnly(true);
-      refreshCookieBuilder.secure(true);
+      refreshCookieBuilder.secure(false);
       refreshCookieBuilder.path("/");
       refreshCookieBuilder.maxAge(refreshMaxAge);
-      refreshCookieBuilder.sameSite("None");
+      refreshCookieBuilder.sameSite("Lax");
       ResponseCookie refreshCookie = refreshCookieBuilder.build();
 
       response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
@@ -159,9 +159,9 @@ public class UserController {
       result.put("LoginUser",user);
 
       return ResponseEntity.status(HttpStatus.CREATED)
-        .header(HttpHeaders.SET_COOKIE, accessCookie.toString())
-        .header(HttpHeaders.SET_COOKIE, refreshCookie.toString())
-        .body(result);
+              .header(HttpHeaders.SET_COOKIE, accessCookie.toString())
+              .header(HttpHeaders.SET_COOKIE, refreshCookie.toString())
+              .body(result);
 
     }catch (Exception e){
       log.error("Auth Fail: {}", e.getMessage());
@@ -175,7 +175,7 @@ public class UserController {
   //회원 로그아웃
   @PostMapping("/logout")
   public ResponseEntity<?> logoutUser(@AuthenticationPrincipal CustomUserDetails principal,
-      HttpServletResponse response){
+                                      HttpServletResponse response){
 
     Map<String, Object> result = new HashMap<>();
     try {
@@ -184,14 +184,14 @@ public class UserController {
       refreshTokenService.deleteByUserId(userLoginId);
 
       ResponseCookie deleteAccessCookie =
-          ResponseCookie.from("accessToken", "").httpOnly(true).secure(true).path("/").maxAge(0)
-              .sameSite("None").build();
+              ResponseCookie.from("accessToken", "").httpOnly(true).secure(false).path("/").maxAge(0)
+                      .sameSite("Lax").build();
       ResponseCookie deleteRefreshCookie =
-          ResponseCookie.from("refreshToken", "").httpOnly(true).secure(true)
-              .path("/").maxAge(0).sameSite("None").build();
+              ResponseCookie.from("refreshToken", "").httpOnly(true).secure(false)
+                      .path("/").maxAge(0).sameSite("Lax").build();
       ResponseCookie deleteSessionCookie =
-          ResponseCookie.from("JSESSIONID", "").httpOnly(true).secure(true)
-              .path("/").maxAge(0).sameSite("None").build();
+              ResponseCookie.from("JSESSIONID", "").httpOnly(true).secure(false)
+                      .path("/").maxAge(0).sameSite("Lax").build();
 
       response.addHeader(HttpHeaders.SET_COOKIE, deleteAccessCookie.toString());
       response.addHeader(HttpHeaders.SET_COOKIE, deleteRefreshCookie.toString());
@@ -233,9 +233,9 @@ public class UserController {
   //회원 탈퇴(모든 토큰들도 삭제)
   @PostMapping("/delete")
   public ResponseEntity<?> DeleteUser(
-      @AuthenticationPrincipal CustomUserDetails principal,
-      @RequestBody Map<String,String> deleteRequest,
-      HttpServletResponse response){
+          @AuthenticationPrincipal CustomUserDetails principal,
+          @RequestBody Map<String,String> deleteRequest,
+          HttpServletResponse response){
 
     Map<String,Object> result=new HashMap<>();
 
@@ -249,21 +249,21 @@ public class UserController {
     refreshTokenService.deleteByUserId(userLoginId);
 
     ResponseCookie deleteAccessCookie =
-        ResponseCookie.from("accessToken", "").httpOnly(true).secure(true).path("/").maxAge(0)
-            .sameSite("Strict").build();
+            ResponseCookie.from("accessToken", "").httpOnly(true).secure(false).path("/").maxAge(0)
+                    .sameSite("Strict").build();
     ResponseCookie deleteRefreshCookie =
-        ResponseCookie.from("refreshToken", "").httpOnly(true).secure(true)
-            .path("/").maxAge(0).sameSite("None").build();
+            ResponseCookie.from("refreshToken", "").httpOnly(true).secure(false)
+                    .path("/").maxAge(0).sameSite("None").build();
     ResponseCookie deleteSessionCookie =
-        ResponseCookie.from("JSESSIONID", "").httpOnly(true).secure(true)
-            .path("/").maxAge(0).sameSite("None").build();
+            ResponseCookie.from("JSESSIONID", "").httpOnly(true).secure(false)
+                    .path("/").maxAge(0).sameSite("None").build();
 
     response.addHeader(HttpHeaders.SET_COOKIE, deleteAccessCookie.toString());
     response.addHeader(HttpHeaders.SET_COOKIE, deleteRefreshCookie.toString());
     response.addHeader(HttpHeaders.SET_COOKIE, deleteSessionCookie.toString());
 
     if(customUserService.DeleteUser(principal, deleteRequest.get("LoginId")
-        ,deleteRequest.get("Password"))){
+            ,deleteRequest.get("Password"))){
       result.put("result", true);
     }else{
       result.put("result", false);
@@ -277,7 +277,7 @@ public class UserController {
   //회원 정보 수정
   @PutMapping("/update")
   public ResponseEntity<?> UpdateUserInfo(@AuthenticationPrincipal Object principal,
-      @RequestBody UserDTO user){
+                                          @RequestBody UserDTO user){
     Map<String,Object> result=new HashMap<>();
     UserDTO updateUser=customUserService.UpdateUser((CustomUserDetails)principal,user);
 
@@ -310,7 +310,7 @@ public class UserController {
       result.put("loginId", oAuth2UserDetail.getName());
       result.put("UserName", oAuth2UserDetail.getUsername());
       result.put("Role", oAuth2UserDetail.getAuthorities().stream().map(GrantedAuthority::getAuthority)
-          .collect(Collectors.joining()));
+              .collect(Collectors.joining()));
 
     } else if(principal instanceof CustomUserDetails ){
       result.put("loginMethod", "normal");
@@ -319,7 +319,7 @@ public class UserController {
       result.put("loginId", customUserDetails.getUsername());
       result.put("UserName", customUserDetails.getName());
       result.put("Role", customUserDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority)
-          .collect(Collectors.joining()));
+              .collect(Collectors.joining()));
 
     }else {
       log.warn("Unknown principal type: {}", principal.getClass().getName());
@@ -334,8 +334,8 @@ public class UserController {
   //회원 세부정보 읽기
   @GetMapping("/detailInfo")
   public ResponseEntity<?> getUserDetailInfo(
-      @AuthenticationPrincipal CustomUserDetails principal,
-      @RequestParam(name = "userLoginId") String UserLoginId){
+          @AuthenticationPrincipal CustomUserDetails principal,
+          @RequestParam(name = "userLoginId") String UserLoginId){
     Map<String,Object> result=new HashMap<>();
     if(principal==null||principal.getUsername().compareTo(UserLoginId)!=0){
       result.put("auth",false);

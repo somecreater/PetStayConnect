@@ -13,6 +13,8 @@ export default function HomePage() {
        <div className="row d-flex align-items-center gx-3" style={{ minHeight: '400px' }}>
           <div className="col-12 col-md-6 py-5 pe-md-1 text-center">
               <h1 className="display-4">Pet Service Booking System</h1>
+              <p className="text-danger fw-bold">🔥 This is Server 2</p>
+
               <p className="lead mb-4">Easily book appointment online for pet care services</p>
               <button 
                 className="btn btn-warning btn-lg"

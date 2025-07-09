@@ -144,8 +144,16 @@ public class NaverSearchService implements NaverSearchServiceInterface {
         PetBusinessDTO dto = ConvertBusinessDTO(naverPlaceItem, address);
         PetBusinessTypeDTO typeDto = ConvertBusinessTypeDTO(naverPlaceItem.getCategoryGroupCode(),
             naverPlaceItem.getCategoryGroupName());
-        dto.setPetBusinessTypeId(typeDto.getId());
-        dto.setPetBusinessTypeName(typeDto.getTypeName());
+        if(typeDto != null){
+          dto.setPetBusinessTypeId(typeDto.getId());
+          dto.setPetBusinessTypeName(typeDto.getTypeName());
+        }else {
+          log.warn("❗ ConvertBusinessTypeDTO 반환값이 null입니다. categoryGroupCode={}, categoryGroupName={}",
+                  naverPlaceItem.getCategoryGroupCode(), naverPlaceItem.getCategoryGroupName());
+          dto.setPetBusinessTypeId(null);
+          dto.setPetBusinessTypeName("기타");
+        }
+
         return dto;
 
       }).toList();

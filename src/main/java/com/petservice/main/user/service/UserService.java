@@ -119,7 +119,8 @@ public class UserService implements CustomUserServiceInterface, UserDetailsServi
         user = userRepository.save(newuser);
         account.setAmount(BigDecimal.ZERO);
         account.setUser(user);
-        account.setAccountType(AccountType.CONSUMER);
+
+        account.setAccountType(AccountType.SERVER);
         Account insert=accountRepository.save(account);
 
         if(insert.getId() == null){

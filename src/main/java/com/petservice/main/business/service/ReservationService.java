@@ -121,7 +121,7 @@ public class ReservationService implements ReservationServiceInterface {
   @Transactional
   public ReservationDTO registerReservation(ReservationRequest reservationRequest) {
     Reservation reservation = new Reservation();
-    LocalDate today = LocalDate.now().plusDays(3);
+    LocalDate today = LocalDate.now().plusDays(-10);
 
     User user = userRepository.findByUserLoginId(reservationRequest.getUser_login_id())
         .orElse(null);
