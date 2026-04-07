@@ -21,8 +21,8 @@ function PetUpdateForm({ pet, onUpdate, onCancel }) {
         id: pet.id,
         name,
         species,
-        age: parseInt(age, 10),
-        birthDate,
+        age: parseInt(age, 10) || 0,
+        birthDate: birthDate === "" ? null : birthDate,
         breed,
         healthInfo,
         gender,
@@ -67,13 +67,13 @@ function PetUpdateForm({ pet, onUpdate, onCancel }) {
         </div>
 
         <div className="mb-3">
-          <label className="col-sm-3 col-form-label">종류</label>
+          <label className="col-sm-3 col-form-label">종류(품종)</label>
           <TextInput
             classtext="form-control"
             id="species"
             value={species}
             onChange={e => setSpecies(e.target.value)}
-            placeholderText="종류"
+            placeholderText="예: 푸들, 말티즈, 샴 고양이 등"
           />
         </div>
 

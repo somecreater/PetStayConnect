@@ -5,10 +5,10 @@ import Button from "../../common/Ui/Button";
 import Modal from "../../common/Ui/Modal";
 import BreedList from "../../common/Component/BreedList";
 
-const style={
-  Breeds:{
-    padding: "1rem", 
-    maxHeight: "70vh", 
+const style = {
+  Breeds: {
+    padding: "1rem",
+    maxHeight: "70vh",
   },
 }
 
@@ -21,40 +21,33 @@ function PetRegisterForm({ onRegister, dogBreeds, catBreeds }) {
   const [breed, setBreed] = useState("");
   const [healthInfo, setHealthInfo] = useState("");
   const [gender, setGender] = useState("MAN");
-  const [selectBreed,setSelectBreed]= useState("dog");
-  const [selectBreedImage, setSelectBreedImage]= useState(false);
-  const [breedModal,setBreedModal]= useState(false);
+  const [selectBreed, setSelectBreed] = useState("dog");
+  const [selectBreedImage, setSelectBreedImage] = useState(false);
+  const [breedModal, setBreedModal] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const dto = { 
-        id: null, 
-        name:name, 
-        species:species, 
-        breed:breed,
-        birthDate:birthDate,
-        age:age,
-        healthInfo:healthInfo,
-        gender:gender,
-        createAt:null,
-        updateAt:null,
-        userId:null,
-        userLoginId:null
+      const dto = {
+        id: null,
+        name: name,
+        species: species,
+        breed: breed,
+        birthDate: birthDate === "" ? null : birthDate,
+        age: parseInt(age, 10) || 0,
+        healthInfo: healthInfo,
+        gender: gender,
+        createAt: null,
+        updateAt: null,
+        userId: null,
+        userLoginId: null
       };
       const response = await ApiService.pet.register(dto);
-      
+
       onRegister();
-      setName("");
-      setSpecies("");
-      setAge("");
-      setBirthDate("");
-      setBreed("");
-      setHealthInfo("");
-      setGender("MAN");
-      if(response.data.result){
+      if (response.data.result) {
         alert('애완동물 한마리 등록 완료!!');
-      }else{
+      } else {
         alert(response.data.message);
       }
     } catch (err) {
@@ -63,6 +56,17 @@ function PetRegisterForm({ onRegister, dogBreeds, catBreeds }) {
       } else {
         alert("등록 실패");
       }
+    } finally {
+      setSelectBreed("dog");
+      setSelectBreedImage(false);
+      setBreedModal(false);
+      setName("");
+      setSpecies("");
+      setAge("");
+      setBirthDate("");
+      setBreed("");
+      setHealthInfo("");
+      setGender("MAN");
     }
   };
 
@@ -86,7 +90,6 @@ function PetRegisterForm({ onRegister, dogBreeds, catBreeds }) {
             value={selectBreed}
             onChange={e => {
               setSelectBreed(e.target.value);
-              setSpecies("");
             }}
           >
             <option value="dog">견종</option>
@@ -94,7 +97,7 @@ function PetRegisterForm({ onRegister, dogBreeds, catBreeds }) {
             <option value="etc">그외</option>
           </select>
         </div>
-        
+
         {(selectBreed === "dog" || selectBreed === "cat") && (
           <div className="mb-3 form-check">
             <input
@@ -110,37 +113,38 @@ function PetRegisterForm({ onRegister, dogBreeds, catBreeds }) {
           </div>
         )}
 
-        {(selectBreed === "dog" || selectBreed === "cat") && 
-        <div>
-          <button
-            className="btn btn-primary"
-            type="button"
-            onClick={()=>{setBreedModal(true)}}
-          >
-            현존하는 {selectBreed === "dog" ? "견종" : "묘종"} 보기
-          </button>
-          {breedModal &&(
-            <Modal isOpen={breedModal} onClose={() => setBreedModal(false)}>
-              <div style={style.Breeds}>
-                <h5 className="mb-3">
-                  {selectBreed === "dog" ? "견종 목록" : "묘종 목록"}
-                </h5>
-                <BreedList
-                  breeds={selectBreed === "dog" ? dogBreeds : catBreeds}
-                  isDog={selectBreed === "dog"}
-                  isCat={selectBreed === "cat"}
-                  isImage={selectBreedImage}
-                />
-              </div>
-            </Modal>
-          )}
-        </div>
+        {(selectBreed === "dog" || selectBreed === "cat") &&
+          <div>
+            <button
+              className="btn btn-primary"
+              type="button"
+              onClick={() => { setBreedModal(true) }}
+            >
+              현존하는 {selectBreed === "dog" ? "견종" : "묘종"} 보기
+            </button>
+            {breedModal && (
+              <Modal isOpen={breedModal} onClose={() => setBreedModal(false)}>
+                <div style={style.Breeds}>
+                  <h5 className="mb-3">
+                    {selectBreed === "dog" ? "견종 목록" : "묘종 목록"}
+                  </h5>
+                  <BreedList
+                    breeds={selectBreed === "dog" ? dogBreeds : catBreeds}
+                    isDog={selectBreed === "dog"}
+                    isCat={selectBreed === "cat"}
+                    isImage={selectBreedImage}
+                  />
+                </div>
+              </Modal>
+            )}
+          </div>
         }
         <div className="mb-3">
+          <label className="form-label">종류(품종)</label>
           <TextInput
             classtext="form-control"
             value={species}
-            placeholderText="종류(견종이나 묘종은 정보창을 참고해주세요)"
+            placeholderText="예: 푸들, 말티즈, 샴 고양이 등"
             onChange={e => setSpecies(e.target.value)}
           />
         </div>
@@ -177,10 +181,11 @@ function PetRegisterForm({ onRegister, dogBreeds, catBreeds }) {
         </div>
 
         <div className="mb-3">
+          <label className="form-label">임신여부</label>
           <TextInput
             classtext="form-control"
             value={breed}
-            placeholderText="임신여부"
+            placeholderText="예: 임신 중, 없음 등"
             onChange={e => setBreed(e.target.value)}
           />
         </div>

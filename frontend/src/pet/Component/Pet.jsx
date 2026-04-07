@@ -14,7 +14,7 @@ function Pet({ pet, onEdit, isEdit=false }) {
   const items = [
     ['이름 ', name],
     ['종류 ', species],
-    ['품종 ', breed],
+    ['임신여부 ', breed],
     ['나이 ', `${age}살`],
     ['성별 ', gender],
     ['생년월일 ', birthDate],

@@ -48,6 +48,10 @@ public class PetServiceImpl implements PetServiceInterface {
     @Transactional
     public PetDTO createPet(PetDTO petDTO, String userLoginId) {
         try {
+            log.info("{}, {}, {}, {}",petDTO.getName(),
+                    petDTO.getSpecies(),
+                    petDTO.getBreed(),
+                    petDTO.getGender().name());
             if (!insertValidationPet(petDTO)) {
                 return null;
             }
